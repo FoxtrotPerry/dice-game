@@ -1,5 +1,5 @@
-import { Container, Stack, useTheme } from '@mui/material';
 import { ReactNode } from 'react';
+import { Container, Stack, useTheme } from '@mui/material';
 
 type CenterStageContainerProps = {
     children: ReactNode;
@@ -15,12 +15,14 @@ export const CenterStageContainer = ({ children }: CenterStageContainerProps) =>
                 display: 'flex',
                 flexGrow: 1,
                 justifyContent: 'center',
-                padding: theme.spacing(2),
+                paddingY: theme.spacing(2),
+                paddingX: theme.spacing(3),
                 height: '100%',
             }}
         >
-            {/* TODO: replace with something other than stack, ideally nothing */}
-            <Stack>{children}</Stack>
+            <Stack width="100%" alignItems="center">
+                {children}
+            </Stack>
         </Container>
     );
 };

@@ -12,8 +12,6 @@ export const Footer = ({ children }: CenterStageFooterProps) => {
                 flexDirection: 'row',
                 alignItems: 'flex-end',
                 justifyContent: 'center',
-                height: '100%',
-                width: '100%',
             }}
         >
             {children}

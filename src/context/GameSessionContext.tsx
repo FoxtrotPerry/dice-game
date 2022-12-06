@@ -12,26 +12,55 @@ type GameSessionContextProps = {
     children: ReactNode;
 };
 
-type Player = {
+export type Player = {
     name: string;
     id: number;
     score: number;
+    outOfTheGate: boolean;
+};
+
+export enum GameStage {
+    /** Default stage. Used when creating players. */
+    SETUP = 'SETUP',
+    /** First stage of the game. Used when deciding whose turn it is first. */
+    FIRST_ROLL = 'FIRST_ROLL',
+    /** Second stage of the game. Used when normal game is taking place. */
+    MAIN_GAME = 'MAIN_GAME',
+    /** Final stage of game. Used when every player has one last chance to
+     * beat the player who just met or surpassed the winning score threshold.
+     */
+    FINAL_ROLLS = 'FINAL_ROLLS',
+}
+
+type GameState = {
+    stage: GameStage;
+    gameInProgress: boolean;
+    playersTurn: number;
 };
 
 type GameSessionContext = {
     players: Player[];
+    gameState: GameState;
+    updateGameState: (partialGameState: Partial<GameState>) => void;
     setPlayers: Dispatch<SetStateAction<Player[]>>;
     resetPlayers: () => void;
+    resetGameStateAndScores: () => void;
     changeNumOfPlayers: (n: number) => void;
-    editPlayer: (id: number, partial: Partial<Player>) => void;
+    updatePlayer: (id: number, partial: Partial<Player>) => void;
 };
 
-const PLAYER_TEMPLATE: Player = { id: 0, name: 'Player ', score: 0 };
+const PLAYER_TEMPLATE: Player = { id: 0, name: 'Player ', score: 0, outOfTheGate: false };
 
 const DEFAULT_PLAYERS: Player[] = [
-    { id: 0, name: 'Player 1', score: 0 },
-    { id: 1, name: 'Player 2', score: 0 },
+    { id: 0, name: 'Player 1', score: 0, outOfTheGate: false },
+    { id: 1, name: 'Player 2', score: 0, outOfTheGate: false },
 ];
+
+const DEFAULT_GAME_STATE = {
+    stage: GameStage.SETUP,
+    gameInProgress: false,
+    playersTurn: 0,
+};
 
 /*
     We instantiate the functions to dummy functions that way we don't need to do undefined checks later
@@ -39,18 +68,24 @@ const DEFAULT_PLAYERS: Player[] = [
 */
 const GameSessionContextInstance = createContext<GameSessionContext>({
     players: DEFAULT_PLAYERS,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    setPlayers: (players: SetStateAction<Player[]>) => {
+    gameState: DEFAULT_GAME_STATE,
+    updateGameState: () => {
+        throw new Error('How did you even use this updateGameState() placeholder function?');
+    },
+    setPlayers: () => {
         throw new Error('How did you even use this setPlayers() placeholder function?');
     },
     resetPlayers: () => {
         throw new Error('How did you even use this resetPlayers() placeholder function?');
     },
+    resetGameStateAndScores: () => {
+        throw new Error('How did you even use this resetGameStateAndScores() placeholder function?');
+    },
     changeNumOfPlayers: () => {
         throw new Error('How did you even use this changeNumOfPlayers() placeholder function?');
     },
-    editPlayer: () => {
-        throw new Error('How did you even use this editPlayer() placeholder function?');
+    updatePlayer: () => {
+        throw new Error('How did you even use this updatePlayer() placeholder function?');
     },
 });
 
@@ -65,10 +100,16 @@ export const useGameSessionContext = () => {
 export const GameSessionContextProvider = ({ children }: GameSessionContextProps) => {
     const c = useContext(GameSessionContextInstance);
     const [players, setPlayers] = useState(c.players);
+    const [gameState, setGameState] = useState(c.gameState);
 
     const resetPlayers = useCallback(() => {
         setPlayers(DEFAULT_PLAYERS);
     }, [setPlayers]);
+
+    const resetGameStateAndScores = useCallback(() => {
+        setPlayers(players.map((p) => ({ ...p, score: 0 })));
+        setGameState(DEFAULT_GAME_STATE);
+    }, [players]);
 
     const addPlayers = useCallback(
         (numOfNewPlayers: number) => {
@@ -97,7 +138,7 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         [addPlayers, players]
     );
 
-    const editPlayer = useCallback(
+    const updatePlayer = useCallback(
         (playerId: number, partialPlayer: Partial<Player>) => {
             const newPlayersArr = players;
             newPlayersArr[playerId] = {
@@ -109,9 +150,25 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         [players]
     );
 
+    const updateGameState = useCallback(
+        (partialGameState: Partial<GameState>) => {
+            setGameState({ ...gameState, ...partialGameState });
+        },
+        [gameState]
+    );
+
     return (
         <GameSessionContextInstance.Provider
-            value={{ players, setPlayers, resetPlayers, changeNumOfPlayers, editPlayer }}
+            value={{
+                players,
+                gameState,
+                updateGameState,
+                setPlayers,
+                resetPlayers,
+                resetGameStateAndScores,
+                changeNumOfPlayers,
+                updatePlayer,
+            }}
         >
             {children}
         </GameSessionContextInstance.Provider>
