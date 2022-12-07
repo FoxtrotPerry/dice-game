@@ -1,40 +1,12 @@
-import { useState } from 'react';
 import { useRoutes } from 'react-router-dom';
-import { AppBar, Button, CssBaseline, Fade, IconButton, Stack, Toolbar } from '@mui/material';
-import { alpha, createTheme, ThemeProvider } from '@mui/material/styles';
-import { AppBoundaryContainer, CenterStack, CenterStageContainer } from './components';
+import { AppBar, Button, CssBaseline, IconButton, Stack, Toolbar } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import { AppBoundaryContainer, CenterStageContainer, ToggleThemeButton } from './components';
 import { useRouteToGameWizard, useRouteToHome, useRouteToRules } from './hooks';
 import { GameWizard, Home, Rules } from './pages';
 
 import CasinoIcon from '@mui/icons-material/Casino';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { GameSessionContextProvider } from './context';
-
-const darkTheme = createTheme({
-    palette: {
-        mode: 'dark',
-        secondary: {
-            main: alpha('#fff', 0.05),
-            light: '#fff',
-            dark: alpha('#fff', 0.15),
-        },
-    },
-});
-
-const lightTheme = createTheme({
-    palette: {
-        mode: 'light',
-        secondary: {
-            main: alpha('#000', 0.05),
-            light: '#fff',
-            dark: alpha('#000', 0.15),
-        },
-        background: {
-            default: alpha('#000', 0.2),
-        },
-    },
-});
+import { GameSessionContextProvider, usePreferenceContext } from './context';
 
 export enum ValidRoutes {
     HOME = '/',
@@ -43,7 +15,7 @@ export enum ValidRoutes {
 }
 
 function App() {
-    const [theme, setTheme] = useState(darkTheme);
+    const { theme } = usePreferenceContext();
     const content = useRoutes([
         {
             path: ValidRoutes.HOME,
@@ -74,7 +46,6 @@ function App() {
                                 justifyContent: 'space-between',
                             }}
                         >
-                            {/* Home Bar Buttons */}
                             <div>
                                 <IconButton size="large" edge="start" onClick={useRouteToHome()}>
                                     <CasinoIcon />
@@ -89,25 +60,7 @@ function App() {
                                     About
                                 </Button>
                             </div>
-                            {/* Dark Theme Toggle */}
-                            <IconButton
-                                onClick={() => {
-                                    setTheme((currTheme) => {
-                                        if (currTheme.palette.mode === 'dark') {
-                                            return lightTheme;
-                                        } else return darkTheme;
-                                    });
-                                }}
-                            >
-                                <CenterStack>
-                                    <Fade in={theme.palette.mode === 'light'} timeout={500}>
-                                        <LightModeIcon />
-                                    </Fade>
-                                    <Fade in={theme.palette.mode === 'dark'} timeout={500}>
-                                        <DarkModeIcon />
-                                    </Fade>
-                                </CenterStack>
-                            </IconButton>
+                            <ToggleThemeButton />
                         </Stack>
                     </Toolbar>
                 </AppBar>

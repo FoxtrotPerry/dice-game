@@ -1,5 +1,4 @@
-import { Footer } from '@components';
-import { GameStage, Player, useGameSessionContext } from '@context';
+import { useState } from 'react';
 import {
     Avatar,
     Box,
@@ -14,7 +13,8 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { useState } from 'react';
+import { Footer } from '@components';
+import { GameStage, Player, useGameSessionContext } from '@context';
 
 const steps = [
     'Every player rolls one dice.',
@@ -50,7 +50,14 @@ export const InitialDiceRoll = () => {
                         <Chip label="Instructions" variant="outlined" />
                     </Divider>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                    }}
+                >
                     <List>
                         {steps.map((step, i) => (
                             <ListItem key={`initial-roll-instruction-${i}`}>
@@ -68,6 +75,7 @@ export const InitialDiceRoll = () => {
                         helperText="Pick who won the dice roll"
                         value={winner?.id}
                         type="number"
+                        autoFocus
                         onChange={(e) => {
                             setWinner(
                                 gameSession.players.find(
@@ -90,8 +98,13 @@ export const InitialDiceRoll = () => {
                 </div>
             </Box>
             <Footer>
-                <Button variant="contained" disabled={winner === undefined} onClick={onSubmit}>
-                    {`Let's Play!`}
+                <Button
+                    variant="contained"
+                    size="large"
+                    disabled={winner === undefined}
+                    onClick={onSubmit}
+                >
+                    <Typography>{`Let's Play!`}</Typography>
                 </Button>
             </Footer>
         </>

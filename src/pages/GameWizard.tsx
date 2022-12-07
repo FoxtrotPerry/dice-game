@@ -12,10 +12,10 @@ import {
 } from '@mui/material';
 import { Footer } from '@components';
 import { GameStage, useGameSessionContext } from '@context';
+import { useRouteToHome } from '@hooks';
 
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import CasinoIcon from '@mui/icons-material/Casino';
-import { useRouteToHome } from '@hooks';
 
 const playerNumOptions = [...Array(11).keys()].slice(2);
 
@@ -33,7 +33,7 @@ export const GameWizard = () => {
             <Box
                 sx={{
                     height: '100%',
-                    width: '100%',
+                    width: `${theme.breakpoints.values.sm / 2}px`,
                 }}
             >
                 <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
