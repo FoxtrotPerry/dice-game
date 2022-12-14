@@ -5,6 +5,7 @@ import {
     SetStateAction,
     useCallback,
     useContext,
+    useEffect,
     useState,
 } from 'react';
 
@@ -12,11 +13,33 @@ type GameSessionContextProps = {
     children: ReactNode;
 };
 
+export enum PlayerColor {
+    PINK = '#FFCCF9',
+    RED = '#FFABAB',
+    ORANGE = '#FFCBC1',
+    YELLOW = '#FFFFD1',
+    MINT = '#AFF8DB',
+    CYAN = '#C4FAF8',
+    BLUE = '#6EB5FF',
+    PURPLE = '#B28DFF',
+    SLATE = '#D7EEFF',
+    VANILLA = '#E5DBD9',
+}
+
+export const playerColorOptions = Object.entries(PlayerColor).map(([label, color]) => {
+    return {
+        label,
+        color,
+    };
+});
+
 export type Player = {
     name: string;
     id: number;
     score: number;
+    color: PlayerColor;
     outOfTheGate: boolean;
+    isPlayersTurn: boolean;
 };
 
 export enum GameStage {
@@ -47,13 +70,35 @@ type GameSessionContext = {
     resetGameStateAndScores: () => void;
     changeNumOfPlayers: (n: number) => void;
     updatePlayer: (id: number, partial: Partial<Player>) => void;
+    endTurn: () => void;
 };
 
-const PLAYER_TEMPLATE: Player = { id: 0, name: 'Player ', score: 0, outOfTheGate: false };
+const PLAYER_TEMPLATE: Player = {
+    id: 0,
+    name: 'Player ',
+    score: 0,
+    color: PlayerColor.SLATE,
+    outOfTheGate: false,
+    isPlayersTurn: false,
+};
 
 const DEFAULT_PLAYERS: Player[] = [
-    { id: 0, name: 'Player 1', score: 0, outOfTheGate: false },
-    { id: 1, name: 'Player 2', score: 0, outOfTheGate: false },
+    {
+        id: 0,
+        name: 'Player 1',
+        score: 0,
+        color: PlayerColor.PURPLE,
+        outOfTheGate: false,
+        isPlayersTurn: false,
+    },
+    {
+        id: 1,
+        name: 'Player 2',
+        score: 0,
+        color: PlayerColor.MINT,
+        outOfTheGate: false,
+        isPlayersTurn: false,
+    },
 ];
 
 const DEFAULT_GAME_STATE = {
@@ -70,22 +115,27 @@ const GameSessionContextInstance = createContext<GameSessionContext>({
     players: DEFAULT_PLAYERS,
     gameState: DEFAULT_GAME_STATE,
     updateGameState: () => {
-        throw new Error('How did you even use this updateGameState() placeholder function?');
+        throw new Error('How did you manage to use this updateGameState() placeholder function?');
     },
     setPlayers: () => {
-        throw new Error('How did you even use this setPlayers() placeholder function?');
+        throw new Error('How did you manage to use this setPlayers() placeholder function?');
     },
     resetPlayers: () => {
-        throw new Error('How did you even use this resetPlayers() placeholder function?');
+        throw new Error('How did you manage to use this resetPlayers() placeholder function?');
     },
     resetGameStateAndScores: () => {
-        throw new Error('How did you even use this resetGameStateAndScores() placeholder function?');
+        throw new Error(
+            'How did you manage to use this resetGameStateAndScores() placeholder function?'
+        );
     },
     changeNumOfPlayers: () => {
-        throw new Error('How did you even use this changeNumOfPlayers() placeholder function?');
+        throw new Error('How did you manage to use this changeNumOfPlayers() placeholder function?');
     },
     updatePlayer: () => {
-        throw new Error('How did you even use this updatePlayer() placeholder function?');
+        throw new Error('How did you manage to use this updatePlayer() placeholder function?');
+    },
+    endTurn: () => {
+        throw new Error('How did you manage to use this endTurn() placeholder function?');
     },
 });
 
@@ -140,15 +190,20 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
 
     const updatePlayer = useCallback(
         (playerId: number, partialPlayer: Partial<Player>) => {
-            const newPlayersArr = players;
-            newPlayersArr[playerId] = {
-                ...newPlayersArr[playerId],
-                ...partialPlayer,
-            };
-            setPlayers(newPlayersArr);
+            // passing in an edited version of the players
+            // array as such to ensure a re-render is provoked
+            setPlayers([
+                ...players.slice(0, playerId),
+                { ...players[playerId], ...partialPlayer },
+                ...players.slice(playerId + 1),
+            ]);
         },
         [players]
     );
+
+    const endTurn = useCallback(() => {
+        setGameState({ ...gameState, playersTurn: (gameState.playersTurn + 1) % players.length });
+    }, [gameState, players.length]);
 
     const updateGameState = useCallback(
         (partialGameState: Partial<GameState>) => {
@@ -156,6 +211,19 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         },
         [gameState]
     );
+
+    // If the number assigned to the player who's turn it currently is changes,
+    // make sure to update the players to this change is in sync with all players
+    useEffect(() => {
+        setPlayers((players) => {
+            return players.map((p) => {
+                return {
+                    ...p,
+                    isPlayersTurn: p.id === gameState.playersTurn ? true : false,
+                };
+            });
+        });
+    }, [gameState.playersTurn]);
 
     return (
         <GameSessionContextInstance.Provider
@@ -168,6 +236,7 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
                 resetGameStateAndScores,
                 changeNumOfPlayers,
                 updatePlayer,
+                endTurn,
             }}
         >
             {children}

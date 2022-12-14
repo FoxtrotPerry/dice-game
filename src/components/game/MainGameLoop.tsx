@@ -1,11 +1,22 @@
-import { useGameSessionContext } from '@context/GameSessionContext';
-import { Avatar, Box, Button, Typography } from '@mui/material';
-import { EasingIcon, Footer } from '@components';
-import { usePreferenceContext } from '@context/PreferenceContext';
+import { useMemo } from 'react';
+import { Box, Button, Divider, Stack, Typography, useTheme } from '@mui/material';
+import { useGameSessionContext } from '@context';
+import { Footer, PlayerAvatar } from '@components';
 
 export const MainGameLoop = () => {
+    const theme = useTheme();
     const gameSession = useGameSessionContext();
-    const { theme } = usePreferenceContext();
+    const currentPlayer = gameSession.players[gameSession.gameState.playersTurn];
+
+    const playerQueue = useMemo(() => {
+        return [
+            ...gameSession.players.slice(
+                gameSession.gameState.playersTurn + (1 % gameSession.players.length)
+            ),
+            ...gameSession.players.slice(0, gameSession.gameState.playersTurn),
+        ].reverse();
+    }, [gameSession.gameState.playersTurn, gameSession.players]);
+
     return (
         <>
             <Box
@@ -18,20 +29,39 @@ export const MainGameLoop = () => {
                     flexDirection: 'column',
                 }}
             >
-                <EasingIcon
-                    scale={3}
-                    easeOutScale={1.25}
-                    loopMs={2000}
-                    pingColor={theme.palette.info.main}
-                >
-                    <Avatar sx={{ width: 64, height: 64, fontSize: '2rem', bgcolor: 'cyan' }}>
-                        {gameSession.players.at(gameSession.gameState.playersTurn)?.name.charAt(0)}
-                        {gameSession.players.at(gameSession.gameState.playersTurn)?.name.charAt(0)}
-                    </Avatar>
-                </EasingIcon>
+                <Stack justifyContent="center">
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            flexDirection: 'column',
+                            marginBottom: theme.spacing(2),
+                        }}
+                    >
+                        <Box sx={{ mb: 2 }}>
+                            <PlayerAvatar player={currentPlayer} />
+                        </Box>
+                        <Typography variant="h3" align="center">
+                            {`${currentPlayer.name}'s turn!`}
+                        </Typography>
+                    </div>
+                    <Divider sx={{ mb: 2 }} />
+                    <Stack direction="row" spacing={-3} justifyContent="center">
+                        {playerQueue.map((p) => {
+                            return <PlayerAvatar key={`player-${p.id}`} player={p} />;
+                        })}
+                    </Stack>
+                </Stack>
             </Box>
             <Footer>
-                <Button variant="contained" size="large">
+                <Button
+                    onClick={() => {
+                        gameSession.endTurn();
+                    }}
+                    variant="contained"
+                    size="large"
+                    style={{ backgroundColor: currentPlayer.color }}
+                >
                     <Typography>{`End Turn`}</Typography>
                 </Button>
             </Footer>

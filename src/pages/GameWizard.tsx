@@ -1,31 +1,29 @@
 import {
     Box,
     Button,
-    debounce,
     MenuItem,
     Select,
     SelectChangeEvent,
     Stack,
-    TextField,
     Typography,
     useTheme,
 } from '@mui/material';
 import { Footer } from '@components';
+import { PlayerInput } from '@components/input';
 import { GameStage, useGameSessionContext } from '@context';
 import { useRouteToHome } from '@hooks';
 
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import CasinoIcon from '@mui/icons-material/Casino';
 
-const playerNumOptions = [...Array(11).keys()].slice(2);
+export const playerNumOptions = [...Array(11).keys()].slice(2);
 
 export const GameWizard = () => {
     const theme = useTheme();
     const routeToHome = useRouteToHome();
-    const gameSession = useGameSessionContext();
+    const { changeNumOfPlayers, players, updateGameState } = useGameSessionContext();
 
     const handleChange = (e: SelectChangeEvent) => {
-        gameSession.changeNumOfPlayers(Number(e.target.value));
+        changeNumOfPlayers(Number(e.target.value));
     };
 
     return (
@@ -39,7 +37,7 @@ export const GameWizard = () => {
                 <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
                     <Typography variant="h5">How many players?</Typography>
                     <Select
-                        value={gameSession.players.length.toString()}
+                        value={players.length.toString()}
                         variant="standard"
                         onChange={handleChange}
                     >
@@ -54,39 +52,14 @@ export const GameWizard = () => {
                         })}
                     </Select>
                 </Stack>
-                {gameSession.players.map((player) => {
-                    return (
-                        <TextField
-                            id={`player-name-text-field-${player.id}`}
-                            key={`player-name-text-field-${player.id}`}
-                            onChange={debounce((e) => {
-                                gameSession.updatePlayer(player.id, { name: e.target.value });
-                            }, 500)}
-                            onKeyDown={(e) => {
-                                if (
-                                    e.key === 'Enter' &&
-                                    gameSession.players.length < (playerNumOptions?.at(-1) ?? 1)
-                                ) {
-                                    gameSession.changeNumOfPlayers(gameSession.players.length + 1);
-                                }
-                            }}
-                            label={
-                                <Stack direction="row" spacing={1}>
-                                    <AccountCircle sx={{ color: 'action.active' }} />
-                                    <Typography>{`Player ${player.id + 1}`}</Typography>
-                                </Stack>
-                            }
-                            variant="standard"
-                            fullWidth
-                            sx={{ mb: 2 }}
-                        />
-                    );
+                {players.map((player) => {
+                    return <PlayerInput key={`player-input-${player.id}`} player={player} />;
                 })}
             </Box>
             <Footer>
                 <Button
                     onClick={() => {
-                        gameSession.updateGameState({ stage: GameStage.FIRST_ROLL });
+                        updateGameState({ stage: GameStage.FIRST_ROLL });
                         routeToHome();
                     }}
                     variant="contained"

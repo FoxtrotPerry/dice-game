@@ -16,12 +16,12 @@ const lightTheme = createTheme({
     palette: {
         mode: 'light',
         secondary: {
-            main: alpha('#000', 0.05),
+            main: '#eee',
             light: '#fff',
-            dark: alpha('#000', 0.15),
+            dark: '#ddd',
         },
         background: {
-            default: alpha('#000', 0.2),
+            default: '#ddd',
         },
     },
 });
