@@ -1,6 +1,8 @@
-import { Box, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import { InitialDiceRoll, MainGameLoop } from '@components/game';
 import { GameStage, useGameSessionContext } from '@context';
+
+import CasinoIcon from '@mui/icons-material/Casino';
 
 export const Home = () => {
     const gameSession = useGameSessionContext();
@@ -22,9 +24,46 @@ export const Home = () => {
                     width="100%"
                     height="100%"
                 >
-                    <Typography align="center">
-                        To start a new game, click the new game button at the top!
+                    <Typography variant="h5" align="center">
+                        TO START A NEW GAME,
                     </Typography>
+                    <Typography variant="h3" align="center">
+                        CLICK THE DIE
+                    </Typography>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            onClick={() => {
+                                undefined;
+                            }}
+                        >
+                            <CasinoIcon
+                                sx={{
+                                    height: '8rem',
+                                    width: '8rem',
+                                    animation: `rotate 3500ms infinite`,
+                                    '@keyframes rotate': {
+                                        '0%': {
+                                            transform: `rotate(0deg)`,
+                                        },
+                                        '50%': {
+                                            transform: `rotate(0deg)`,
+                                        },
+                                        '66%': {
+                                            transform: `rotate(-25deg)`,
+                                        },
+                                        '85%': {
+                                            transform: `rotate(375deg)`,
+                                        },
+                                        '100%': {
+                                            transform: `rotate(360deg)`,
+                                        },
+                                    },
+                                }}
+                            />
+                        </IconButton>
+                    </div>
                 </Box>
             );
     }

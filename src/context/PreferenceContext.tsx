@@ -1,7 +1,20 @@
-import { alpha, createTheme, Theme } from '@mui/material';
+import { alpha, createTheme, Theme, ThemeOptions } from '@mui/material';
 import { createContext, ReactNode, useContext, useState } from 'react';
 
+const baseTheme: ThemeOptions = {
+    typography: {
+        fontFamily: [
+            'proxima',
+            'Roboto',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"',
+        ].join(','),
+    },
+};
+
 const darkTheme = createTheme({
+    ...baseTheme,
     palette: {
         mode: 'dark',
         secondary: {
@@ -13,6 +26,7 @@ const darkTheme = createTheme({
 });
 
 const lightTheme = createTheme({
+    ...baseTheme,
     palette: {
         mode: 'light',
         secondary: {

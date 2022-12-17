@@ -3,10 +3,10 @@ import { AppBar, Button, CssBaseline, IconButton, Stack, Toolbar } from '@mui/ma
 import { ThemeProvider } from '@mui/material/styles';
 import { AppBoundaryContainer, CenterStageContainer, ToggleThemeButton } from './components';
 import { useRouteToGameWizard, useRouteToHome, useRouteToRules } from './hooks';
+import { GameSessionContextProvider, usePreferenceContext } from './context';
 import { GameWizard, Home, Rules } from './pages';
 
 import CasinoIcon from '@mui/icons-material/Casino';
-import { GameSessionContextProvider, usePreferenceContext } from './context';
 
 export enum ValidRoutes {
     HOME = '/',

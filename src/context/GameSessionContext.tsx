@@ -26,6 +26,10 @@ export enum PlayerColor {
     VANILLA = '#E5DBD9',
 }
 
+export const getRandomColor = () => {
+    return Object.values(PlayerColor)[Math.floor(Math.random() * Object.values(PlayerColor).length)];
+};
+
 export const playerColorOptions = Object.entries(PlayerColor).map(([label, color]) => {
     return {
         label,
@@ -87,7 +91,7 @@ const DEFAULT_PLAYERS: Player[] = [
         id: 0,
         name: 'Player 1',
         score: 0,
-        color: PlayerColor.PURPLE,
+        color: Object.values(PlayerColor)[0],
         outOfTheGate: false,
         isPlayersTurn: false,
     },
@@ -95,7 +99,7 @@ const DEFAULT_PLAYERS: Player[] = [
         id: 1,
         name: 'Player 2',
         score: 0,
-        color: PlayerColor.MINT,
+        color: Object.values(PlayerColor)[1],
         outOfTheGate: false,
         isPlayersTurn: false,
     },
@@ -170,6 +174,7 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
                     ...PLAYER_TEMPLATE,
                     name: PLAYER_TEMPLATE.name + (newPlayerId + 1).toString(),
                     id: newPlayerId,
+                    color: Object.values(PlayerColor)[newPlayerId],
                 };
             });
             setPlayers([...players, ...newPlayerAdditions]);

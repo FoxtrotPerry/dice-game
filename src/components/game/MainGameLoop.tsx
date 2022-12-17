@@ -46,7 +46,11 @@ export const MainGameLoop = () => {
                         </Typography>
                     </div>
                     <Divider sx={{ mb: 2 }} />
-                    <Stack direction="row" spacing={-3} justifyContent="center">
+                    <Stack
+                        direction="row"
+                        spacing={gameSession.players.length * (-1 / 2.5)}
+                        justifyContent="center"
+                    >
                         {playerQueue.map((p) => {
                             return <PlayerAvatar key={`player-${p.id}`} player={p} />;
                         })}
