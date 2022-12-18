@@ -18,8 +18,6 @@ export const NewGameButton = () => {
         };
     }, []);
 
-    console.log(color);
-
     return (
         <IconButton size="large" onClick={useRouteToGameWizard()}>
             <CasinoIcon
