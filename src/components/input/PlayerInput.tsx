@@ -29,7 +29,14 @@ export const PlayerInput = ({ player }: PlayerInputProps) => {
                     }}
                     ref={avatarRef}
                 >
-                    <AccountCircle sx={{ color: player.color }} />
+                    <AccountCircle
+                        sx={{
+                            color: player.color,
+                            filter: 'drop-shadow(0 0 0.125rem #0007)',
+                            stroke: '#0004',
+                            strokeWidth: 1,
+                        }}
+                    />
                 </IconButton>
                 <TextField
                     id={`player-name-text-field-${player.id}`}
@@ -77,7 +84,15 @@ export const PlayerInput = ({ player }: PlayerInputProps) => {
                                         close();
                                     }}
                                 >
-                                    <AccountCircle sx={{ color: option }} fontSize="large" />
+                                    <AccountCircle
+                                        sx={{
+                                            color: option,
+                                            filter: 'drop-shadow(0 0 0.3rem #0007)',
+                                            stroke: '#0007',
+                                            strokeWidth: 1,
+                                        }}
+                                        fontSize="large"
+                                    />
                                 </IconButton>
                             </Grid>
                         );

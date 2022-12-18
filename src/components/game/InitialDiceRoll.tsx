@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import {
     Avatar,
     Box,
@@ -17,9 +17,9 @@ import { Footer } from '@components';
 import { GameStage, Player, useGameSessionContext } from '@context';
 
 const steps = [
-    'Every player rolls one dice.',
-    'The player with the highest roll gets to live.',
-    'If there is a tie, roll again.',
+    'EVERY PLAYER ROLLS ONE DIE.',
+    'THE PLAYER WITH THE HIGHEST ROLL GOES FIRST.',
+    'IF THERE IS A TIE, THOSE IN THE TIE ROLL AGAIN.',
 ];
 
 export const InitialDiceRoll = () => {
@@ -43,7 +43,7 @@ export const InitialDiceRoll = () => {
                 }}
             >
                 <Typography variant="h4" align="center">
-                    Roll for first turn!
+                    ROLL FOR FIRST TURN
                 </Typography>
                 <div style={{ width: '100%' }}>
                     <Divider component="div" sx={{ marginTop: 2 }}>
@@ -64,7 +64,7 @@ export const InitialDiceRoll = () => {
                                 <Avatar sx={{ bgcolor: theme.palette.secondary.dark, mr: 2 }}>
                                     <Typography color="primary">{i + 1}</Typography>
                                 </Avatar>
-                                <ListItemText primary={<Typography variant="h6">{step}</Typography>} />
+                                <ListItemText primary={<Typography>{step}</Typography>} />
                             </ListItem>
                         ))}
                     </List>

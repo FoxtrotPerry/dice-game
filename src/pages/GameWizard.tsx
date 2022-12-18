@@ -40,6 +40,8 @@ export const GameWizard = () => {
                         value={players.length.toString()}
                         variant="standard"
                         onChange={handleChange}
+                        autoFocus
+                        defaultOpen
                     >
                         {playerNumOptions.map((option) => {
                             return (
@@ -66,7 +68,7 @@ export const GameWizard = () => {
                     size="large"
                 >
                     <Stack direction="row" spacing={1}>
-                        <Typography>{`Let's Roll`}</Typography>
+                        <Typography alignItems="center">{`Let's Roll`}</Typography>
                         <CasinoIcon />
                     </Stack>
                 </Button>

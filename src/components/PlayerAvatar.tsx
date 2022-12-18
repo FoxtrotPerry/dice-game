@@ -13,7 +13,8 @@ export const PlayerAvatar = ({ player }: PlayerAvatarProps) => {
 
     const playerInitials = useMemo(() => {
         const splitName = player.name.split(' ');
-        return splitName[0][0] + splitName[1][0];
+        const optionalSecondInitial = splitName?.at(1)?.at(0);
+        return optionalSecondInitial ? splitName[0][0] + optionalSecondInitial : splitName[0][0];
     }, [player.name]);
 
     return (
@@ -22,7 +23,7 @@ export const PlayerAvatar = ({ player }: PlayerAvatarProps) => {
                 disabled={!isPlayersTurn}
                 CircularPulseProps={{
                     scale: 4,
-                    endPulseScale: 3,
+                    endPulseScale: 1.5,
                 }}
                 pingColor={player.color ? player.color : alpha(theme.palette.action.active, 0.6)}
             >

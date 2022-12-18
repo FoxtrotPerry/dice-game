@@ -1,44 +1,6 @@
-import { alpha, createTheme, Theme, ThemeOptions } from '@mui/material';
+import { Theme } from '@mui/material';
 import { createContext, ReactNode, useContext, useState } from 'react';
-
-const baseTheme: ThemeOptions = {
-    typography: {
-        fontFamily: [
-            'proxima',
-            'Roboto',
-            '"Apple Color Emoji"',
-            '"Segoe UI Emoji"',
-            '"Segoe UI Symbol"',
-        ].join(','),
-    },
-};
-
-const darkTheme = createTheme({
-    ...baseTheme,
-    palette: {
-        mode: 'dark',
-        secondary: {
-            main: alpha('#fff', 0.05),
-            light: '#fff',
-            dark: alpha('#fff', 0.15),
-        },
-    },
-});
-
-const lightTheme = createTheme({
-    ...baseTheme,
-    palette: {
-        mode: 'light',
-        secondary: {
-            main: '#eee',
-            light: '#fff',
-            dark: '#ddd',
-        },
-        background: {
-            default: '#ddd',
-        },
-    },
-});
+import { darkTheme, lightTheme } from 'src/theme';
 
 type PreferenceContext = {
     theme: Theme;
