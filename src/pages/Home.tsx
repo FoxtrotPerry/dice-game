@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { GameStage, useGameSessionContext } from '@context';
 import { InitialDiceRoll, MainGameLoop } from '@components/game';
 import { NewGameButton } from '@components';
@@ -12,29 +12,20 @@ export const Home = () => {
             return <MainGameLoop />;
         default:
             return (
-                <Box
-                    component="div"
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="space-evenly"
-                    width="100%"
-                    height="100%"
-                >
-                    <div>
-                        <Typography variant="h3" align="center">
-                            <i>THE 5 DICE GAME!</i>
-                        </Typography>
+                <Stack justifyContent="center" height="100%">
+                    <Typography variant="h3" align="center">
+                        <i>THE 5 DICE GAME!</i>
+                    </Typography>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <NewGameButton />
                     </div>
-                    <NewGameButton />
-                    <div>
-                        <Typography variant="h4" align="center">
-                            CLICK THE DIE TO
-                        </Typography>
-                        <Typography variant="h2" align="center">
-                            START
-                        </Typography>
-                    </div>
-                </Box>
+                    <Typography variant="h4" align="center">
+                        CLICK THE DIE TO
+                    </Typography>
+                    <Typography variant="h1" align="center">
+                        START
+                    </Typography>
+                </Stack>
             );
     }
 };

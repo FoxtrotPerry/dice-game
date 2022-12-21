@@ -29,19 +29,21 @@ export const NewGameButton = () => {
                         '0%': {
                             transform: `rotate(0deg)`,
                         },
-                        '50%': {
-                            transform: `rotate(0deg)`,
-                        },
-                        '66%': {
+                        '15%': {
                             transform: `rotate(-25deg)`,
-                            color: 'inherit',
-                        },
-                        '85%': {
-                            transform: `rotate(375deg)`,
                             color: color,
                         },
+                        '50%': {
+                            transform: 'rotate(375deg)',
+                        },
+                        '60%': {
+                            transform: 'rotate(360deg)',
+                        },
+                        '90%': {
+                            color: 'inherit',
+                        },
                         '100%': {
-                            transform: `rotate(360deg)`,
+                            transform: 'rotate(360deg)',
                         },
                     },
                 }}

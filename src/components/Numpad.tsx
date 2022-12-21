@@ -1,4 +1,4 @@
-import { Button, Card, Grid, Typography } from '@mui/material';
+import { Button, Card, Grid, SxProps, Typography } from '@mui/material';
 
 export enum NumpadAction {
     CLEAR = 'CLEAR',
@@ -7,11 +7,12 @@ export enum NumpadAction {
 
 type NumpadProps = {
     onNumpadAction: (value: number | NumpadAction) => void;
+    sx?: SxProps;
 };
 
-export const Numpad = ({ onNumpadAction }: NumpadProps) => {
+export const Numpad = ({ onNumpadAction, sx }: NumpadProps) => {
     return (
-        <Card variant="elevation" sx={{ borderRadius: 4 }}>
+        <Card variant="elevation" sx={{ borderRadius: 4, maxWidth: 'sm', ...sx }}>
             <Grid
                 container
                 columns={3}

@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Box, Button, Card, Chip, Divider, Grid, Stack, Typography } from '@mui/material';
+import { Box, Card, Chip, Divider, Stack, Typography } from '@mui/material';
 import { useGameSessionContext } from '@context';
-import { Footer, Numpad, NumpadAction, PlayerAvatar } from '@components';
+import { Numpad, NumpadAction, PlayerAvatar } from '@components';
 
 export const MainGameLoop = () => {
     const gameSession = useGameSessionContext();
@@ -84,12 +84,22 @@ export const MainGameLoop = () => {
                         })}
                     </Stack>
                 </Stack>
-                <Card sx={{ mb: 1, width: '100%', borderRadius: 4 }}>
+                <Card
+                    sx={{
+                        mb: 1,
+                        px: 2,
+                        borderRadius: 4,
+                        border: `0.25rem solid ${currentPlayer.color}`,
+                    }}
+                >
                     <Typography variant="h4" align="center">
                         <i>{`+${scoreAddition}`}</i>
                     </Typography>
                 </Card>
-                <Numpad onNumpadAction={onNumpadAction} />
+                <Numpad
+                    onNumpadAction={onNumpadAction}
+                    sx={{ border: `0.25rem solid ${currentPlayer.color}` }}
+                />
             </Box>
         </>
     );
