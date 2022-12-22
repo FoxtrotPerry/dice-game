@@ -1,5 +1,16 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Box, Card, Chip, Divider, Stack, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    Chip,
+    Divider,
+    Grid,
+    Stack,
+    Typography,
+} from '@mui/material';
 import { useGameSessionContext } from '@context';
 import { Numpad, NumpadAction, PlayerAvatar } from '@components';
 
@@ -96,10 +107,30 @@ export const MainGameLoop = () => {
                         <i>{`+${scoreAddition}`}</i>
                     </Typography>
                 </Card>
-                <Numpad
-                    onNumpadAction={onNumpadAction}
-                    sx={{ border: `0.25rem solid ${currentPlayer.color}` }}
-                />
+                {currentPlayer.outOfTheGate ? (
+                    <Numpad
+                        onNumpadAction={onNumpadAction}
+                        sx={{ border: `0.25rem solid ${currentPlayer.color}` }}
+                    />
+                ) : (
+                    <Card variant="elevation" sx={{ borderRadius: 4, maxWidth: 'sm', padding: 2 }}>
+                        <Typography align="center" variant="h3">
+                            On the board?
+                        </Typography>
+                        <Grid container spacing={1}>
+                            <Grid item xs={6}>
+                                <Button variant="contained" size="large" fullWidth>
+                                    NO
+                                </Button>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Button variant="contained" size="large" fullWidth>
+                                    YES
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Card>
+                )}
             </Box>
         </>
     );
