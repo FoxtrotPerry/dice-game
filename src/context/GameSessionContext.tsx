@@ -42,7 +42,7 @@ export type Player = {
     id: number;
     score: number;
     color: PlayerColor;
-    outOfTheGate: boolean;
+    onTheBoard: boolean;
     isPlayersTurn: boolean;
 };
 
@@ -82,7 +82,7 @@ const PLAYER_TEMPLATE: Player = {
     name: 'Player ',
     score: 0,
     color: PlayerColor.SLATE,
-    outOfTheGate: false,
+    onTheBoard: false,
     isPlayersTurn: false,
 };
 
@@ -92,7 +92,7 @@ const DEFAULT_PLAYERS: Player[] = [
         name: 'Player 1',
         score: 0,
         color: Object.values(PlayerColor)[0],
-        outOfTheGate: false,
+        onTheBoard: false,
         isPlayersTurn: false,
     },
     {
@@ -100,7 +100,7 @@ const DEFAULT_PLAYERS: Player[] = [
         name: 'Player 2',
         score: 0,
         color: Object.values(PlayerColor)[1],
-        outOfTheGate: false,
+        onTheBoard: false,
         isPlayersTurn: false,
     },
 ];

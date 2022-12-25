@@ -107,7 +107,7 @@ export const MainGameLoop = () => {
                         <i>{`+${scoreAddition}`}</i>
                     </Typography>
                 </Card>
-                {currentPlayer.outOfTheGate ? (
+                {currentPlayer.onTheBoard ? (
                     <Numpad
                         onNumpadAction={onNumpadAction}
                         sx={{ border: `0.25rem solid ${currentPlayer.color}` }}
@@ -119,12 +119,32 @@ export const MainGameLoop = () => {
                         </Typography>
                         <Grid container spacing={1}>
                             <Grid item xs={6}>
-                                <Button variant="contained" size="large" fullWidth>
+                                <Button
+                                    onClick={() => {
+                                        gameSession.updatePlayer(currentPlayer.id, {
+                                            onTheBoard: false,
+                                        });
+                                        gameSession.endTurn();
+                                    }}
+                                    variant="contained"
+                                    size="large"
+                                    fullWidth
+                                >
                                     NO
                                 </Button>
                             </Grid>
                             <Grid item xs={6}>
-                                <Button variant="contained" size="large" fullWidth>
+                                <Button
+                                    onClick={() => {
+                                        gameSession.updatePlayer(currentPlayer.id, {
+                                            onTheBoard: true,
+                                        });
+                                        gameSession.endTurn();
+                                    }}
+                                    variant="contained"
+                                    size="large"
+                                    fullWidth
+                                >
                                     YES
                                 </Button>
                             </Grid>
