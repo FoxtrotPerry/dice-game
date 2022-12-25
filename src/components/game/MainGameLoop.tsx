@@ -95,7 +95,10 @@ export const MainGameLoop = () => {
                     </div>
                     <div>
                         <Divider sx={{ mb: 1 }}>
-                            <Chip label="On Deck" variant="outlined" />
+                            {/* <Chip label="On Deck" variant="outlined" /> */}
+                            <Typography variant="button">
+                                <i>ON DECK</i>
+                            </Typography>
                         </Divider>
                     </div>
                     <Stack
@@ -111,27 +114,29 @@ export const MainGameLoop = () => {
                         })}
                     </Stack>
                 </Stack>
-                <Card
-                    sx={{
-                        mb: 1,
-                        px: 2,
-                        borderRadius: 4,
-                        border: `0.25rem solid ${currentPlayer.color}`,
-                    }}
-                >
-                    <Typography variant="h4" align="center">
-                        <i>{`+${scoreAddition}`}</i>
-                    </Typography>
-                </Card>
                 {currentPlayer.onTheBoard ? (
-                    <Numpad
-                        onNumpadAction={onNumpadAction}
-                        sx={{ border: `0.25rem solid ${currentPlayer.color}` }}
-                    />
+                    <>
+                        <Card
+                            sx={{
+                                mb: 1,
+                                px: 2,
+                                borderRadius: 4,
+                                border: `0.25rem solid ${currentPlayer.color}`,
+                            }}
+                        >
+                            <Typography variant="h4" align="center">
+                                <i>{`+${scoreAddition}`}</i>
+                            </Typography>
+                        </Card>
+                        <Numpad
+                            onNumpadAction={onNumpadAction}
+                            sx={{ border: `0.25rem solid ${currentPlayer.color}` }}
+                        />
+                    </>
                 ) : (
                     <Card variant="elevation" sx={{ borderRadius: 4, maxWidth: 'sm', padding: 2 }}>
-                        <Typography align="center" variant="h4">
-                            On the board?
+                        <Typography align="center" variant="h4" mb={1}>
+                            ON THE BOARD?
                         </Typography>
                         <Grid container spacing={1}>
                             <Grid item xs={6}>
@@ -142,7 +147,8 @@ export const MainGameLoop = () => {
                                     size="large"
                                     fullWidth
                                     sx={{
-                                        boxShadow: `inset 0 0 0 10px ${theme.palette.warning}`,
+                                        stroke: theme.palette.warning.main,
+                                        strokeWidth: 1,
                                     }}
                                 >
                                     <Typography variant="h3" color={theme.palette.text.primary}>
