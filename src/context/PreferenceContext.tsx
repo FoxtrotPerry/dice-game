@@ -1,4 +1,4 @@
-import { Theme } from '@mui/material';
+import { Theme, useMediaQuery } from '@mui/material';
 import { createContext, ReactNode, useContext, useState } from 'react';
 import { darkTheme, lightTheme } from 'src/theme';
 
@@ -27,8 +27,8 @@ export const usePreferenceContext = () => {
 };
 
 export const PreferenceContextProvider = ({ children }: PreferenceContextProps) => {
-    const c = useContext(PreferenceContextInstance);
-    const [theme, setTheme] = useState(c.theme);
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const [theme, setTheme] = useState(prefersDarkMode ? darkTheme : lightTheme);
 
     return (
         <PreferenceContextInstance.Provider

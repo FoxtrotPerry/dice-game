@@ -10,11 +10,13 @@ import {
     Grid,
     Stack,
     Typography,
+    useTheme,
 } from '@mui/material';
 import { useGameSessionContext } from '@context';
 import { Numpad, NumpadAction, PlayerAvatar } from '@components';
 
 export const MainGameLoop = () => {
+    const theme = useTheme();
     const gameSession = useGameSessionContext();
     const currentPlayer = gameSession.players[gameSession.gameState.playersTurn];
     const [scoreAddition, setScoreAddition] = useState(0);
@@ -38,6 +40,20 @@ export const MainGameLoop = () => {
         },
         [currentPlayer.id, currentPlayer.score, gameSession, scoreAddition]
     );
+
+    const onNotOutOfGateClick = useCallback(() => {
+        gameSession.updatePlayer(currentPlayer.id, {
+            onTheBoard: false,
+        });
+        gameSession.endTurn();
+    }, [currentPlayer.id, gameSession]);
+
+    const onOutOfGateClick = useCallback(() => {
+        gameSession.updatePlayer(currentPlayer.id, {
+            onTheBoard: true,
+        });
+        gameSession.endTurn();
+    }, [currentPlayer.id, gameSession]);
 
     const playerQueue = useMemo(() => {
         return [
@@ -114,38 +130,35 @@ export const MainGameLoop = () => {
                     />
                 ) : (
                     <Card variant="elevation" sx={{ borderRadius: 4, maxWidth: 'sm', padding: 2 }}>
-                        <Typography align="center" variant="h3">
+                        <Typography align="center" variant="h4">
                             On the board?
                         </Typography>
                         <Grid container spacing={1}>
                             <Grid item xs={6}>
                                 <Button
-                                    onClick={() => {
-                                        gameSession.updatePlayer(currentPlayer.id, {
-                                            onTheBoard: false,
-                                        });
-                                        gameSession.endTurn();
-                                    }}
+                                    onClick={onNotOutOfGateClick}
                                     variant="contained"
+                                    color="secondary"
                                     size="large"
                                     fullWidth
+                                    sx={{
+                                        boxShadow: `inset 0 0 0 10px ${theme.palette.warning}`,
+                                    }}
                                 >
-                                    NO
+                                    <Typography variant="h3" color={theme.palette.text.primary}>
+                                        NO
+                                    </Typography>
                                 </Button>
                             </Grid>
                             <Grid item xs={6}>
                                 <Button
-                                    onClick={() => {
-                                        gameSession.updatePlayer(currentPlayer.id, {
-                                            onTheBoard: true,
-                                        });
-                                        gameSession.endTurn();
-                                    }}
+                                    onClick={onOutOfGateClick}
                                     variant="contained"
+                                    color="success"
                                     size="large"
                                     fullWidth
                                 >
-                                    YES
+                                    <Typography variant="h3">YES</Typography>
                                 </Button>
                             </Grid>
                         </Grid>

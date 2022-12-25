@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IconButton } from '@mui/material';
+import { darken, IconButton, useTheme } from '@mui/material';
 import { useRouteToGameWizard } from '@hooks/routerHooks';
 
 import CasinoIcon from '@mui/icons-material/Casino';
@@ -8,6 +8,7 @@ import { getRandomColor } from '@context/GameSessionContext';
 const loopTimeMs = 4000;
 
 export const NewGameButton = () => {
+    const theme = useTheme();
     const [color, setColor] = useState(getRandomColor());
     const [intervalId, setIntervalId] = useState(0);
 
@@ -22,8 +23,10 @@ export const NewGameButton = () => {
         <IconButton size="large" onClick={useRouteToGameWizard()}>
             <CasinoIcon
                 sx={{
+                    color: theme.palette.text.primary,
                     height: '8rem',
                     width: '8rem',
+                    filter: 'drop-shadow(0 0 0.2rem #0009)',
                     animation: `rotate ${loopTimeMs}ms infinite`,
                     '@keyframes rotate': {
                         '0%': {
@@ -40,7 +43,7 @@ export const NewGameButton = () => {
                             transform: 'rotate(360deg)',
                         },
                         '90%': {
-                            color: 'inherit',
+                            color: theme.palette.text.primary,
                         },
                         '100%': {
                             transform: 'rotate(360deg)',
