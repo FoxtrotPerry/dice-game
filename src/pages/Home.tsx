@@ -1,5 +1,6 @@
 import { Stack, Typography } from '@mui/material';
-import { GameStage, useGameSessionContext } from '@context';
+import { useGameSessionContext } from '@context';
+import { GameStage } from '@types';
 import { InitialDiceRoll, MainGameLoop } from '@components/game';
 import { NewGameButton } from '@components';
 

@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import {
     Avatar,
     Box,
@@ -14,7 +14,8 @@ import {
     useTheme,
 } from '@mui/material';
 import { Footer } from '@components';
-import { GameStage, Player, useGameSessionContext } from '@context';
+import { useGameSessionContext } from '@context';
+import { GameStage, Player } from '@types';
 
 const steps = [
     'EVERY PLAYER ROLLS ONE DIE.',

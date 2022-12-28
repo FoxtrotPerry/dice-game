@@ -10,7 +10,8 @@ import {
 } from '@mui/material';
 import { Footer } from '@components';
 import { PlayerInput } from '@components/input';
-import { GameStage, useGameSessionContext } from '@context';
+import { useGameSessionContext } from '@context';
+import { GameStage } from '@types';
 import { useRouteToHome } from '@hooks';
 
 import CasinoIcon from '@mui/icons-material/Casino';

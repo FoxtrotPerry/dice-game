@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { darken, IconButton, useTheme } from '@mui/material';
+import { IconButton, useTheme } from '@mui/material';
 import { useRouteToGameWizard } from '@hooks/routerHooks';
 
 import CasinoIcon from '@mui/icons-material/Casino';

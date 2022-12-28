@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Box, debounce, Grid, IconButton, Popover, TextField, Typography } from '@mui/material';
-import { Player, playerColorOptions, useGameSessionContext } from '@context';
+import { playerColorOptions, useGameSessionContext } from '@context';
+import { Player } from '@types';
 import { playerNumOptions } from '@pages';
 
 import { AccountCircle } from '@mui/icons-material';

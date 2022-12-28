@@ -1,17 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import {
-    Box,
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    Chip,
-    Divider,
-    Grid,
-    Stack,
-    Typography,
-    useTheme,
-} from '@mui/material';
+import { Box, Button, Card, Divider, Grid, Stack, Typography, useTheme } from '@mui/material';
 import { useGameSessionContext } from '@context';
 import { Numpad, NumpadAction, PlayerAvatar } from '@components';
 
@@ -95,7 +83,6 @@ export const MainGameLoop = () => {
                     </div>
                     <div>
                         <Divider sx={{ mb: 1 }}>
-                            {/* <Chip label="On Deck" variant="outlined" /> */}
                             <Typography variant="button">
                                 <i>ON DECK</i>
                             </Typography>
@@ -135,7 +122,7 @@ export const MainGameLoop = () => {
                     </>
                 ) : (
                     <Card variant="elevation" sx={{ borderRadius: 4, maxWidth: 'sm', padding: 2 }}>
-                        <Typography align="center" variant="h4" mb={1}>
+                        <Typography align="center" variant="h4">
                             ON THE BOARD?
                         </Typography>
                         <Grid container spacing={1}>
@@ -143,15 +130,11 @@ export const MainGameLoop = () => {
                                 <Button
                                     onClick={onNotOutOfGateClick}
                                     variant="contained"
-                                    color="secondary"
                                     size="large"
                                     fullWidth
-                                    sx={{
-                                        stroke: theme.palette.warning.main,
-                                        strokeWidth: 1,
-                                    }}
+                                    sx={{ backgroundColor: theme.palette.text.primary }}
                                 >
-                                    <Typography variant="h3" color={theme.palette.text.primary}>
+                                    <Typography variant="h3" color={theme.palette.background.paper}>
                                         NO
                                     </Typography>
                                 </Button>
@@ -168,6 +151,9 @@ export const MainGameLoop = () => {
                                 </Button>
                             </Grid>
                         </Grid>
+                        <Typography align="center" variant="h5" mt={1}>
+                            ANSWERING ENDS TURN
+                        </Typography>
                     </Card>
                 )}
             </Box>

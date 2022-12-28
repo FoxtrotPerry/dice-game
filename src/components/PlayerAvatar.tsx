@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { alpha, Avatar, Typography, useTheme } from '@mui/material';
-import { Player } from '@context';
+import { Player } from '@types';
 import { Pinging } from '@components';
 
 type PlayerAvatarProps = {

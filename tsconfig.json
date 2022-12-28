@@ -9,7 +9,8 @@
         "@context": ["src/context/"],
         "@context/*": ["src/context/*"],
         "@hooks": ["src/hooks/"],
-        "@hooks/*": ["src/hooks/*"]
+        "@hooks/*": ["src/hooks/*"],
+        "@types": ["src/types"],
     },
     "target": "ESNext",
     "useDefineForClassFields": true,
