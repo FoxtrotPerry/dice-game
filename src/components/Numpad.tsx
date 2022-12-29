@@ -30,7 +30,7 @@ export const Numpad = ({ onNumpadAction, sx }: NumpadProps) => {
                             onClick={() => {
                                 onNumpadAction(Number(n));
                             }}
-                            sx={{ borderRadius: 0 }}
+                            sx={{ borderRadius: 4 }}
                             fullWidth
                         >
                             <Typography variant="h3">{n}</Typography>
@@ -53,7 +53,7 @@ export const Numpad = ({ onNumpadAction, sx }: NumpadProps) => {
                         onClick={() => {
                             onNumpadAction(0);
                         }}
-                        sx={{ borderRadius: 0 }}
+                        sx={{ borderRadius: 4 }}
                         fullWidth
                     >
                         <Typography variant="h3">0</Typography>

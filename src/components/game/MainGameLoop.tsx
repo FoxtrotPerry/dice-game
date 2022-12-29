@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Box, Button, Card, Divider, Grid, Stack, Typography, useTheme } from '@mui/material';
 import { useGameSessionContext } from '@context';
-import { Numpad, NumpadAction, PlayerAvatar } from '@components';
+import { Numpad, NumpadAction, PlayerAvatar, PlayerPositionBadge } from '@components';
 
 export const MainGameLoop = () => {
     const theme = useTheme();
@@ -59,12 +59,11 @@ export const MainGameLoop = () => {
                     height: '100%',
                     width: '100%',
                     display: 'flex',
-                    justifyContent: 'center',
                     alignItems: 'center',
                     flexDirection: 'column',
                 }}
             >
-                <Stack justifyContent="center">
+                <Stack justifyContent="center" width="100%">
                     <div
                         style={{
                             display: 'flex',
@@ -74,14 +73,24 @@ export const MainGameLoop = () => {
                     >
                         {/* TODO: Consider placing the player avatar to the left of the
                             typography as opposed to above it. might help with mobile spacing. */}
-                        <Box sx={{ mb: 1 }}>
-                            <PlayerAvatar player={currentPlayer} />
-                        </Box>
-                        <Typography variant="h4" align="center">
-                            {`${currentPlayer.name}'s turn!`}
-                        </Typography>
+                        <Stack direction="row" alignItems="center">
+                            <Box sx={{ mb: 1 }}>
+                                <PlayerAvatar player={currentPlayer} />
+                            </Box>
+                            <Stack ml={1} height="100%" justifyContent="center">
+                                <Typography variant="h3">{currentPlayer.name}</Typography>
+                                <Stack direction="row" spacing={1}>
+                                    <Box display="flex" alignItems="center" height="100%">
+                                        <PlayerPositionBadge />
+                                    </Box>
+                                    <Typography variant="h4">
+                                        <i>{currentPlayer.score}</i>
+                                    </Typography>
+                                </Stack>
+                            </Stack>
+                        </Stack>
                     </div>
-                    <div>
+                    <div style={{ width: '100%' }}>
                         <Divider sx={{ mb: 1 }}>
                             <Typography variant="button">
                                 <i>ON DECK</i>

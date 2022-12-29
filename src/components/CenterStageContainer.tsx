@@ -16,7 +16,7 @@ export const CenterStageContainer = ({ children }: CenterStageContainerProps) =>
                 flexGrow: 1,
                 justifyContent: 'center',
                 paddingY: theme.spacing(2),
-                paddingX: theme.spacing(3),
+                paddingX: theme.spacing(2),
                 height: '100%',
             }}
         >

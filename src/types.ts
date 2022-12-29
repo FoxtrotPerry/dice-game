@@ -26,6 +26,14 @@ export enum PlayerColor {
     VANILLA = '#E5DBD9',
 }
 
+export enum MedalColors {
+    GOLD = '#FFD700',
+    SILVER = '#C0C0C0',
+    BRONZE = '#CD7F32',
+    // Did Not Place
+    DNP = '#A2A2A2',
+}
+
 export type Player = {
     name: string;
     id: number;

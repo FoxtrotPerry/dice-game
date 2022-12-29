@@ -133,6 +133,8 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         [addPlayers, players]
     );
 
+    // TODO: Check if partial player contains a score attribute and
+    // resort the standings if found.
     const updatePlayer = useCallback(
         (playerId: number, partialPlayer: Partial<Player>) => {
             // passing in an edited version of the players
