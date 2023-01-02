@@ -6,11 +6,12 @@ export enum GameStage {
     /** First stage of the game. Used when deciding whose turn it is first. */
     FIRST_ROLL = 'FIRST_ROLL',
     /** Second stage of the game. Used when normal game is taking place. */
-    MAIN_GAME = 'MAIN_GAME',
+    REGULATION = 'REGULATION',
     /** Final stage of game. Used when every player has one last chance to
      * beat the player who just met or surpassed the winning score threshold.
      */
     FINAL_ROLLS = 'FINAL_ROLLS',
+    GAME_OVER = 'GAME_OVER',
 }
 
 export enum PlayerColor {
@@ -28,7 +29,7 @@ export enum PlayerColor {
 
 export enum MedalColors {
     GOLD = '#FFD700',
-    SILVER = '#C0C0C0',
+    SILVER = '#E0E0F0',
     BRONZE = '#CD7F32',
     // Did Not Place
     DNP = '#A2A2A2',
@@ -38,6 +39,7 @@ export type Player = {
     name: string;
     id: number;
     score: number;
+    place?: number;
     color: PlayerColor;
     onTheBoard: boolean;
     isPlayersTurn: boolean;
@@ -52,6 +54,8 @@ export type GameState = {
 export type GameSessionContext = {
     players: Player[];
     gameState: GameState;
+    firstPlayerPastScoreGoal: Player | undefined;
+    winner: Player | undefined;
     updateGameState: (partialGameState: Partial<GameState>) => void;
     setPlayers: Dispatch<SetStateAction<Player[]>>;
     resetPlayers: () => void;

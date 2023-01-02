@@ -18,7 +18,13 @@ export const PlayerAvatar = ({ player }: PlayerAvatarProps) => {
     }, [player.name]);
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
             <Pinging
                 disabled={!isPlayersTurn}
                 CircularPulseProps={{
@@ -29,8 +35,8 @@ export const PlayerAvatar = ({ player }: PlayerAvatarProps) => {
             >
                 <Avatar
                     sx={{
-                        width: isPlayersTurn ? 100 : 64,
-                        height: isPlayersTurn ? 100 : 64,
+                        width: isPlayersTurn ? theme.spacing(12) : theme.spacing(8),
+                        height: isPlayersTurn ? theme.spacing(12) : theme.spacing(8),
                         fontSize: '2rem',
                         bgcolor: player.color,
                         border: '3px solid #0003',
@@ -38,6 +44,7 @@ export const PlayerAvatar = ({ player }: PlayerAvatarProps) => {
                 >
                     <Typography
                         variant={isPlayersTurn ? 'h2' : 'h4'}
+                        // variant="h4"
                         sx={{ textShadow: '0px 1px 5px #000000aa' }}
                     >
                         {playerInitials}

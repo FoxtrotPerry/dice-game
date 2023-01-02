@@ -1,13 +1,26 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Box, Button, Card, Divider, Grid, Stack, Typography, useTheme } from '@mui/material';
+import {
+    Alert,
+    Box,
+    Button,
+    Card,
+    Divider,
+    Grid,
+    Snackbar,
+    Stack,
+    Typography,
+    useTheme,
+} from '@mui/material';
 import { useGameSessionContext } from '@context';
-import { Numpad, NumpadAction, PlayerAvatar, PlayerPositionBadge } from '@components';
+import { Numpad, NumpadAction, PlayerAvatar, PlayerPlaceBadge } from '@components';
+import { GameStage } from '@types';
 
 export const MainGameLoop = () => {
     const theme = useTheme();
     const gameSession = useGameSessionContext();
     const currentPlayer = gameSession.players[gameSession.gameState.playersTurn];
     const [scoreAddition, setScoreAddition] = useState(0);
+    const [playerOutDismiss, setPlayerOutDismiss] = useState(false);
 
     const onNumpadAction = useCallback(
         (value: number | NumpadAction) => {
@@ -30,11 +43,8 @@ export const MainGameLoop = () => {
     );
 
     const onNotOutOfGateClick = useCallback(() => {
-        gameSession.updatePlayer(currentPlayer.id, {
-            onTheBoard: false,
-        });
         gameSession.endTurn();
-    }, [currentPlayer.id, gameSession]);
+    }, [gameSession]);
 
     const onOutOfGateClick = useCallback(() => {
         gameSession.updatePlayer(currentPlayer.id, {
@@ -71,8 +81,6 @@ export const MainGameLoop = () => {
                             flexDirection: 'column',
                         }}
                     >
-                        {/* TODO: Consider placing the player avatar to the left of the
-                            typography as opposed to above it. might help with mobile spacing. */}
                         <Stack direction="row" alignItems="center">
                             <Box sx={{ mb: 1 }}>
                                 <PlayerAvatar player={currentPlayer} />
@@ -81,7 +89,7 @@ export const MainGameLoop = () => {
                                 <Typography variant="h3">{currentPlayer.name}</Typography>
                                 <Stack direction="row" spacing={1}>
                                     <Box display="flex" alignItems="center" height="100%">
-                                        <PlayerPositionBadge />
+                                        <PlayerPlaceBadge player={currentPlayer} />
                                     </Box>
                                     <Typography variant="h4">
                                         <i>{currentPlayer.score}</i>
@@ -92,23 +100,47 @@ export const MainGameLoop = () => {
                     </div>
                     <div style={{ width: '100%' }}>
                         <Divider sx={{ mb: 1 }}>
-                            <Typography variant="button">
-                                <i>ON DECK</i>
-                            </Typography>
+                            {gameSession.gameState.stage !== GameStage.FINAL_ROLLS ? (
+                                <Typography variant="button">
+                                    <i>ON DECK</i>
+                                </Typography>
+                            ) : (
+                                <Typography variant="button">
+                                    <i>PLAYER TO BEAT</i>
+                                </Typography>
+                            )}
                         </Divider>
                     </div>
-                    <Stack
-                        direction="row"
-                        spacing={gameSession.players.length * (-1 / 2.5)}
-                        justifyContent="center"
-                        sx={{
-                            mb: 1,
-                        }}
-                    >
-                        {playerQueue.map((p) => {
-                            return <PlayerAvatar key={`player-${p.id}`} player={p} />;
-                        })}
-                    </Stack>
+                    {gameSession.gameState.stage === GameStage.FINAL_ROLLS ? (
+                        <Stack direction="row" justifyContent="center" mb={2}>
+                            {gameSession.winner && (
+                                <>
+                                    <PlayerAvatar player={gameSession.winner} />
+                                    <Stack ml={1}>
+                                        <Typography variant="h4">{gameSession.winner.score}</Typography>
+                                        <Typography variant="h6">{`(${
+                                            gameSession.winner.score - currentPlayer.score
+                                        } away)`}</Typography>
+                                    </Stack>
+                                </>
+                            )}
+                        </Stack>
+                    ) : (
+                        <>
+                            <Stack
+                                direction="row"
+                                spacing={gameSession.players.length * (-1 / 2.5)}
+                                justifyContent="center"
+                                sx={{
+                                    mb: 1,
+                                }}
+                            >
+                                {playerQueue.map((p) => {
+                                    return <PlayerAvatar key={`player-${p.id}`} player={p} />;
+                                })}
+                            </Stack>
+                        </>
+                    )}
                 </Stack>
                 {currentPlayer.onTheBoard ? (
                     <>
@@ -120,8 +152,8 @@ export const MainGameLoop = () => {
                                 border: `0.25rem solid ${currentPlayer.color}`,
                             }}
                         >
-                            <Typography variant="h4" align="center">
-                                <i>{`+${scoreAddition}`}</i>
+                            <Typography variant="h3" align="center">
+                                +<i>{`${scoreAddition}`}</i>
                             </Typography>
                         </Card>
                         <Numpad
@@ -130,7 +162,15 @@ export const MainGameLoop = () => {
                         />
                     </>
                 ) : (
-                    <Card variant="elevation" sx={{ borderRadius: 4, maxWidth: 'sm', padding: 2 }}>
+                    <Card
+                        variant="elevation"
+                        sx={{
+                            borderRadius: 4,
+                            maxWidth: 'sm',
+                            padding: 2,
+                            border: `0.25rem solid ${currentPlayer.color}`,
+                        }}
+                    >
                         <Typography align="center" variant="h4">
                             ON THE BOARD?
                         </Typography>
@@ -165,6 +205,10 @@ export const MainGameLoop = () => {
                         </Typography>
                     </Card>
                 )}
+                {/* TODO: Make a toast that alerts that someone surpassed or met the score goal */}
+                <Snackbar>
+                    <Alert />
+                </Snackbar>
             </Box>
         </>
     );

@@ -10,4 +10,4 @@ export * from './ToggleThemeButton';
 export * from './PlayerAvatar';
 export * from './NewGameButton';
 export * from './Numpad';
-export * from './PlayerPositionBadge';
+export * from './PlayerPlaceBadge';

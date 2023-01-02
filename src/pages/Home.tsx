@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@mui/material';
 import { useGameSessionContext } from '@context';
 import { GameStage } from '@types';
-import { InitialDiceRoll, MainGameLoop } from '@components/game';
+import { InitialDiceRoll, MainGameLoop, Victory } from '@components/game';
 import { NewGameButton } from '@components';
 
 export const Home = () => {
@@ -9,8 +9,11 @@ export const Home = () => {
     switch (gameSession.gameState.stage) {
         case GameStage.FIRST_ROLL:
             return <InitialDiceRoll />;
-        case GameStage.MAIN_GAME:
+        case GameStage.REGULATION:
+        case GameStage.FINAL_ROLLS:
             return <MainGameLoop />;
+        case GameStage.GAME_OVER:
+            return <Victory />;
         default:
             return (
                 <Stack justifyContent="center" height="100%">

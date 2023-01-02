@@ -29,7 +29,8 @@ export const InitialDiceRoll = () => {
     const [winner, setWinner] = useState<Player>(gameSession.players[0]);
 
     const onSubmit = () => {
-        gameSession.updateGameState({ playersTurn: winner.id, stage: GameStage.MAIN_GAME });
+        gameSession.updateGameState({ playersTurn: winner.id, stage: GameStage.REGULATION });
+        gameSession.updatePlayer(winner.id, { isPlayersTurn: true });
     };
 
     return (

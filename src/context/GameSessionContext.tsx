@@ -58,6 +58,8 @@ const DEFAULT_GAME_STATE = {
 const GameSessionContextInstance = createContext<GameSessionContext>({
     players: DEFAULT_PLAYERS,
     gameState: DEFAULT_GAME_STATE,
+    firstPlayerPastScoreGoal: undefined,
+    winner: undefined,
     updateGameState: () => {
         throw new Error('How did you manage to use this updateGameState() placeholder function?');
     },
@@ -95,21 +97,36 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
     const c = useContext(GameSessionContextInstance);
     const [players, setPlayers] = useState(c.players);
     const [gameState, setGameState] = useState(c.gameState);
+    const [firstPlayerPastScoreGoal, setFirstPlayerPastScoreGoal] = useState<Player>();
+    const [winner, setWinner] = useState<Player>();
+    //TODO: Allow the user to set a custom goal.
+    const [goal, setGoal] = useState(10000);
 
     const resetPlayers = useCallback(() => {
         setPlayers(DEFAULT_PLAYERS);
     }, [setPlayers]);
 
     const resetGameStateAndScores = useCallback(() => {
-        setPlayers(players.map((p) => ({ ...p, score: 0 })));
+        setPlayers(
+            players.map((p) => ({
+                ...p,
+                score: 0,
+                place: undefined,
+                isPlayersTurn: false,
+            }))
+        );
         setGameState(DEFAULT_GAME_STATE);
     }, [players]);
+
+    const getNextPlayer = useCallback(() => {
+        return players[(gameState.playersTurn + 1) % players.length];
+    }, [gameState.playersTurn, players]);
 
     const addPlayers = useCallback(
         (numOfNewPlayers: number) => {
             const currPlayerLen = players.length;
             const newPlayerAdditions = [...Array(numOfNewPlayers)].map((nothing, i) => {
-                const newPlayerId = currPlayerLen + i;
+                const newPlayerId: number = currPlayerLen + i;
                 return {
                     ...PLAYER_TEMPLATE,
                     name: PLAYER_TEMPLATE.name + (newPlayerId + 1).toString(),
@@ -133,24 +150,37 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         [addPlayers, players]
     );
 
-    // TODO: Check if partial player contains a score attribute and
-    // resort the standings if found.
     const updatePlayer = useCallback(
         (playerId: number, partialPlayer: Partial<Player>) => {
-            // passing in an edited version of the players
-            // array as such to ensure a re-render is provoked
-            setPlayers([
+            let newPlayers = [
                 ...players.slice(0, playerId),
                 { ...players[playerId], ...partialPlayer },
                 ...players.slice(playerId + 1),
-            ]);
+            ];
+            if (partialPlayer.score) {
+                // we make a shallow copy of newPlayers with .slice()
+                // so that sort() doesn't mutate newPlayers
+                const sortedPlayers = newPlayers.slice().sort((a, b) => b.score - a.score);
+                newPlayers = newPlayers.map((p) => {
+                    return {
+                        ...p,
+                        place: sortedPlayers.findIndex((pl) => pl.id === p.id) + 1,
+                    };
+                });
+                // if we're on the final rolls and the updated player
+                // steals first place, then set them as the new winner.
+                if (
+                    gameState.stage === GameStage.FINAL_ROLLS &&
+                    winner &&
+                    partialPlayer.score > winner?.score
+                ) {
+                    setWinner(players[playerId]);
+                }
+            }
+            setPlayers(newPlayers);
         },
-        [players]
+        [gameState.stage, players, winner]
     );
-
-    const endTurn = useCallback(() => {
-        setGameState({ ...gameState, playersTurn: (gameState.playersTurn + 1) % players.length });
-    }, [gameState, players.length]);
 
     const updateGameState = useCallback(
         (partialGameState: Partial<GameState>) => {
@@ -159,24 +189,42 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         [gameState]
     );
 
-    // If the number assigned to the player who's turn it currently is changes,
-    // make sure to update the players to this change is in sync with all players
-    useEffect(() => {
-        setPlayers((players) => {
-            return players.map((p) => {
-                return {
-                    ...p,
-                    isPlayersTurn: p.id === gameState.playersTurn ? true : false,
-                };
+    const endTurn = useCallback(() => {
+        const nextPlayer = getNextPlayer();
+        if (nextPlayer.id === firstPlayerPastScoreGoal?.id) {
+            updateGameState({ stage: GameStage.GAME_OVER });
+        } else {
+            updateGameState({ playersTurn: nextPlayer.id });
+            setPlayers((players) => {
+                return players.map((p) => {
+                    return {
+                        ...p,
+                        isPlayersTurn: p.id === nextPlayer.id ? true : false,
+                    };
+                });
             });
-        });
-    }, [gameState.playersTurn]);
+        }
+    }, [firstPlayerPastScoreGoal?.id, getNextPlayer, updateGameState]);
+
+    // Make sure that we catch when a player goes over the score goal so we can
+    // Notify that the next roll everyone makes will be their last chance to beat
+    // the player in first place
+    useEffect(() => {
+        const outPlayer = players.find((p) => p.score >= goal);
+        if (gameState.stage === GameStage.REGULATION && outPlayer && !firstPlayerPastScoreGoal) {
+            setFirstPlayerPastScoreGoal(outPlayer);
+            updateGameState({ stage: GameStage.FINAL_ROLLS });
+            setWinner(outPlayer);
+        }
+    }, [firstPlayerPastScoreGoal, gameState, getNextPlayer, goal, players, updateGameState]);
 
     return (
         <GameSessionContextInstance.Provider
             value={{
                 players,
                 gameState,
+                firstPlayerPastScoreGoal,
+                winner,
                 updateGameState,
                 setPlayers,
                 resetPlayers,
