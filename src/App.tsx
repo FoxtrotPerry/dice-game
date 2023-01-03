@@ -50,9 +50,9 @@ function App() {
                                 <IconButton size="large" edge="start" onClick={useRouteToHome()}>
                                     <CasinoIcon />
                                 </IconButton>
-                                <Button size="large" onClick={useRouteToGameWizard()}>
+                                {/* <Button size="large" onClick={useRouteToGameWizard()}>
                                     New game
-                                </Button>
+                                </Button> */}
                                 <Button size="large" onClick={useRouteToRules()}>
                                     Rules
                                 </Button>

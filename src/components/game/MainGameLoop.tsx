@@ -4,8 +4,13 @@ import {
     Box,
     Button,
     Card,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     Divider,
     Grid,
+    IconButton,
     Snackbar,
     Stack,
     Typography,
@@ -14,12 +19,15 @@ import {
 import { useGameSessionContext } from '@context';
 import { Numpad, NumpadAction, PlayerAvatar, PlayerPlaceBadge } from '@components';
 import { GameStage } from '@types';
+import { LeaderBoard } from './LeaderBoard';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 
 export const MainGameLoop = () => {
     const theme = useTheme();
     const gameSession = useGameSessionContext();
     const currentPlayer = gameSession.players[gameSession.gameState.playersTurn];
     const [scoreAddition, setScoreAddition] = useState(0);
+    const [showScores, setShowScores] = useState(false);
     const [playerOutDismiss, setPlayerOutDismiss] = useState(false);
 
     const onNumpadAction = useCallback(
@@ -62,6 +70,10 @@ export const MainGameLoop = () => {
         ].reverse();
     }, [gameSession.gameState.playersTurn, gameSession.players]);
 
+    const currentWinner = useMemo(() => {
+        if (gameSession.winnerId !== undefined) return gameSession.players[gameSession.winnerId];
+    }, [gameSession.players, gameSession.winnerId]);
+
     return (
         <>
             <Box
@@ -85,15 +97,28 @@ export const MainGameLoop = () => {
                             <Box sx={{ mb: 1 }}>
                                 <PlayerAvatar player={currentPlayer} />
                             </Box>
-                            <Stack ml={1} height="100%" justifyContent="center">
+                            <Stack ml={1} height="100%" justifyContent="center" width="100%">
                                 <Typography variant="h3">{currentPlayer.name}</Typography>
-                                <Stack direction="row" spacing={1}>
+                                <Stack
+                                    direction="row"
+                                    spacing={1}
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="space-between"
+                                >
                                     <Box display="flex" alignItems="center" height="100%">
                                         <PlayerPlaceBadge player={currentPlayer} />
+                                        <Typography variant="h4" ml={1}>
+                                            <i>{currentPlayer.score}</i>
+                                        </Typography>
                                     </Box>
-                                    <Typography variant="h4">
-                                        <i>{currentPlayer.score}</i>
-                                    </Typography>
+                                    <IconButton
+                                        onClick={() => {
+                                            setShowScores(true);
+                                        }}
+                                    >
+                                        <FormatListNumberedIcon fontSize="large" />
+                                    </IconButton>
                                 </Stack>
                             </Stack>
                         </Stack>
@@ -111,15 +136,15 @@ export const MainGameLoop = () => {
                             )}
                         </Divider>
                     </div>
-                    {gameSession.gameState.stage === GameStage.FINAL_ROLLS ? (
+                    {gameSession.gameState.stage === GameStage.FINAL_ROLLS && currentWinner ? (
                         <Stack direction="row" justifyContent="center" mb={2}>
-                            {gameSession.winner && (
+                            {gameSession.winnerId !== undefined && (
                                 <>
-                                    <PlayerAvatar player={gameSession.winner} />
+                                    <PlayerAvatar player={currentWinner} />
                                     <Stack ml={1}>
-                                        <Typography variant="h4">{gameSession.winner.score}</Typography>
+                                        <Typography variant="h4">{currentWinner.score}</Typography>
                                         <Typography variant="h6">{`(${
-                                            gameSession.winner.score - currentPlayer.score
+                                            currentWinner.score - currentPlayer.score
                                         } away)`}</Typography>
                                     </Stack>
                                 </>
@@ -209,6 +234,22 @@ export const MainGameLoop = () => {
                 <Snackbar>
                     <Alert />
                 </Snackbar>
+                <Dialog open={showScores}>
+                    <DialogTitle>LEADER BOARD</DialogTitle>
+                    <DialogContent>
+                        <LeaderBoard />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            variant="outlined"
+                            onClick={() => {
+                                setShowScores(false);
+                            }}
+                        >
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Box>
         </>
     );

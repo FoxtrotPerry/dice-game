@@ -59,7 +59,7 @@ const GameSessionContextInstance = createContext<GameSessionContext>({
     players: DEFAULT_PLAYERS,
     gameState: DEFAULT_GAME_STATE,
     firstPlayerPastScoreGoal: undefined,
-    winner: undefined,
+    winnerId: undefined,
     updateGameState: () => {
         throw new Error('How did you manage to use this updateGameState() placeholder function?');
     },
@@ -97,8 +97,8 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
     const c = useContext(GameSessionContextInstance);
     const [players, setPlayers] = useState(c.players);
     const [gameState, setGameState] = useState(c.gameState);
-    const [firstPlayerPastScoreGoal, setFirstPlayerPastScoreGoal] = useState<Player>();
-    const [winner, setWinner] = useState<Player>();
+    const [firstPlayerPastScoreGoalId, setFirstPlayerPastScoreGoalId] = useState<number>();
+    const [winnerId, setWinnerId] = useState<number>();
     //TODO: Allow the user to set a custom goal.
     const [goal, setGoal] = useState(10000);
 
@@ -115,6 +115,8 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
                 isPlayersTurn: false,
             }))
         );
+        setWinnerId(undefined);
+        setFirstPlayerPastScoreGoalId(undefined);
         setGameState(DEFAULT_GAME_STATE);
     }, [players]);
 
@@ -171,15 +173,15 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
                 // steals first place, then set them as the new winner.
                 if (
                     gameState.stage === GameStage.FINAL_ROLLS &&
-                    winner &&
-                    partialPlayer.score > winner?.score
+                    winnerId !== undefined &&
+                    partialPlayer.score > players[winnerId]?.score
                 ) {
-                    setWinner(players[playerId]);
+                    setWinnerId(playerId);
                 }
             }
             setPlayers(newPlayers);
         },
-        [gameState.stage, players, winner]
+        [gameState.stage, players, winnerId]
     );
 
     const updateGameState = useCallback(
@@ -191,7 +193,7 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
 
     const endTurn = useCallback(() => {
         const nextPlayer = getNextPlayer();
-        if (nextPlayer.id === firstPlayerPastScoreGoal?.id) {
+        if (nextPlayer.id === firstPlayerPastScoreGoalId) {
             updateGameState({ stage: GameStage.GAME_OVER });
         } else {
             updateGameState({ playersTurn: nextPlayer.id });
@@ -204,27 +206,27 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
                 });
             });
         }
-    }, [firstPlayerPastScoreGoal?.id, getNextPlayer, updateGameState]);
+    }, [firstPlayerPastScoreGoalId, getNextPlayer, updateGameState]);
 
     // Make sure that we catch when a player goes over the score goal so we can
     // Notify that the next roll everyone makes will be their last chance to beat
     // the player in first place
     useEffect(() => {
         const outPlayer = players.find((p) => p.score >= goal);
-        if (gameState.stage === GameStage.REGULATION && outPlayer && !firstPlayerPastScoreGoal) {
-            setFirstPlayerPastScoreGoal(outPlayer);
+        if (gameState.stage === GameStage.REGULATION && outPlayer && !firstPlayerPastScoreGoalId) {
+            setFirstPlayerPastScoreGoalId(outPlayer.id);
             updateGameState({ stage: GameStage.FINAL_ROLLS });
-            setWinner(outPlayer);
+            setWinnerId(outPlayer.id);
         }
-    }, [firstPlayerPastScoreGoal, gameState, getNextPlayer, goal, players, updateGameState]);
+    }, [firstPlayerPastScoreGoalId, gameState, getNextPlayer, goal, players, updateGameState]);
 
     return (
         <GameSessionContextInstance.Provider
             value={{
                 players,
                 gameState,
-                firstPlayerPastScoreGoal,
-                winner,
+                firstPlayerPastScoreGoal: firstPlayerPastScoreGoalId,
+                winnerId: winnerId,
                 updateGameState,
                 setPlayers,
                 resetPlayers,

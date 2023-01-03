@@ -54,8 +54,8 @@ export type GameState = {
 export type GameSessionContext = {
     players: Player[];
     gameState: GameState;
-    firstPlayerPastScoreGoal: Player | undefined;
-    winner: Player | undefined;
+    firstPlayerPastScoreGoal?: number;
+    winnerId?: number;
     updateGameState: (partialGameState: Partial<GameState>) => void;
     setPlayers: Dispatch<SetStateAction<Player[]>>;
     resetPlayers: () => void;

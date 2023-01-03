@@ -55,7 +55,7 @@ export const PlayerInput = ({ player }: PlayerInputProps) => {
                     }}
                     label={<Typography>{`Player ${player.id + 1}`}</Typography>}
                     variant="standard"
-                    sx={{ mb: 1 }}
+                    sx={{ mb: 0.5 }}
                     fullWidth
                 />
             </Box>
