@@ -13,7 +13,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { Footer } from '@components';
+import { Footer, NumberedListItem } from '@components';
 import { useGameSessionContext } from '@context';
 import { GameStage, Player } from '@types';
 
@@ -62,12 +62,9 @@ export const InitialDiceRoll = () => {
                 >
                     <List>
                         {steps.map((step, i) => (
-                            <ListItem key={`initial-roll-instruction-${i}`}>
-                                <Avatar sx={{ bgcolor: theme.palette.secondary.dark, mr: 2 }}>
-                                    <Typography color="primary">{i + 1}</Typography>
-                                </Avatar>
-                                <ListItemText primary={<Typography>{step}</Typography>} />
-                            </ListItem>
+                            <NumberedListItem num={i + 1} key={`initial-roll-instruction-${i}`}>
+                                {step}
+                            </NumberedListItem>
                         ))}
                     </List>
                     <TextField

@@ -58,22 +58,22 @@ export const GameWizard = () => {
                 {players.map((player) => {
                     return <PlayerInput key={`player-input-${player.id}`} player={player} />;
                 })}
+                <Box display="flex" justifyContent="center" mt={2}>
+                    <Button
+                        onClick={() => {
+                            updateGameState({ stage: GameStage.FIRST_ROLL });
+                            routeToHome();
+                        }}
+                        variant="contained"
+                        size="large"
+                    >
+                        <Stack direction="row" spacing={1}>
+                            <Typography alignItems="center">{`Let's Roll`}</Typography>
+                            <CasinoIcon />
+                        </Stack>
+                    </Button>
+                </Box>
             </Box>
-            <Footer>
-                <Button
-                    onClick={() => {
-                        updateGameState({ stage: GameStage.FIRST_ROLL });
-                        routeToHome();
-                    }}
-                    variant="contained"
-                    size="large"
-                >
-                    <Stack direction="row" spacing={1}>
-                        <Typography alignItems="center">{`Let's Roll`}</Typography>
-                        <CasinoIcon />
-                    </Stack>
-                </Button>
-            </Footer>
         </>
     );
 };
