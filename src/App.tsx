@@ -2,9 +2,10 @@ import { useRoutes } from 'react-router-dom';
 import { AppBar, Button, CssBaseline, IconButton, Stack, Toolbar } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { AppBoundaryContainer, CenterStageContainer, ToggleThemeButton } from './components';
-import { useRouteToGameWizard, useRouteToHome, useRouteToRules } from './hooks';
-import { GameSessionContextProvider, usePreferenceContext } from './context';
+import { useRouteToHome, useRouteToRules } from './hooks';
+import { usePreferenceContext } from './context';
 import { GameWizard, Home, Rules } from './pages';
+import { ShowScoreBoardButton } from '@components/ShowScoresButton';
 
 import CasinoIcon from '@mui/icons-material/Casino';
 
@@ -16,6 +17,7 @@ export enum ValidRoutes {
 
 function App() {
     const { theme } = usePreferenceContext();
+
     const content = useRoutes([
         {
             path: ValidRoutes.HOME,
@@ -50,9 +52,6 @@ function App() {
                                 <IconButton size="large" edge="start" onClick={useRouteToHome()}>
                                     <CasinoIcon />
                                 </IconButton>
-                                {/* <Button size="large" onClick={useRouteToGameWizard()}>
-                                    New game
-                                </Button> */}
                                 <Button size="large" onClick={useRouteToRules()}>
                                     Rules
                                 </Button>
@@ -60,13 +59,14 @@ function App() {
                                     About
                                 </Button>
                             </div>
-                            <ToggleThemeButton />
+                            <div>
+                                <ShowScoreBoardButton />
+                                <ToggleThemeButton />
+                            </div>
                         </Stack>
                     </Toolbar>
                 </AppBar>
-                <CenterStageContainer>
-                    <GameSessionContextProvider>{content}</GameSessionContextProvider>
-                </CenterStageContainer>
+                <CenterStageContainer>{content}</CenterStageContainer>
             </AppBoundaryContainer>
         </ThemeProvider>
     );

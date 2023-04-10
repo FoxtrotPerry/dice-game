@@ -44,7 +44,6 @@ export const PlayerAvatar = ({ player }: PlayerAvatarProps) => {
                 >
                     <Typography
                         variant={isPlayersTurn ? 'h2' : 'h4'}
-                        // variant="h4"
                         sx={{ textShadow: '0px 1px 5px #000000aa' }}
                     >
                         {playerInitials}

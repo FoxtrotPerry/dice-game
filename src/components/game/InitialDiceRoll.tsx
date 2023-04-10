@@ -1,18 +1,5 @@
 import { useState } from 'react';
-import {
-    Avatar,
-    Box,
-    Button,
-    Chip,
-    Divider,
-    List,
-    ListItem,
-    ListItemText,
-    MenuItem,
-    TextField,
-    Typography,
-    useTheme,
-} from '@mui/material';
+import { Box, Button, Chip, Divider, List, MenuItem, TextField, Typography } from '@mui/material';
 import { Footer, NumberedListItem } from '@components';
 import { useGameSessionContext } from '@context';
 import { GameStage, Player } from '@types';
@@ -24,7 +11,6 @@ const steps = [
 ];
 
 export const InitialDiceRoll = () => {
-    const theme = useTheme();
     const gameSession = useGameSessionContext();
     const [winner, setWinner] = useState<Player>(gameSession.players[0]);
 

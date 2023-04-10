@@ -6,7 +6,21 @@ import {
     GiDiceSixFacesThree,
     GiDiceSixFacesTwo,
 } from 'react-icons/gi';
-import { Box, Divider, List, ListItem, Typography, useTheme } from '@mui/material';
+import {
+    Box,
+    Divider,
+    List,
+    ListItem,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography,
+    useTheme,
+} from '@mui/material';
 import { ReactNode, useMemo } from 'react';
 import { Stack } from '@mui/system';
 import { NumberedListItem } from '@components/NumberedListItem';
@@ -18,6 +32,20 @@ const BulletPoint = ({ children }: { children: ReactNode }) => {
             <ChevronRightIcon fontSize="large" />
             <Typography>{children}</Typography>
         </ListItem>
+    );
+};
+
+const ScoreRow = ({ type, example, points }: { type: string; example: ReactNode; points: number }) => {
+    return (
+        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+            <TableCell component="th" scope="row">
+                <Typography variant="h6">{type}</Typography>
+            </TableCell>
+            <TableCell align="left">{example}</TableCell>
+            <TableCell align="left">
+                <Typography variant="h6">{points}</Typography>
+            </TableCell>
+        </TableRow>
     );
 };
 
@@ -65,18 +93,15 @@ export const Rules = () => {
                     <u>How to Play</u>
                 </Typography>
                 <Typography variant="h6" align="center">
-                    Each player&apos;s game is broken up into three main components:
+                    The game is broken up into three parts:
                 </Typography>
                 <List>
                     <NumberedListItem num={1}>
                         <Stack>{`Getting "on the board".`}</Stack>
                     </NumberedListItem>
-                    <NumberedListItem num={2}>
-                        Earn points on your way towards the score goal.
-                    </NumberedListItem>
+                    <NumberedListItem num={2}>Earning points.</NumberedListItem>
                     <NumberedListItem num={3}>
-                        Surpass or meet the score goal (and hope no one beats your score on their last
-                        roll).
+                        Getting to the score goal before everyone else.
                     </NumberedListItem>
                 </List>
                 <Typography variant="h5" align="center">
@@ -117,13 +142,122 @@ export const Rules = () => {
                     and a four, then you can only choose to roll the one remaining die.`}
                 </BulletPoint>
                 <Typography variant="h5" align="center" mt={2}>
-                    <u>{`Passing the Score Goal`}</u>
+                    <u>{`Getting to the Score Goal`}</u>
                 </Typography>
                 <Typography variant="h5" align="center" mt={2}>
                     <u>{`Scoring Rolls`}</u>
                 </Typography>
             </Box>
             <Divider sx={{ mb: 1 }} />
+            <Box my={1}>
+                <TableContainer component={Paper} sx={{ width: 'auto' }}>
+                    <Table sx={{ width: 'auto', marginLeft: 'auto', marginRight: 'auto' }}>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Name</TableCell>
+                                <TableCell align="left">Roll</TableCell>
+                                <TableCell align="left">Points</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <ScoreRow
+                                type="Straight"
+                                example={
+                                    <>
+                                        {One}
+                                        {Two}
+                                        {Three}
+                                        {Four}
+                                        {Five}
+                                    </>
+                                }
+                                points={1250}
+                            />
+                            <ScoreRow
+                                type="Straight"
+                                example={
+                                    <>
+                                        {Two}
+                                        {Three}
+                                        {Four}
+                                        {Five}
+                                        {Six}
+                                    </>
+                                }
+                                points={1250}
+                            />
+                            <ScoreRow
+                                type="Trio of 1s"
+                                example={
+                                    <>
+                                        {One}
+                                        {One}
+                                        {One}
+                                    </>
+                                }
+                                points={1100}
+                            />
+                            <ScoreRow
+                                type="Trio of 6s"
+                                example={
+                                    <>
+                                        {Six}
+                                        {Six}
+                                        {Six}
+                                    </>
+                                }
+                                points={600}
+                            />
+                            <ScoreRow
+                                type="Trio of 5s"
+                                example={
+                                    <>
+                                        {Five}
+                                        {Five}
+                                        {Five}
+                                    </>
+                                }
+                                points={500}
+                            />
+                            <ScoreRow
+                                type="Trio of 4s"
+                                example={
+                                    <>
+                                        {Four}
+                                        {Four}
+                                        {Four}
+                                    </>
+                                }
+                                points={400}
+                            />
+                            <ScoreRow
+                                type="Trio of 3s"
+                                example={
+                                    <>
+                                        {Three}
+                                        {Three}
+                                        {Three}
+                                    </>
+                                }
+                                points={300}
+                            />
+                            <ScoreRow
+                                type="Trio of 2s"
+                                example={
+                                    <>
+                                        {Two}
+                                        {Two}
+                                        {Two}
+                                    </>
+                                }
+                                points={200}
+                            />
+                            <ScoreRow type="Single One" example={<>{One}</>} points={100} />
+                            <ScoreRow type="Single Five" example={<>{Five}</>} points={50} />
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Box>
         </Stack>
     );
 };

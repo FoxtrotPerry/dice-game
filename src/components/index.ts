@@ -12,3 +12,4 @@ export * from './NewGameButton';
 export * from './Numpad';
 export * from './PlayerPlaceBadge';
 export * from './NumberedListItem';
+export * from './ShowScoresButton';

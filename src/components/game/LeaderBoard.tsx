@@ -50,9 +50,6 @@ export const LeaderBoard = () => {
                                     <Typography variant="h4">{p.place}</Typography>
                                 )}
                             </TableCell>
-                            <TableCell align="left" padding="checkbox">
-                                <ListItemText secondary={p.score} />
-                            </TableCell>
                             <TableCell align="right" sx={{ paddingY: 0.5 }}>
                                 <Typography
                                     variant="h4"
@@ -65,6 +62,9 @@ export const LeaderBoard = () => {
                                 >
                                     {p.name}
                                 </Typography>
+                            </TableCell>
+                            <TableCell align="left" padding="checkbox">
+                                <ListItemText primary={p.score} />
                             </TableCell>
                         </TableRow>
                     ))}

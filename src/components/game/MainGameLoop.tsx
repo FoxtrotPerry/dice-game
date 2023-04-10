@@ -4,13 +4,8 @@ import {
     Box,
     Button,
     Card,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
     Divider,
     Grid,
-    IconButton,
     Snackbar,
     Stack,
     Typography,
@@ -19,16 +14,13 @@ import {
 import { useGameSessionContext } from '@context';
 import { Numpad, NumpadAction, PlayerAvatar, PlayerPlaceBadge } from '@components';
 import { GameStage } from '@types';
-import { LeaderBoard } from './LeaderBoard';
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import { GoBackOneTurnButton } from '@components/GoBackOneTurnButton';
 
 export const MainGameLoop = () => {
     const theme = useTheme();
     const gameSession = useGameSessionContext();
     const currentPlayer = gameSession.players[gameSession.gameState.playersTurn];
     const [scoreAddition, setScoreAddition] = useState(0);
-    const [showScores, setShowScores] = useState(false);
-    const [playerOutDismiss, setPlayerOutDismiss] = useState(false);
 
     const onNumpadAction = useCallback(
         (value: number | NumpadAction) => {
@@ -37,11 +29,20 @@ export const MainGameLoop = () => {
                     setScoreAddition(0);
                     break;
                 case NumpadAction.END_TURN:
-                    gameSession.updatePlayer(currentPlayer.id, {
-                        score: currentPlayer.score + scoreAddition,
-                    });
-                    setScoreAddition(0);
-                    gameSession.endTurn();
+                    {
+                        const newScore = currentPlayer.score + scoreAddition;
+                        gameSession.updatePlayer(currentPlayer.id, {
+                            score: newScore,
+                        });
+                        gameSession.addTurnResult({
+                            id: currentPlayer.id,
+                            onTheBoard: currentPlayer.onTheBoard,
+                            score: newScore,
+                            place: currentPlayer.place,
+                        });
+                        setScoreAddition(0);
+                        gameSession.endTurn();
+                    }
                     break;
                 default:
                     setScoreAddition((curr) => Number(curr.toString() + value.toString()));
@@ -112,13 +113,7 @@ export const MainGameLoop = () => {
                                             <i>{currentPlayer.score}</i>
                                         </Typography>
                                     </Box>
-                                    <IconButton
-                                        onClick={() => {
-                                            setShowScores(true);
-                                        }}
-                                    >
-                                        <FormatListNumberedIcon fontSize="large" />
-                                    </IconButton>
+                                    <GoBackOneTurnButton />
                                 </Stack>
                             </Stack>
                         </Stack>
@@ -234,22 +229,6 @@ export const MainGameLoop = () => {
                 <Snackbar>
                     <Alert />
                 </Snackbar>
-                <Dialog open={showScores}>
-                    <DialogTitle>LEADER BOARD</DialogTitle>
-                    <DialogContent>
-                        <LeaderBoard />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button
-                            variant="outlined"
-                            onClick={() => {
-                                setShowScores(false);
-                            }}
-                        >
-                            Close
-                        </Button>
-                    </DialogActions>
-                </Dialog>
             </Box>
         </>
     );

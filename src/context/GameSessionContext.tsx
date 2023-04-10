@@ -1,6 +1,13 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 
-import { GameSessionContext, GameStage, GameState, Player, PlayerColor } from '@types';
+import {
+    GameSessionContext,
+    GameStage,
+    GameState,
+    Player,
+    PlayerColor,
+    PlayerTurnResult,
+} from '@types';
 
 type GameSessionContextProps = {
     children: ReactNode;
@@ -51,6 +58,14 @@ const DEFAULT_GAME_STATE = {
     playersTurn: 0,
 };
 
+const throwPrematureExecutionError = (funcName: string) => {
+    return () => {
+        throw new Error(
+            `Placeholder ${funcName} function used before proper instantiation. Check where you have used ${funcName}.`
+        );
+    };
+};
+
 /*
     We instantiate the functions to dummy functions that way we don't need to do undefined checks later
     when we go to actually use the real thing.
@@ -60,29 +75,15 @@ const GameSessionContextInstance = createContext<GameSessionContext>({
     gameState: DEFAULT_GAME_STATE,
     firstPlayerPastScoreGoal: undefined,
     winnerId: undefined,
-    updateGameState: () => {
-        throw new Error('How did you manage to use this updateGameState() placeholder function?');
-    },
-    setPlayers: () => {
-        throw new Error('How did you manage to use this setPlayers() placeholder function?');
-    },
-    resetPlayers: () => {
-        throw new Error('How did you manage to use this resetPlayers() placeholder function?');
-    },
-    resetGameStateAndScores: () => {
-        throw new Error(
-            'How did you manage to use this resetGameStateAndScores() placeholder function?'
-        );
-    },
-    changeNumOfPlayers: () => {
-        throw new Error('How did you manage to use this changeNumOfPlayers() placeholder function?');
-    },
-    updatePlayer: () => {
-        throw new Error('How did you manage to use this updatePlayer() placeholder function?');
-    },
-    endTurn: () => {
-        throw new Error('How did you manage to use this endTurn() placeholder function?');
-    },
+    updateGameState: throwPrematureExecutionError('updateGameState'),
+    setPlayers: throwPrematureExecutionError('setPlayers'),
+    resetPlayers: throwPrematureExecutionError('resetPlayers'),
+    resetGameStateAndScores: throwPrematureExecutionError('resetGameStateAndScores'),
+    changeNumOfPlayers: throwPrematureExecutionError('changeNumOfPlayers'),
+    updatePlayer: throwPrematureExecutionError('updatePlayer'),
+    endTurn: throwPrematureExecutionError('endTurn'),
+    goBackOneTurn: throwPrematureExecutionError('goBackOneTurn'),
+    addTurnResult: throwPrematureExecutionError('addTurnResult'),
 });
 
 export const useGameSessionContext = () => {
@@ -96,6 +97,8 @@ export const useGameSessionContext = () => {
 export const GameSessionContextProvider = ({ children }: GameSessionContextProps) => {
     const c = useContext(GameSessionContextInstance);
     const [players, setPlayers] = useState(c.players);
+    // List of player states after turn at index was completed
+    const [turnResults, setTurnResults] = useState<PlayerTurnResult[]>([]);
     const [gameState, setGameState] = useState(c.gameState);
     const [firstPlayerPastScoreGoalId, setFirstPlayerPastScoreGoalId] = useState<number>();
     const [winnerId, setWinnerId] = useState<number>();
@@ -113,15 +116,21 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
                 score: 0,
                 place: undefined,
                 isPlayersTurn: false,
+                onTheBoard: false,
             }))
         );
         setWinnerId(undefined);
         setFirstPlayerPastScoreGoalId(undefined);
         setGameState(DEFAULT_GAME_STATE);
+        setTurnResults([]);
     }, [players]);
 
     const getNextPlayer = useCallback(() => {
         return players[(gameState.playersTurn + 1) % players.length];
+    }, [gameState.playersTurn, players]);
+
+    const getPreviousPlayer = useCallback(() => {
+        return players.at(gameState.playersTurn - 1);
     }, [gameState.playersTurn, players]);
 
     const addPlayers = useCallback(
@@ -191,22 +200,46 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         [gameState]
     );
 
+    const makePlayersTurn = useCallback((playerId: Player['id']) => {
+        setPlayers((players) => {
+            return players.map((p) => {
+                return {
+                    ...p,
+                    isPlayersTurn: p.id === playerId ? true : false,
+                };
+            });
+        });
+    }, []);
+
+    const addTurnResult = useCallback((newTurnResult: PlayerTurnResult) => {
+        setTurnResults((currentTurnResults) => {
+            return [...currentTurnResults, newTurnResult];
+        });
+    }, []);
+
+    const removeLastTurnResult = useCallback(() => {
+        setTurnResults((currentTurnResults) => {
+            return currentTurnResults.slice(0, -1);
+        });
+    }, []);
+
+    const goBackOneTurn = useCallback(() => {
+        const previousPlayer = getPreviousPlayer();
+        if (!previousPlayer) throw new Error('Could not find previous player when going back a turn');
+        updateGameState({ playersTurn: previousPlayer.id });
+        makePlayersTurn(previousPlayer.id);
+        removeLastTurnResult();
+    }, [getPreviousPlayer, makePlayersTurn, removeLastTurnResult, updateGameState]);
+
     const endTurn = useCallback(() => {
         const nextPlayer = getNextPlayer();
         if (nextPlayer.id === firstPlayerPastScoreGoalId) {
             updateGameState({ stage: GameStage.GAME_OVER });
         } else {
             updateGameState({ playersTurn: nextPlayer.id });
-            setPlayers((players) => {
-                return players.map((p) => {
-                    return {
-                        ...p,
-                        isPlayersTurn: p.id === nextPlayer.id ? true : false,
-                    };
-                });
-            });
+            makePlayersTurn(nextPlayer.id);
         }
-    }, [firstPlayerPastScoreGoalId, getNextPlayer, updateGameState]);
+    }, [firstPlayerPastScoreGoalId, getNextPlayer, makePlayersTurn, updateGameState]);
 
     // Make sure that we catch when a player goes over the score goal so we can
     // Notify that the next roll everyone makes will be their last chance to beat
@@ -234,6 +267,8 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
                 changeNumOfPlayers,
                 updatePlayer,
                 endTurn,
+                goBackOneTurn,
+                addTurnResult,
             }}
         >
             {children}

@@ -45,6 +45,8 @@ export type Player = {
     isPlayersTurn: boolean;
 };
 
+export type PlayerTurnResult = Pick<Player, 'id' | 'onTheBoard' | 'place' | 'score'>;
+
 export type GameState = {
     stage: GameStage;
     gameInProgress: boolean;
@@ -63,4 +65,6 @@ export type GameSessionContext = {
     changeNumOfPlayers: (n: number) => void;
     updatePlayer: (id: number, partial: Partial<Player>) => void;
     endTurn: () => void;
+    goBackOneTurn: () => void;
+    addTurnResult: (result: PlayerTurnResult) => void;
 };
