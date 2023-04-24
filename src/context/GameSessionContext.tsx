@@ -24,31 +24,34 @@ export const playerColorOptions = Object.entries(PlayerColor).map(([label, color
     };
 });
 
+const PLAYER_SCORE_FIELDS: Pick<Player, 'score' | 'scoreHistory' | 'onTheBoard'> = {
+    score: 0,
+    scoreHistory: [],
+    onTheBoard: false,
+};
+
 const PLAYER_TEMPLATE: Player = {
     id: 0,
     name: 'Player ',
-    score: 0,
     color: PlayerColor.SLATE,
-    onTheBoard: false,
     isPlayersTurn: false,
+    ...PLAYER_SCORE_FIELDS,
 };
 
 const DEFAULT_PLAYERS: Player[] = [
     {
         id: 0,
         name: 'Player 1',
-        score: 0,
         color: Object.values(PlayerColor)[0],
-        onTheBoard: false,
         isPlayersTurn: false,
+        ...PLAYER_SCORE_FIELDS,
     },
     {
         id: 1,
         name: 'Player 2',
-        score: 0,
         color: Object.values(PlayerColor)[1],
-        onTheBoard: false,
         isPlayersTurn: false,
+        ...PLAYER_SCORE_FIELDS,
     },
 ];
 
@@ -73,6 +76,7 @@ const throwPrematureExecutionError = (funcName: string) => {
 const GameSessionContextInstance = createContext<GameSessionContext>({
     players: DEFAULT_PLAYERS,
     gameState: DEFAULT_GAME_STATE,
+    turnResults: [],
     firstPlayerPastScoreGoal: undefined,
     winnerId: undefined,
     updateGameState: throwPrematureExecutionError('updateGameState'),
@@ -82,7 +86,7 @@ const GameSessionContextInstance = createContext<GameSessionContext>({
     changeNumOfPlayers: throwPrematureExecutionError('changeNumOfPlayers'),
     updatePlayer: throwPrematureExecutionError('updatePlayer'),
     endTurn: throwPrematureExecutionError('endTurn'),
-    goBackOneTurn: throwPrematureExecutionError('goBackOneTurn'),
+    undoLastTurn: throwPrematureExecutionError('undoLastTurn'),
     addTurnResult: throwPrematureExecutionError('addTurnResult'),
 });
 
@@ -124,6 +128,10 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         setGameState(DEFAULT_GAME_STATE);
         setTurnResults([]);
     }, [players]);
+
+    const getCurrentPlayer = useCallback(() => {
+        return players[gameState.playersTurn];
+    }, [gameState.playersTurn, players]);
 
     const getNextPlayer = useCallback(() => {
         return players[(gameState.playersTurn + 1) % players.length];
@@ -223,33 +231,87 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         });
     }, []);
 
-    const goBackOneTurn = useCallback(() => {
+    const undoLastTurn = useCallback(() => {
         const previousPlayer = getPreviousPlayer();
         if (!previousPlayer) throw new Error('Could not find previous player when going back a turn');
         updateGameState({ playersTurn: previousPlayer.id });
-        makePlayersTurn(previousPlayer.id);
-        removeLastTurnResult();
-    }, [getPreviousPlayer, makePlayersTurn, removeLastTurnResult, updateGameState]);
+        // Get the previous player's last turn entry
+        const previousPlayersLastTurnEntry = previousPlayer.scoreHistory.at(-1);
+        // Make a new partial player state instantiated with default score fields
+        const rolledBackPreviousPlayerState = PLAYER_SCORE_FIELDS;
+        // If the previous player's last turn entry exists...
+        if (previousPlayersLastTurnEntry !== undefined) {
+            // ...then use it to inform us of what the previous player's state should be
 
-    const endTurn = useCallback(() => {
-        const nextPlayer = getNextPlayer();
-        if (nextPlayer.id === firstPlayerPastScoreGoalId) {
-            updateGameState({ stage: GameStage.GAME_OVER });
-        } else {
-            updateGameState({ playersTurn: nextPlayer.id });
-            makePlayersTurn(nextPlayer.id);
+            // ON THE BOARD
+            // If the previous player's last turn entry was spent getting on the board
+            if (previousPlayersLastTurnEntry.gotOnTheBoardThisTurn) {
+                // then set the player's onTheBoard field to false because regardless of whether
+                // the player successfully made it on the board, that result is now retracted.
+                rolledBackPreviousPlayerState.onTheBoard = false;
+            } else {
+                // Otherwise, retain the previous player's onTheBoard state
+                rolledBackPreviousPlayerState.onTheBoard = previousPlayer.onTheBoard;
+            }
+
+            // SCORE
+            rolledBackPreviousPlayerState.score =
+                previousPlayersLastTurnEntry.total - previousPlayersLastTurnEntry.earned;
+
+            // LAST TURN ENTRY
+            rolledBackPreviousPlayerState.scoreHistory = previousPlayer.scoreHistory.slice(0, -1) ?? [];
         }
-    }, [firstPlayerPastScoreGoalId, getNextPlayer, makePlayersTurn, updateGameState]);
+        updatePlayer(previousPlayer.id, rolledBackPreviousPlayerState);
+        removeLastTurnResult();
+        makePlayersTurn(previousPlayer.id);
+    }, [getPreviousPlayer, makePlayersTurn, removeLastTurnResult, updateGameState, updatePlayer]);
+
+    const endTurn = useCallback(
+        (turnResult: PlayerTurnResult) => {
+            addTurnResult(turnResult);
+            const nextPlayer = getNextPlayer();
+            updatePlayer(turnResult.playerId, {
+                ...turnResult.playerUpdate,
+                scoreHistory: [...getCurrentPlayer().scoreHistory, turnResult.turnEntry],
+            });
+            if (nextPlayer.id === firstPlayerPastScoreGoalId) {
+                updateGameState({ stage: GameStage.GAME_OVER });
+            } else {
+                updateGameState({ playersTurn: nextPlayer.id });
+                makePlayersTurn(nextPlayer.id);
+            }
+        },
+        [
+            addTurnResult,
+            firstPlayerPastScoreGoalId,
+            getCurrentPlayer,
+            getNextPlayer,
+            makePlayersTurn,
+            updateGameState,
+            updatePlayer,
+        ]
+    );
 
     // Make sure that we catch when a player goes over the score goal so we can
     // Notify that the next roll everyone makes will be their last chance to beat
     // the player in first place
     useEffect(() => {
         const outPlayer = players.find((p) => p.score >= goal);
+        // If we're in the regulation stage and a player goes over the score goal
         if (gameState.stage === GameStage.REGULATION && outPlayer && !firstPlayerPastScoreGoalId) {
+            // then set the first player to go over the score goal
+            // and move to the final rolls stage
             setFirstPlayerPastScoreGoalId(outPlayer.id);
             updateGameState({ stage: GameStage.FINAL_ROLLS });
             setWinnerId(outPlayer.id);
+        } else if (
+            gameState.stage === GameStage.FINAL_ROLLS &&
+            !outPlayer &&
+            firstPlayerPastScoreGoalId
+        ) {
+            setFirstPlayerPastScoreGoalId(undefined);
+            updateGameState({ stage: GameStage.REGULATION });
+            setWinnerId(undefined);
         }
     }, [firstPlayerPastScoreGoalId, gameState, getNextPlayer, goal, players, updateGameState]);
 
@@ -258,6 +320,7 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
             value={{
                 players,
                 gameState,
+                turnResults,
                 firstPlayerPastScoreGoal: firstPlayerPastScoreGoalId,
                 winnerId: winnerId,
                 updateGameState,
@@ -267,7 +330,7 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
                 changeNumOfPlayers,
                 updatePlayer,
                 endTurn,
-                goBackOneTurn,
+                undoLastTurn,
                 addTurnResult,
             }}
         >

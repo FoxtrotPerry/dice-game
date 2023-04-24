@@ -5,9 +5,10 @@ import { Pinging } from '@components';
 
 type PlayerAvatarProps = {
     player: Player;
+    style?: React.CSSProperties;
 };
 
-export const PlayerAvatar = ({ player }: PlayerAvatarProps) => {
+export const PlayerAvatar = ({ player, style }: PlayerAvatarProps) => {
     const theme = useTheme();
     const { isPlayersTurn } = player;
 
@@ -23,6 +24,7 @@ export const PlayerAvatar = ({ player }: PlayerAvatarProps) => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
+                ...style,
             }}
         >
             <Pinging

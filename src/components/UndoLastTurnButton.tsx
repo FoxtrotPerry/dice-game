@@ -13,10 +13,10 @@ import { useGameSessionContext } from '@context/GameSessionContext';
 
 import UndoRoundedIcon from '@mui/icons-material/UndoRounded';
 
-export const GoBackOneTurnButton = () => {
+export const UndoLastTurnButton = () => {
     const [showGoBackTurnDialog, setShowGoBackTurnDialog] = useState(false);
 
-    const { goBackOneTurn } = useGameSessionContext();
+    const { undoLastTurn, turnResults } = useGameSessionContext();
 
     return (
         <>
@@ -25,6 +25,7 @@ export const GoBackOneTurnButton = () => {
                     setShowGoBackTurnDialog(true);
                 }}
                 sx={{ border: '3px solid #3337' }}
+                disabled={turnResults.length === 0}
             >
                 <UndoRoundedIcon />
             </IconButton>
@@ -56,7 +57,7 @@ export const GoBackOneTurnButton = () => {
                                 variant="contained"
                                 color="error"
                                 onClick={() => {
-                                    goBackOneTurn();
+                                    undoLastTurn();
                                     setShowGoBackTurnDialog(false);
                                 }}
                                 fullWidth

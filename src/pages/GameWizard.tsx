@@ -8,7 +8,6 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { Footer } from '@components';
 import { PlayerInput } from '@components/input';
 import { useGameSessionContext } from '@context';
 import { GameStage } from '@types';

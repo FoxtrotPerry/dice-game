@@ -4,7 +4,7 @@ import { GameStage } from '@types';
 import { LeaderBoard } from './game';
 import { useGameSessionContext } from '@context/GameSessionContext';
 
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 export const ShowScoreBoardButton = () => {
     const session = useGameSessionContext();
@@ -18,7 +18,7 @@ export const ShowScoreBoardButton = () => {
                 }}
                 disabled={session.gameState.stage === GameStage.SETUP}
             >
-                <FormatListNumberedIcon />
+                <EmojiEventsIcon />
             </IconButton>
             <Dialog
                 open={showScores}

@@ -35,17 +35,39 @@ export enum MedalColors {
     DNP = '#A2A2A2',
 }
 
+export type TurnEntry = {
+    /**
+     * The points the player earned this turn.
+     */
+    earned: number;
+    /**
+     * The total score the player has after this turn.
+     */
+    total: number;
+    /**
+     * Whether or not the player got on the board this turn.
+     */
+    gotOnTheBoardThisTurn?: boolean;
+};
+
 export type Player = {
     name: string;
     id: number;
     score: number;
+    scoreHistory: TurnEntry[];
     place?: number;
     color: PlayerColor;
     onTheBoard: boolean;
     isPlayersTurn: boolean;
 };
 
-export type PlayerTurnResult = Pick<Player, 'id' | 'onTheBoard' | 'place' | 'score'>;
+export type PartialPlayerUpdate = Partial<Pick<Player, 'id' | 'onTheBoard' | 'place' | 'score'>>;
+
+export type PlayerTurnResult = {
+    playerId: number;
+    playerUpdate?: PartialPlayerUpdate;
+    turnEntry: TurnEntry;
+};
 
 export type GameState = {
     stage: GameStage;
@@ -56,6 +78,7 @@ export type GameState = {
 export type GameSessionContext = {
     players: Player[];
     gameState: GameState;
+    turnResults: PlayerTurnResult[];
     firstPlayerPastScoreGoal?: number;
     winnerId?: number;
     updateGameState: (partialGameState: Partial<GameState>) => void;
@@ -64,7 +87,7 @@ export type GameSessionContext = {
     resetGameStateAndScores: () => void;
     changeNumOfPlayers: (n: number) => void;
     updatePlayer: (id: number, partial: Partial<Player>) => void;
-    endTurn: () => void;
-    goBackOneTurn: () => void;
+    endTurn: (playerTurnResult: PlayerTurnResult) => void;
+    undoLastTurn: () => void;
     addTurnResult: (result: PlayerTurnResult) => void;
 };

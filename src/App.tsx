@@ -8,6 +8,7 @@ import { GameWizard, Home, Rules } from './pages';
 import { ShowScoreBoardButton } from '@components/ShowScoresButton';
 
 import CasinoIcon from '@mui/icons-material/Casino';
+import { ShowRecentTurnsButton } from '@components/ShowRecentTurnsButton';
 
 export enum ValidRoutes {
     HOME = '/',
@@ -60,6 +61,7 @@ function App() {
                                 </Button>
                             </div>
                             <div>
+                                <ShowRecentTurnsButton />
                                 <ShowScoreBoardButton />
                                 <ToggleThemeButton />
                             </div>
