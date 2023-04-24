@@ -12,9 +12,8 @@ import {
     useTheme,
 } from '@mui/material';
 import { useGameSessionContext } from '@context';
-import { Numpad, NumpadAction, PlayerAvatar, PlayerPlaceBadge } from '@components';
+import { Numpad, NumpadAction, PlayerAvatar, PlayerPlaceBadge, UndoLastTurnButton } from '@components';
 import { GameStage } from '@types';
-import { GoBackOneTurnButton } from '@components/GoBackOneTurnButton';
 
 export const MainGameLoop = () => {
     const theme = useTheme();
@@ -31,17 +30,17 @@ export const MainGameLoop = () => {
                 case NumpadAction.END_TURN:
                     {
                         const newScore = currentPlayer.score + scoreAddition;
-                        gameSession.updatePlayer(currentPlayer.id, {
-                            score: newScore,
-                        });
-                        gameSession.addTurnResult({
-                            id: currentPlayer.id,
-                            onTheBoard: currentPlayer.onTheBoard,
-                            score: newScore,
-                            place: currentPlayer.place,
-                        });
                         setScoreAddition(0);
-                        gameSession.endTurn();
+                        gameSession.endTurn({
+                            playerId: currentPlayer.id,
+                            playerUpdate: {
+                                score: newScore,
+                            },
+                            turnEntry: {
+                                earned: scoreAddition,
+                                total: newScore,
+                            },
+                        });
                     }
                     break;
                 default:
@@ -52,14 +51,31 @@ export const MainGameLoop = () => {
     );
 
     const onNotOutOfGateClick = useCallback(() => {
-        gameSession.endTurn();
-    }, [gameSession]);
+        gameSession.endTurn({
+            playerId: currentPlayer.id,
+            playerUpdate: {
+                onTheBoard: false,
+            },
+            turnEntry: {
+                earned: 0,
+                total: 0,
+                gotOnTheBoardThisTurn: false,
+            },
+        });
+    }, [currentPlayer.id, gameSession]);
 
     const onOutOfGateClick = useCallback(() => {
-        gameSession.updatePlayer(currentPlayer.id, {
-            onTheBoard: true,
+        gameSession.endTurn({
+            playerId: currentPlayer.id,
+            playerUpdate: {
+                onTheBoard: true,
+            },
+            turnEntry: {
+                earned: 0,
+                total: 0,
+                gotOnTheBoardThisTurn: true,
+            },
         });
-        gameSession.endTurn();
     }, [currentPlayer.id, gameSession]);
 
     const playerQueue = useMemo(() => {
@@ -113,7 +129,7 @@ export const MainGameLoop = () => {
                                             <i>{currentPlayer.score}</i>
                                         </Typography>
                                     </Box>
-                                    <GoBackOneTurnButton />
+                                    <UndoLastTurnButton />
                                 </Stack>
                             </Stack>
                         </Stack>
@@ -155,8 +171,14 @@ export const MainGameLoop = () => {
                                     mb: 1,
                                 }}
                             >
-                                {playerQueue.map((p) => {
-                                    return <PlayerAvatar key={`player-${p.id}`} player={p} />;
+                                {playerQueue.reverse().map((p, i) => {
+                                    return (
+                                        <PlayerAvatar
+                                            key={`player-${p.id}`}
+                                            player={p}
+                                            style={{ zIndex: playerQueue.length - i }}
+                                        />
+                                    );
                                 })}
                             </Stack>
                         </>
