@@ -2,9 +2,9 @@ import { useRoutes } from 'react-router-dom';
 import { AppBar, Button, CssBaseline, IconButton, Stack, Toolbar } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { AppBoundaryContainer, CenterStageContainer, ToggleThemeButton } from './components';
-import { useRouteToHome, useRouteToRules } from './hooks';
+import { useRouteToAbout, useRouteToHome, useRouteToRules } from './hooks';
 import { usePreferenceContext } from './context';
-import { GameWizard, Home, Rules } from './pages';
+import { About, GameWizard, Home, Rules } from './pages';
 import { ShowScoreBoardButton } from '@components/ShowScoresButton';
 
 import CasinoIcon from '@mui/icons-material/Casino';
@@ -14,6 +14,7 @@ export enum ValidRoutes {
     HOME = '/',
     GAME_WIZARD = '/new-game',
     RULES = 'rules',
+    ABOUT = 'about',
 }
 
 function App() {
@@ -31,6 +32,10 @@ function App() {
         {
             path: ValidRoutes.RULES,
             element: <Rules />,
+        },
+        {
+            path: ValidRoutes.ABOUT,
+            element: <About />,
         },
     ]);
     return (
@@ -56,7 +61,7 @@ function App() {
                                 <Button size="large" onClick={useRouteToRules()}>
                                     Rules
                                 </Button>
-                                <Button size="large" onClick={() => undefined}>
+                                <Button size="large" onClick={useRouteToAbout()}>
                                     About
                                 </Button>
                             </div>

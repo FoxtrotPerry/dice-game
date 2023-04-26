@@ -21,3 +21,10 @@ export const useRouteToRules = () => {
         if (!window.location.pathname.includes(ValidRoutes.RULES)) nav(ValidRoutes.RULES);
     };
 };
+
+export const useRouteToAbout = () => {
+    const nav = useNavigate();
+    return () => {
+        if (!window.location.pathname.includes(ValidRoutes.ABOUT)) nav(ValidRoutes.ABOUT);
+    };
+};
