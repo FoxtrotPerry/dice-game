@@ -84,7 +84,7 @@ export const MainGameLoop = () => {
                 gameSession.gameState.playersTurn + (1 % gameSession.players.length)
             ),
             ...gameSession.players.slice(0, gameSession.gameState.playersTurn),
-        ].reverse();
+        ];
     }, [gameSession.gameState.playersTurn, gameSession.players]);
 
     const currentWinner = useMemo(() => {
@@ -171,7 +171,7 @@ export const MainGameLoop = () => {
                                     mb: 1,
                                 }}
                             >
-                                {playerQueue.reverse().map((p, i) => {
+                                {playerQueue.map((p, i) => {
                                     return (
                                         <PlayerAvatar
                                             key={`player-${p.id}`}
