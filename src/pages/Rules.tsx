@@ -71,11 +71,20 @@ export const Rules = () => {
     }, [theme]);
     return (
         <Stack>
-            <Typography align="center" variant="h2">
-                <i>DA RULES</i>
+            <Typography
+                align="center"
+                variant="h2"
+                sx={{
+                    background: `-webkit-linear-gradient(45deg, #fb0, #f20 100%)`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    width: 'auto',
+                }}
+            >
+                <b>DA RULES</b>
             </Typography>
-            <Divider sx={{ mb: 0.5 }} />
-            <Divider sx={{ mb: 2 }} />
+            <Typography align="center">🚧 Rules page is still being written! 🚧</Typography>
+            <Divider sx={{ my: 1, borderBottomWidth: 4 }} />
             <Box my={1}>
                 <Typography variant="h4" align="center">
                     <u>Initial Roll</u>

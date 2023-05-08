@@ -23,7 +23,9 @@ export const ShowRecentTurnsButton = () => {
     const getTurnResultText = (tr: PlayerTurnResult) => {
         const player = session.players[tr.playerId].name;
         if (tr.turnEntry.gotOnTheBoardThisTurn !== undefined) {
-            return `${player} Got on the board: ${tr.turnEntry.gotOnTheBoardThisTurn}`;
+            return `${player} ${
+                tr.turnEntry.gotOnTheBoardThisTurn ? 'Got' : "Didn't get"
+            } on the board.`;
         }
         return `${player} Earned: ${tr.turnEntry.earned} Total: ${tr.turnEntry.total}`;
     };
@@ -43,12 +45,22 @@ export const ShowRecentTurnsButton = () => {
                 onClose={() => {
                     setShowRecentTurns(false);
                 }}
+                PaperProps={{
+                    sx: {
+                        margin: 0,
+                    },
+                }}
             >
-                <DialogTitle>Recent Turns</DialogTitle>
+                <DialogTitle>Turn Log</DialogTitle>
                 <DialogContent>
                     {session.turnResults.length !== 0 ? (
                         session.turnResults.reverse().map((tr, i) => {
-                            return <ListItemText key={i} primary={getTurnResultText(tr)} />;
+                            return (
+                                <ListItemText
+                                    key={i}
+                                    primary={`Turn ${i + 1}: ` + getTurnResultText(tr)}
+                                />
+                            );
                         })
                     ) : (
                         <Typography textAlign="center" color={theme.palette.secondary.dark}>
@@ -60,12 +72,13 @@ export const ShowRecentTurnsButton = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button
-                        variant="outlined"
+                        variant="contained"
                         onClick={() => {
                             setShowRecentTurns(false);
                         }}
+                        fullWidth
                     >
-                        Close
+                        <Typography variant="h5">Close</Typography>
                     </Button>
                 </DialogActions>
             </Dialog>
