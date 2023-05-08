@@ -1,9 +1,8 @@
-import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
+import { Button, Divider, Stack, Typography } from '@mui/material';
 
 import GitHubIcon from '@mui/icons-material/GitHub';
 
 export const About = () => {
-    const theme = useTheme();
     return (
         <Stack
             display="flex"

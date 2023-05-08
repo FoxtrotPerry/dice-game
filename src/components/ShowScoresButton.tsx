@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Typography,
+} from '@mui/material';
 import { GameStage } from '@types';
 import { LeaderBoard } from './game';
 import { useGameSessionContext } from '@context/GameSessionContext';
@@ -25,6 +33,11 @@ export const ShowScoreBoardButton = () => {
                 onClose={() => {
                     setShowScores(false);
                 }}
+                PaperProps={{
+                    sx: {
+                        margin: 0,
+                    },
+                }}
             >
                 <DialogTitle>LEADER BOARD</DialogTitle>
                 <DialogContent>
@@ -32,12 +45,13 @@ export const ShowScoreBoardButton = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button
-                        variant="outlined"
+                        variant="contained"
                         onClick={() => {
                             setShowScores(false);
                         }}
+                        fullWidth
                     >
-                        Close
+                        <Typography variant="h5">Close</Typography>
                     </Button>
                 </DialogActions>
             </Dialog>
