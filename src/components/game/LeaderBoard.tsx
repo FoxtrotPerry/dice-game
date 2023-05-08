@@ -88,7 +88,10 @@ export const LeaderBoard = () => {
                                         <Typography variant="h4">{p.place}</Typography>
                                     )}
                                 </TableCell>
-                                <TableCell align="right" sx={{ paddingY: 0.5, paddingX: 0.5 }}>
+                                <TableCell
+                                    align="right"
+                                    sx={{ paddingY: 0.5, paddingX: 0.5, overflow: 'hidden' }}
+                                >
                                     <Stack direction="row">
                                         {allowNameEdits && (
                                             <IconButton
@@ -108,6 +111,7 @@ export const LeaderBoard = () => {
                                             sx={{
                                                 '& > *': {
                                                     lineHeight: 1,
+                                                    textAlign: 'left',
                                                 },
                                             }}
                                         >
@@ -118,13 +122,20 @@ export const LeaderBoard = () => {
                                                     filter: `drop-shadow(0 0 0.1rem #000F)`,
                                                     textShadow:
                                                         '-1px -1px 0 #0003, 1px -1px 0 #0003, -1px 1px 0 #0003, 1px 1px 0 #0003',
+                                                    maxWidth: (theme) => {
+                                                        const spacingNum = Number(
+                                                            theme.spacing(16).slice(0, -2)
+                                                        );
+                                                        return window.screen.width - spacingNum;
+                                                    },
                                                 }}
+                                                whiteSpace="nowrap"
+                                                overflow="hidden"
+                                                textOverflow="ellipsis"
                                             >
-                                                {p.name.length >= 12
-                                                    ? p.name.slice(0, 12) + '…'
-                                                    : p.name}
+                                                {p.name}
                                             </Typography>
-                                            <Typography textAlign="left">
+                                            <Typography>
                                                 <i>{p.score}</i>
                                             </Typography>
                                         </Stack>
