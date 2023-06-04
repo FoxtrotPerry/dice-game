@@ -10,25 +10,18 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { GameStage, PlayerTurnResult } from '@types';
+import { GameStage } from '@types';
 import { useGameSessionContext } from '@context/GameSessionContext';
 
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import { useGetTurnResultText } from '@hooks/useGetTurnResultText';
 
 export const ShowRecentTurnsButton = () => {
     const theme = useTheme();
     const session = useGameSessionContext();
     const [showRecentTurns, setShowRecentTurns] = useState(false);
 
-    const getTurnResultText = (tr: PlayerTurnResult) => {
-        const player = session.players[tr.playerId].name;
-        if (tr.turnEntry.gotOnTheBoardThisTurn !== undefined) {
-            return `${player} ${
-                tr.turnEntry.gotOnTheBoardThisTurn ? 'Got' : "Didn't get"
-            } on the board.`;
-        }
-        return `${player} Earned: ${tr.turnEntry.earned} Total: ${tr.turnEntry.total}`;
-    };
+    const getTurnResultText = useGetTurnResultText();
 
     return (
         <>

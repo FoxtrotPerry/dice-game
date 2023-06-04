@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     Alert,
     Box,
@@ -14,12 +14,15 @@ import {
 import { useGameSessionContext } from '@context';
 import { Numpad, NumpadAction, PlayerAvatar, PlayerPlaceBadge, UndoLastTurnButton } from '@components';
 import { GameStage } from '@types';
+import { useGetTurnResultText } from '@hooks';
 
 export const MainGameLoop = () => {
     const theme = useTheme();
     const gameSession = useGameSessionContext();
+    const getTurnResultText = useGetTurnResultText();
     const currentPlayer = gameSession.players[gameSession.gameState.playersTurn];
     const [scoreAddition, setScoreAddition] = useState(0);
+    const [lastPlayersTurnResult, setLastPlayersTurnResult] = useState<string | undefined>();
 
     const onNumpadAction = useCallback(
         (value: number | NumpadAction) => {
@@ -90,6 +93,12 @@ export const MainGameLoop = () => {
     const currentWinner = useMemo(() => {
         if (gameSession.winnerId !== undefined) return gameSession.players[gameSession.winnerId];
     }, [gameSession.players, gameSession.winnerId]);
+
+    // Handles keeping the last turn result text up to date
+    useEffect(() => {
+        const lastTurnResult = gameSession.turnResults.at(-1);
+        if (lastTurnResult) setLastPlayersTurnResult(getTurnResultText(lastTurnResult));
+    }, [gameSession.turnResults, getTurnResultText]);
 
     return (
         <>
@@ -247,6 +256,9 @@ export const MainGameLoop = () => {
                         </Typography>
                     </Card>
                 )}
+                <Typography variant="h6" mt={0.5}>
+                    <i>{`Last turn: ${lastPlayersTurnResult}`}</i>
+                </Typography>
                 {/* TODO: Make a toast that alerts that someone surpassed or met the score goal */}
                 <Snackbar>
                     <Alert />
