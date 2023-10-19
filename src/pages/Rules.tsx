@@ -1,11 +1,5 @@
-import {
-    GiDiceSixFacesFive,
-    GiDiceSixFacesFour,
-    GiDiceSixFacesOne,
-    GiDiceSixFacesSix,
-    GiDiceSixFacesThree,
-    GiDiceSixFacesTwo,
-} from 'react-icons/gi';
+import { NumberedListItem } from '@components/NumberedListItem';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
     Box,
     Divider,
@@ -21,10 +15,16 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { ReactNode, useMemo } from 'react';
 import { Stack } from '@mui/system';
-import { NumberedListItem } from '@components/NumberedListItem';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { ReactNode, useMemo } from 'react';
+import {
+    GiDiceSixFacesFive,
+    GiDiceSixFacesFour,
+    GiDiceSixFacesOne,
+    GiDiceSixFacesSix,
+    GiDiceSixFacesThree,
+    GiDiceSixFacesTwo,
+} from 'react-icons/gi';
 
 const BulletPoint = ({ children }: { children: ReactNode }) => {
     return (
@@ -81,7 +81,7 @@ export const Rules = () => {
                     width: 'auto',
                 }}
             >
-                <b>DA RULES</b>
+                DA RULES
             </Typography>
             <Typography align="center">🚧 Rules page is still being written! 🚧</Typography>
             <Divider sx={{ my: 1, borderBottomWidth: 4 }} />

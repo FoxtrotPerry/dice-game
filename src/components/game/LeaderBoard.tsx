@@ -174,7 +174,7 @@ export const LeaderBoard = () => {
                                 <Button
                                     variant="contained"
                                     onClick={() => {
-                                        editedPlayerId &&
+                                        editedPlayerId !== undefined &&
                                             updatePlayer(editedPlayerId, { name: newPlayerName });
                                         setEditedPlayerId(undefined);
                                         setNewPlayerName('');

@@ -71,7 +71,7 @@ const throwPrematureExecutionError = (funcName: string) => {
 
 /*
     We instantiate the functions to dummy functions that way we don't need to do undefined checks later
-    when we go to actually use the real thing.
+    when we go to utilize the properties of the context object.
 */
 const GameSessionContextInstance = createContext<GameSessionContext>({
     players: DEFAULT_PLAYERS,
@@ -113,6 +113,10 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         setPlayers(DEFAULT_PLAYERS);
     }, [setPlayers]);
 
+    /**
+     * Resets the game state and all player scores and other game data to 0.
+     * All non game related data is retained.
+     */
     const resetGameStateAndScores = useCallback(() => {
         setPlayers(
             players.map((p) => ({
@@ -141,6 +145,9 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         return players.at(gameState.playersTurn - 1);
     }, [gameState.playersTurn, players]);
 
+    /**
+     * Adds the provided number of players to the game.
+     */
     const addPlayers = useCallback(
         (numOfNewPlayers: number) => {
             const currPlayerLen = players.length;
@@ -158,6 +165,9 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         [players]
     );
 
+    /**
+     * Changes the total number of players in the game to the provided number.
+     */
     const changeNumOfPlayers = useCallback(
         (newTotalNumOfPlayers: number) => {
             if (newTotalNumOfPlayers > players.length) {
@@ -169,6 +179,9 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         [addPlayers, players]
     );
 
+    /**
+     * Updates the player with the provided id with the provided partial player.
+     */
     const updatePlayer = useCallback(
         (playerId: number, partialPlayer: Partial<Player>) => {
             let newPlayers = [
@@ -201,6 +214,9 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         [gameState.stage, players, winnerId]
     );
 
+    /**
+     * Updates the game state with the provided partial game state.
+     */
     const updateGameState = useCallback(
         (partialGameState: Partial<GameState>) => {
             setGameState({ ...gameState, ...partialGameState });
@@ -208,6 +224,9 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         [gameState]
     );
 
+    /**
+     * Sets the player's turn to true and sets all other players' turns to false.
+     */
     const makePlayersTurn = useCallback((playerId: Player['id']) => {
         setPlayers((players) => {
             return players.map((p) => {
@@ -219,18 +238,27 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         });
     }, []);
 
+    /**
+     * Adds a player's turn result to the turn results list.
+     */
     const addTurnResult = useCallback((newTurnResult: PlayerTurnResult) => {
         setTurnResults((currentTurnResults) => {
             return [...currentTurnResults, newTurnResult];
         });
     }, []);
 
+    /**
+     * Removes the last turn result from the turn results list.
+     */
     const removeLastTurnResult = useCallback(() => {
         setTurnResults((currentTurnResults) => {
             return currentTurnResults.slice(0, -1);
         });
     }, []);
 
+    /**
+     * Undo the last turn and revert the player's state to what it was before the turn was made.
+     */
     const undoLastTurn = useCallback(() => {
         const previousPlayer = getPreviousPlayer();
         if (!previousPlayer) throw new Error('Could not find previous player when going back a turn');
