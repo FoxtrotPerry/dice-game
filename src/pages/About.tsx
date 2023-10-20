@@ -25,7 +25,7 @@ export const About = () => {
                     width: 'auto',
                 }}
             >
-                <b>ABOUT</b>
+                ABOUT
             </Typography>
             <Divider sx={{ my: 2 }} />
             <Typography variant="h5">
@@ -41,6 +41,7 @@ export const About = () => {
                 sx={{
                     width: 'auto',
                     mb: 2,
+                    background: `-webkit-linear-gradient(45deg, #09f, #0f9 100%)`,
                 }}
             >
                 Open Source In New Tab

@@ -35,9 +35,11 @@ export const UndoLastTurnButton = () => {
                     setShowGoBackTurnDialog(false);
                 }}
             >
-                <DialogTitle>Go back a turn?</DialogTitle>
+                <DialogTitle>Undo last turn?</DialogTitle>
                 <DialogContent>
-                    <Typography align="center">Entries for this turn will be lost.</Typography>
+                    <Typography align="center">
+                        Entries for this turn and the last will be erased.
+                    </Typography>
                 </DialogContent>
                 <DialogActions>
                     <Grid container sx={{ width: '100%' }} columns={13} justifyContent="space-between">
