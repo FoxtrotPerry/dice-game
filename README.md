@@ -4,7 +4,7 @@ A score keeper and rule book for my family's rendition of the classic 5 die game
 
 This game goes by name names (Farkle, Greed, Hot Dice, Zonk, Zilch, Dice 10k, 5-Dice, just to name a few). Each of these permutations of the game follow a similar rule set but no two are the same. In my house it was just called "Dice" and as such, the repo is just as creatively named!
 
-## Features ⚒
+## Features ⚙
 
 - ✅ **Automatic Score Keeping** - Input the score earned on each turn, and let the app handle the rest.
 - ✅ **Turn Tracker** - Clear indicator of whose turn it is.
