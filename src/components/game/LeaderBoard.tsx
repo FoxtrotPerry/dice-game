@@ -93,20 +93,6 @@ export const LeaderBoard = () => {
                                     sx={{ paddingY: 0.5, paddingX: 0.5, overflow: 'hidden' }}
                                 >
                                     <Stack direction="row">
-                                        {allowNameEdits && (
-                                            <IconButton
-                                                size="small"
-                                                onClick={() => {
-                                                    setEditedPlayerId(p.id);
-                                                    setNewPlayerName(p.name);
-                                                    setOpenEditDialog(true);
-                                                }}
-                                            >
-                                                <DriveFileRenameOutlineIcon
-                                                    htmlColor={theme.palette.secondary.dark}
-                                                />
-                                            </IconButton>
-                                        )}
                                         <Stack
                                             sx={{
                                                 '& > *': {
@@ -134,6 +120,22 @@ export const LeaderBoard = () => {
                                                 textOverflow="ellipsis"
                                             >
                                                 {p.name}
+                                                {allowNameEdits && (
+                                                    <span>
+                                                        <IconButton
+                                                            size="small"
+                                                            onClick={() => {
+                                                                setEditedPlayerId(p.id);
+                                                                setNewPlayerName(p.name);
+                                                                setOpenEditDialog(true);
+                                                            }}
+                                                        >
+                                                            <DriveFileRenameOutlineIcon
+                                                                htmlColor={theme.palette.secondary.dark}
+                                                            />
+                                                        </IconButton>
+                                                    </span>
+                                                )}
                                             </Typography>
                                             <Typography>
                                                 <i>{p.score}</i>
@@ -174,7 +176,7 @@ export const LeaderBoard = () => {
                                 <Button
                                     variant="contained"
                                     onClick={() => {
-                                        editedPlayerId &&
+                                        editedPlayerId !== undefined &&
                                             updatePlayer(editedPlayerId, { name: newPlayerName });
                                         setEditedPlayerId(undefined);
                                         setNewPlayerName('');

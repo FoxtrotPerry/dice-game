@@ -9,6 +9,19 @@ const baseTheme: ThemeOptions = {
             '"Segoe UI Emoji"',
             '"Segoe UI Symbol"',
         ].join(','),
+        fontSize: undefined,
+        h1: {
+            fontWeight: 950,
+        },
+        h2: {
+            fontWeight: 850,
+        },
+        h3: {
+            fontWeight: 750,
+        },
+        h4: {
+            fontWeight: 650,
+        },
     },
 };
 

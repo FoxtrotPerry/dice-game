@@ -8,28 +8,7 @@
 
 @font-face {
     font-family: 'proxima';
-    src: url('/fonts/proxima_nova-webfont.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'proxima';
-    src: url('/fonts/proxima_nova_italic-webfont.woff2') format('woff2');
-    font-weight: normal;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'proxima';
-    src: url('/fonts/proxima_nova_bold-webfont.woff2') format('woff2');
-    font-weight: bold;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'proxima';
-    src: url('/fonts/proxima_nova_bold_italic-webfont.woff2') format('woff2');
-    font-weight: bold;
-    font-style: italic;
+    src: url('/fonts/proxima_vara-vf.woff2') format('woff2-variations');
+    font-weight: 550 850;
+    font-stretch: 75% 125%;
 }
