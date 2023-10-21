@@ -16,6 +16,7 @@ import {
     ListItemText,
     Stack,
     Toolbar,
+    Typography,
 } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { AppBoundaryContainer, CenterStageContainer, ToggleThemeButton } from './components';
@@ -28,6 +29,8 @@ import CasinoIcon from '@mui/icons-material/Casino';
 import InfoIcon from '@mui/icons-material/Info';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import SaveIcon from '@mui/icons-material/Save';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 export enum ValidRoutes {
     HOME = '/',
@@ -74,7 +77,7 @@ function App() {
                                 justifyContent: 'space-between',
                             }}
                         >
-                            <div>
+                            <span>
                                 <IconButton
                                     size="large"
                                     edge="start"
@@ -82,7 +85,7 @@ function App() {
                                 >
                                     <MenuIcon />
                                 </IconButton>
-                            </div>
+                            </span>
                             <div>
                                 <ShowRecentTurnsButton />
                                 <ShowScoreBoardButton />
@@ -129,20 +132,41 @@ function App() {
                                     <ListItemText primary="Rules" />
                                 </ListItemButton>
                             </ListItem>
-                            <Divider />
+                            <Divider>
+                                <Typography>Actions</Typography>
+                            </Divider>
                             <ListItem disablePadding>
-                                <ListItemButton onClick={useRouteToAbout()}>
+                                <ListItemButton onClick={() => undefined}>
                                     <ListItemIcon>
-                                        <InfoIcon />
+                                        <SaveIcon />
                                     </ListItemIcon>
-                                    <ListItemText primary="About" />
+                                    <ListItemText primary="Save Game" />
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton onClick={() => undefined}>
+                                    <ListItemIcon>
+                                        <FileUploadIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Load Game" />
                                 </ListItemButton>
                             </ListItem>
                         </List>
                     </Box>
-                    <ListItem sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <ToggleThemeButton />
-                    </ListItem>
+                    <div>
+                        <ListItem sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <ToggleThemeButton />
+                        </ListItem>
+                        <Divider />
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={useRouteToAbout()}>
+                                <ListItemIcon>
+                                    <InfoIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="About" />
+                            </ListItemButton>
+                        </ListItem>
+                    </div>
                 </Stack>
             </Drawer>
         </ThemeProvider>

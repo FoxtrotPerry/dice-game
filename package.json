@@ -10,9 +10,10 @@
     "lint": "eslint src/ --ext .ts,.tsx"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^4.26.6",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@mui/core": "^5.0.0-alpha.54",
+    "@mui/base": "^5.0.0-beta.20",
     "@mui/icons-material": "^5.10.15",
     "@mui/material": "^5.10.15",
     "react": "^18.2.0",
