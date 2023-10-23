@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouteToAbout, useRouteToHome, useRouteToRules } from '@hooks/routerHooks';
 import {
     Box,
@@ -11,6 +11,7 @@ import {
     ListItemIcon,
     ListItemText,
     Stack,
+    Tooltip,
     Typography,
 } from '@mui/material';
 import { ToggleThemeButton } from './ToggleThemeButton';
@@ -22,12 +23,15 @@ import SaveIcon from '@mui/icons-material/Save';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useGameSessionContext, usePreferenceContext } from '@context';
+import { GameStage } from '@types';
 
 export const AppDrawer = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
 
-    const { loadGameData, saveGameData, gameDataExists } = useGameSessionContext();
+    const { loadGameData, saveGameData, gameDataExists, gameState } = useGameSessionContext();
     const { theme } = usePreferenceContext();
+
+    const gameInProgress = [GameStage.SETUP, GameStage.GAME_OVER].includes(gameState.stage);
 
     return (
         <>
@@ -75,12 +79,24 @@ export const AppDrawer = () => {
                                 <Typography>Actions</Typography>
                             </Divider>
                             <ListItem disablePadding>
-                                <ListItemButton onClick={saveGameData}>
-                                    <ListItemIcon>
-                                        <SaveIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Save Game" />
-                                </ListItemButton>
+                                <Tooltip
+                                    title={
+                                        gameInProgress ? 'Game must be in progress to save' : undefined
+                                    }
+                                    placement="right"
+                                >
+                                    <span>
+                                        <ListItemButton
+                                            onClick={saveGameData}
+                                            disabled={gameInProgress}
+                                        >
+                                            <ListItemIcon>
+                                                <SaveIcon />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Save Game" />
+                                        </ListItemButton>
+                                    </span>
+                                </Tooltip>
                             </ListItem>
                             <ListItem disablePadding>
                                 <ListItemButton onClick={loadGameData} disabled={!gameDataExists}>

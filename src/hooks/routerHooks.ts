@@ -28,3 +28,17 @@ export const useRouteToAbout = () => {
         if (!window.location.pathname.includes(ValidRoutes.ABOUT)) nav(ValidRoutes.ABOUT);
     };
 };
+
+export const useRouteToSignInDialog = () => {
+    const nav = useNavigate();
+    return () => {
+        if (!window.location.pathname.includes(ValidRoutes.SIGN_IN)) nav(ValidRoutes.SIGN_IN);
+    };
+};
+
+export const useRouteToSignUpDialog = () => {
+    const nav = useNavigate();
+    return () => {
+        if (!window.location.pathname.includes(ValidRoutes.SIGN_UP)) nav(ValidRoutes.SIGN_UP);
+    };
+};
