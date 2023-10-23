@@ -5,7 +5,7 @@ import { isJson } from './jsonUtils';
  * @param key the key to get the value of.
  * @returns the value of the key in local storage, or null if the key does not exist.
  */
-export const getLocalStorageItem = <T extends string | null>(key: string) => {
+export const getLocalStorageItem = <T extends string | null | Record<string, unknown>>(key: string) => {
     const item = localStorage.getItem(key);
     if (item && isJson(item)) {
         return JSON.parse(item) as T;

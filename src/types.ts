@@ -1,5 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 
+// TODO: Convert the enums in here to regular types with static strings.
+
 export enum GameStage {
     /** Default stage. Used when creating players. */
     SETUP = 'SETUP',
@@ -14,6 +16,9 @@ export enum GameStage {
     GAME_OVER = 'GAME_OVER',
 }
 
+/**
+ * I like pastel colors, incase you couldn't tell.
+ */
 export enum PlayerColor {
     PINK = '#FFCCF9',
     RED = '#FFABAB',
@@ -90,4 +95,15 @@ export type GameSessionContext = {
     endTurn: (playerTurnResult: PlayerTurnResult) => void;
     undoLastTurn: () => void;
     addTurnResult: (result: PlayerTurnResult) => void;
+    loadGameData: () => void;
+    saveGameData: () => void;
+    gameDataExists: boolean;
+};
+
+export type GameSaveData = {
+    players: Player[];
+    gameState: GameState;
+    turnResults: PlayerTurnResult[];
+    firstPlayerPastScoreGoalId: number | undefined;
+    winnerId: number | undefined;
 };

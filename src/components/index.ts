@@ -14,3 +14,4 @@ export * from './PlayerPlaceBadge';
 export * from './NumberedListItem';
 export * from './ShowScoresButton';
 export * from './UndoLastTurnButton';
+export * from './AppDrawer';

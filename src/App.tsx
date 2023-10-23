@@ -1,36 +1,13 @@
-import { useState } from 'react';
 import { useRoutes } from 'react-router-dom';
 
 import { ShowScoreBoardButton } from '@components/ShowScoresButton';
-import {
-    AppBar,
-    Box,
-    CssBaseline,
-    Divider,
-    Drawer,
-    IconButton,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Stack,
-    Toolbar,
-    Typography,
-} from '@mui/material';
+import { AppBar, CssBaseline, Stack, Toolbar } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
-import { AppBoundaryContainer, CenterStageContainer, ToggleThemeButton } from './components';
+import { AppBoundaryContainer, AppDrawer, CenterStageContainer } from './components';
 import { usePreferenceContext } from './context';
-import { useRouteToAbout, useRouteToHome, useRouteToRules } from './hooks';
 import { About, GameWizard, Home, Rules } from './pages';
 
 import { ShowRecentTurnsButton } from '@components/ShowRecentTurnsButton';
-import CasinoIcon from '@mui/icons-material/Casino';
-import InfoIcon from '@mui/icons-material/Info';
-import MenuIcon from '@mui/icons-material/Menu';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import SaveIcon from '@mui/icons-material/Save';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 export enum ValidRoutes {
     HOME = '/',
@@ -41,7 +18,6 @@ export enum ValidRoutes {
 
 function App() {
     const { theme } = usePreferenceContext();
-    const [drawerOpen, setDrawerOpen] = useState(false);
 
     const content = useRoutes([
         {
@@ -78,13 +54,7 @@ function App() {
                             }}
                         >
                             <span>
-                                <IconButton
-                                    size="large"
-                                    edge="start"
-                                    onClick={() => setDrawerOpen(true)}
-                                >
-                                    <MenuIcon />
-                                </IconButton>
+                                <AppDrawer />
                             </span>
                             <div>
                                 <ShowRecentTurnsButton />
@@ -95,80 +65,6 @@ function App() {
                 </AppBar>
                 <CenterStageContainer>{content}</CenterStageContainer>
             </AppBoundaryContainer>
-            <Drawer
-                anchor="left"
-                open={drawerOpen}
-                onClose={() => setDrawerOpen(false)}
-                PaperProps={{
-                    sx: {
-                        background: `linear-gradient(270deg, rgba(0,0,0,0) 0%, rgba(${
-                            theme.palette.mode !== 'dark' ? '255,255,255' : '0,0,0'
-                        },0.8) 100%)`,
-                        backdropFilter: 'blur(4px)',
-                    },
-                    elevation: 2,
-                }}
-            >
-                <Stack display="flex" justifyContent="space-between" height="100%">
-                    <Box
-                        onClick={() => setDrawerOpen(false)}
-                        onKeyDown={() => setDrawerOpen(false)}
-                        height="100%"
-                    >
-                        <List>
-                            <ListItem disablePadding>
-                                <ListItemButton onClick={useRouteToHome()}>
-                                    <ListItemIcon>
-                                        <CasinoIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Home" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton onClick={useRouteToRules()}>
-                                    <ListItemIcon>
-                                        <MenuBookIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Rules" />
-                                </ListItemButton>
-                            </ListItem>
-                            <Divider>
-                                <Typography>Actions</Typography>
-                            </Divider>
-                            <ListItem disablePadding>
-                                <ListItemButton onClick={() => undefined}>
-                                    <ListItemIcon>
-                                        <SaveIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Save Game" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton onClick={() => undefined}>
-                                    <ListItemIcon>
-                                        <FileUploadIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Load Game" />
-                                </ListItemButton>
-                            </ListItem>
-                        </List>
-                    </Box>
-                    <div>
-                        <ListItem sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <ToggleThemeButton />
-                        </ListItem>
-                        <Divider />
-                        <ListItem disablePadding>
-                            <ListItemButton onClick={useRouteToAbout()}>
-                                <ListItemIcon>
-                                    <InfoIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="About" />
-                            </ListItemButton>
-                        </ListItem>
-                    </div>
-                </Stack>
-            </Drawer>
         </ThemeProvider>
     );
 }

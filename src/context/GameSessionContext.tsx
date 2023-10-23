@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 
 import {
+    GameSaveData,
     GameSessionContext,
     GameStage,
     GameState,
@@ -8,6 +9,7 @@ import {
     PlayerColor,
     PlayerTurnResult,
 } from '@types';
+import { getLocalStorageItem, setLocalStorageItem } from 'src/utils/localStorageUtils';
 
 type GameSessionContextProps = {
     children: ReactNode;
@@ -23,6 +25,8 @@ export const playerColorOptions = Object.entries(PlayerColor).map(([label, color
         color,
     };
 });
+
+const LOCAL_STORAGE_GAME_DATA_KEY = 'gameData';
 
 const PLAYER_SCORE_FIELDS: Pick<Player, 'score' | 'scoreHistory' | 'onTheBoard'> = {
     score: 0,
@@ -79,6 +83,7 @@ const GameSessionContextInstance = createContext<GameSessionContext>({
     turnResults: [],
     firstPlayerPastScoreGoal: undefined,
     winnerId: undefined,
+    gameDataExists: false,
     updateGameState: throwPrematureExecutionError('updateGameState'),
     setPlayers: throwPrematureExecutionError('setPlayers'),
     resetPlayers: throwPrematureExecutionError('resetPlayers'),
@@ -88,6 +93,8 @@ const GameSessionContextInstance = createContext<GameSessionContext>({
     endTurn: throwPrematureExecutionError('endTurn'),
     undoLastTurn: throwPrematureExecutionError('undoLastTurn'),
     addTurnResult: throwPrematureExecutionError('addTurnResult'),
+    loadGameData: throwPrematureExecutionError('loadGameData'),
+    saveGameData: throwPrematureExecutionError('saveGameData'),
 });
 
 export const useGameSessionContext = () => {
@@ -108,6 +115,8 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
     const [winnerId, setWinnerId] = useState<number>();
     //TODO: Allow the user to set a custom goal.
     const [goal, setGoal] = useState(10000);
+
+    const [gameDataExists, setGameDataExists] = useState(false);
 
     const resetPlayers = useCallback(() => {
         setPlayers(DEFAULT_PLAYERS);
@@ -294,6 +303,39 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         makePlayersTurn(previousPlayer.id);
     }, [getPreviousPlayer, makePlayersTurn, removeLastTurnResult, updateGameState, updatePlayer]);
 
+    /**
+     * Saves current game data (states) to browser local storage.
+     */
+    const saveGameData = useCallback(() => {
+        setLocalStorageItem(LOCAL_STORAGE_GAME_DATA_KEY, {
+            players,
+            gameState,
+            turnResults,
+            firstPlayerPastScoreGoalId,
+            winnerId,
+        } as GameSaveData);
+        // now that we've ensured there is save data present, we can safely set this to true:
+        setGameDataExists(true);
+    }, [firstPlayerPastScoreGoalId, gameState, players, turnResults, winnerId]);
+
+    /**
+     * If present, will load into state the game data found in browser's local storage.
+     */
+    const loadGameData = useCallback(() => {
+        const gameData = getLocalStorageItem<GameSaveData>(LOCAL_STORAGE_GAME_DATA_KEY);
+        if (gameData) {
+            setPlayers(gameData.players);
+            setGameState(gameData.gameState);
+            setTurnResults(gameData.turnResults);
+            setFirstPlayerPastScoreGoalId(gameData.firstPlayerPastScoreGoalId);
+            setWinnerId(gameData.winnerId);
+        }
+    }, []);
+
+    const gameDataInLocalStorage = useCallback(() => {
+        return getLocalStorageItem<GameSaveData>(LOCAL_STORAGE_GAME_DATA_KEY) !== null;
+    }, []);
+
     const endTurn = useCallback(
         (turnResult: PlayerTurnResult) => {
             addTurnResult(turnResult);
@@ -320,9 +362,18 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
         ]
     );
 
-    // Make sure that we catch when a player goes over the score goal so we can
-    // Notify that the next roll everyone makes will be their last chance to beat
-    // the player in first place
+    /**
+     * On page load, check if there is game data in local storage.
+     */
+    useEffect(() => {
+        setGameDataExists(gameDataInLocalStorage());
+    }, [gameDataInLocalStorage]);
+
+    /**
+     * Make sure that we catch when a player goes over the score goal so we can
+     * Notify that the next roll everyone makes will be their last chance to beat
+     * the player in first place
+     */
     useEffect(() => {
         const outPlayer = players.find((p) => p.score >= goal);
         // If we're in the regulation stage and a player goes over the score goal
@@ -360,6 +411,9 @@ export const GameSessionContextProvider = ({ children }: GameSessionContextProps
                 endTurn,
                 undoLastTurn,
                 addTurnResult,
+                saveGameData,
+                loadGameData,
+                gameDataExists,
             }}
         >
             {children}
