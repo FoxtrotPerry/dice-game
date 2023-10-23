@@ -10,7 +10,6 @@ import { About, GameWizard, Home, Rules, SignInDialog, SignUpDialog } from './pa
 import { useRouteToSignInDialog } from '@hooks';
 
 import { ShowRecentTurnsButton } from '@components/ShowRecentTurnsButton';
-import { useEffect } from 'react';
 
 export enum ValidRoutes {
     HOME = '/',
