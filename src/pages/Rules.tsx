@@ -1,3 +1,4 @@
+import { ReactNode, useMemo } from 'react';
 import { NumberedListItem } from '@components/NumberedListItem';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
@@ -6,6 +7,7 @@ import {
     List,
     ListItem,
     Paper,
+    Stack,
     Table,
     TableBody,
     TableCell,
@@ -15,8 +17,6 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { Stack } from '@mui/system';
-import { ReactNode, useMemo } from 'react';
 import {
     GiDiceSixFacesFive,
     GiDiceSixFacesFour,
@@ -106,7 +106,7 @@ export const Rules = () => {
                 </Typography>
                 <List>
                     <NumberedListItem num={1}>
-                        <Stack>{`Getting "on the board" (eligable to score).`}</Stack>
+                        <Stack>{`Getting "on the board" (eligible to score).`}</Stack>
                     </NumberedListItem>
                     <NumberedListItem
                         num={2}
@@ -151,7 +151,7 @@ export const Rules = () => {
                 </BulletPoint>
                 <BulletPoint>
                     <u>IMPORTANT:</u> Another way to keep your turn going{' '}
-                    <b>without rolling anything scoring</b> is to roll mathcing dice! For example, if
+                    <b>without rolling anything scoring</b> is to roll matching dice! For example, if
                     you have two dice left to roll and you roll a matching pair, then you get to roll
                     all five dice again and keep your turn alive!
                 </BulletPoint>
@@ -166,7 +166,7 @@ export const Rules = () => {
                 </Typography>
                 <BulletPoint>
                     {`The goal of the game is to reach the score goal before everyone else! If after 
-                    you've ended your turn you have supassed or met the score goal, you're considered
+                    you've ended your turn you have surpassed or met the score goal, you're considered
                     "out" and now get to watch everyone else roll one last time in a desperate attempt
                     to catch up and beat you at the very last minute!`}
                 </BulletPoint>
