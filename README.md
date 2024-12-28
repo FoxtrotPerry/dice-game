@@ -1,21 +1,13 @@
-# 🎲 Dice Game 🎲
+# 🚧 V2 Under Construction 🚧
 
-A score keeper and rule book for my family's rendition of the classic 5 die game.
+V2 of [fivedicegame.com](https://fivedicegame.com) aims to maintain the existing functionality of the original and add some missing features that will make playing the game even more effortless!
 
-This game goes by name names (Farkle, Greed, Hot Dice, Zonk, Zilch, Dice 10k, 5-Dice, just to name a few). Each of these permutations of the game follow a similar rule set but no two are the same. In my house it was just called "Dice" and as such, the repo is just as creatively named!
+## V2 Additional Features ⚙️
 
-## Features ⚙
-
-- ✅ **Automatic Score Keeping** - Input the score earned on each turn, and let the app handle the rest.
-- ✅ **Turn Tracker** - Clear indicator of whose turn it is.
-- ✅ **Unique Player Icon Colors** - Give each player a different colored icon to more easily identify.
-- ✅ **Rule Handbook** - Quick reference to use when teaching new players about the game.
-
-## Roadmap 🔮
-
-- **Game Session Caching** - Pick up where you left off either through browser local storage.
-- **Post Game Analytics** - Interesting stats about the game after the game has concluded.
-- **Configurable Rule Sets** - Allow users to create their own rule sets and save them for later use.
+- [ ] **User Authentication**  - Users can create accounts and log in to save their games and preferences.
+- [ ] **Game Caching** - Any ongoing game is saved locally automatically and can be restored when you revisit the site.
+- [ ] **Game History** - Users can view their past games and see generated stats based on what occurred during the game.
+- [ ] **Autofill Players** - Do you typically play with the same group? If so, you can save that preset to use it whenever you start a new game. No more typing in everyone's name every time!
 
 ## Why?
 
