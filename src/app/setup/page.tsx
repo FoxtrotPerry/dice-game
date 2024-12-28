@@ -3,7 +3,7 @@ import { Button } from "~/components/ui/button";
 import PlayersInputList from "~/components/ui/players-input-list";
 import Link from "next/link";
 
-export default function NewGame() {
+export default function Setup() {
   return (
     <main className="flex justify-center">
       <section className="flex max-w-screen-sm flex-col gap-2 pt-4">
