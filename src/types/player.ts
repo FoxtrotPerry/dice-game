@@ -1,4 +1,4 @@
-import { playerColor } from "./playerColor";
+import type { playerColor } from "./playerColor";
 import type { TurnEntry } from "./turnEntry";
 
 export type Player = {

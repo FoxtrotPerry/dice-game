@@ -3,10 +3,11 @@ import type { Player } from "~/types/player";
 import { playerColor } from "~/types/playerColor";
 import { createId } from "@paralleldrive/cuid2";
 import { getRandomInt } from "~/utils/math";
+import { gameStage } from "~/types/gameStage";
 
 export type GameState = {
   players: Player[];
-  count: number;
+  gameStage: (typeof gameStage)[keyof typeof gameStage];
 };
 
 const initialState: GameState = {
@@ -30,28 +31,19 @@ const initialState: GameState = {
       isPlayersTurn: false,
     },
   ],
-  count: 0,
+  gameStage: gameStage.SETUP,
 };
 
-export const createGameState = (previousState?: GameState) =>
+export const createGameState = (savedState?: GameState) =>
   createStore({
-    context: previousState ?? initialState,
+    context: savedState ?? initialState,
     on: {
-      addPlayer: {
-        players: (ctx, e: { newPlayer: Player }) => {
-          return [...ctx.players, e.newPlayer];
-        },
-      },
+      // #region PLAYER EVENTS
       changePlayerName: {
         players: (ctx, e: { playerId: string; newName: string }) => {
           return ctx.players.map((p) =>
             p.id === e.playerId ? { ...p, name: e.newName } : p,
           );
-        },
-      },
-      deletePlayer: {
-        players: (ctx, e: { player: Player }) => {
-          return ctx.players.filter((p) => p.id !== e.player.id);
         },
       },
       resizePlayers: {
@@ -86,9 +78,21 @@ export const createGameState = (previousState?: GameState) =>
           }
         },
       },
-      increment: {
-        count: (ctx, e: { by: number }) => ctx.count + e.by,
+      progressToFirstRollStage: (ctx) => {
+        // make sure all players have a name
+        const namedPlayers = ctx.players.map((player, i) => {
+          const playerName =
+            player.name !== "" ? player.name : `Player ${i + 1}`;
+          return {
+            ...player,
+            name: playerName,
+          };
+        });
+        return { ...ctx, players: namedPlayers };
       },
+      // #endregion
+      // #region LOAD / RESET
       RESET: () => initialState,
+      RESTORE: (_ctx, e: { savedState: GameState }) => e.savedState,
     },
   });

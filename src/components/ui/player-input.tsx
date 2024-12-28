@@ -27,8 +27,8 @@ export default function PlayerInput({
       <Input
         className="w-full"
         placeholder="Player"
-        {...InputProps}
         onChange={handlePlayerNameChange}
+        {...InputProps}
       />
     </div>
   );

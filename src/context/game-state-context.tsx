@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { createGameState } from "./game-state";
+import { createGameState, type GameState } from "./game-state";
 import { useSelector } from "@xstate/store/react";
 
 const LS_KEY = "gameState";
@@ -12,10 +12,26 @@ const GameStateContext = React.createContext<ReturnType<
 
 const GameStateProvider = ({ children }: { children: React.ReactNode }) => {
   // Store is created once per Provider usage
-  const [gameStateStore] = React.useState(() => {
-    const previousState = JSON.parse(localStorage?.getItem(LS_KEY) ?? "{}");
-    return createGameState(previousState);
-  });
+  const [gameStateStore] = React.useState(createGameState);
+
+  /**
+   * We restore gameState inside this useEffect to avoid hydration errors.
+   * In restoring inside a useEffect, we allow the initial render to occur
+   * without any mismatch errors (server doesn't have the localStorage contents).
+   * After we perform this initial render, we grab the localStorage contents
+   * and restore whatever saved state is found there.
+   */
+  React.useEffect(() => {
+    if (typeof localStorage !== "undefined") {
+      const savedState = JSON.parse(localStorage?.getItem(LS_KEY) ?? "{}") as
+        | GameState
+        | undefined;
+      if (savedState) {
+        gameStateStore.send({ type: "RESTORE", savedState });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   gameStateStore.subscribe((state) => {
     localStorage.setItem(LS_KEY, JSON.stringify(state.context));
@@ -42,9 +58,4 @@ const usePlayers = () => {
   return useSelector(store, (state) => state.context.players);
 };
 
-const useCount = () => {
-  const store = useGameState();
-  return useSelector(store, (state) => state.context.count);
-};
-
-export { GameStateProvider, useGameState, usePlayers, useCount };
+export { GameStateProvider, useGameState, usePlayers };
