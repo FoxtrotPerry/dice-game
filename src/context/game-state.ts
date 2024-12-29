@@ -8,6 +8,7 @@ import { gameStage } from "~/types/gameStage";
 export type GameState = {
   players: Player[];
   gameStage: (typeof gameStage)[keyof typeof gameStage];
+  currentPlayerId: string;
 };
 
 const initialState: GameState = {
@@ -16,22 +17,21 @@ const initialState: GameState = {
       name: "",
       id: createId(),
       score: 0,
-      scoreHistory: [],
+      turnHistory: [],
       color: playerColor.BLUE,
       onTheBoard: false,
-      isPlayersTurn: false,
     },
     {
       name: "",
       id: createId(),
       score: 0,
-      scoreHistory: [],
+      turnHistory: [],
       color: playerColor.RED,
       onTheBoard: false,
-      isPlayersTurn: false,
     },
   ],
   gameStage: gameStage.SETUP,
+  currentPlayerId: "",
 };
 
 export const createGameState = (savedState?: GameState) =>
@@ -65,11 +65,10 @@ export const createGameState = (savedState?: GameState) =>
               newPlayers[i] = {
                 color: randomColor ?? playerColor.VANILLA,
                 id: createId(),
-                isPlayersTurn: false,
                 name: "",
                 onTheBoard: false,
                 score: 0,
-                scoreHistory: [],
+                turnHistory: [],
               };
             }
             return ctx.players.concat(newPlayers);
@@ -96,11 +95,22 @@ export const createGameState = (savedState?: GameState) =>
           gameStage: gameStage.FINAL_ROLLS,
         };
       },
-      progressToRegulation: (ctx, e: { firstRoleWinner: string }) => {
-        // TODO: Set the winner of the first roll to have the first turn in regulation.
+      progressToRegulation: (ctx, e: { firstRoleWinnerId: string }) => {
+        const updatedPlayers = ctx.players.map((player) => {
+          if (player.id === e.firstRoleWinnerId) {
+            return {
+              ...player,
+              isPlayersTurn: true,
+            };
+          } else {
+            return player;
+          }
+        });
         return {
           ...ctx,
           gameStage: gameStage.REGULATION,
+          players: updatedPlayers,
+          currentPlayerId: e.firstRoleWinnerId,
         };
       },
       // #endregion

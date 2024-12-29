@@ -58,4 +58,31 @@ const usePlayers = () => {
   return useSelector(store, (state) => state.context.players);
 };
 
-export { GameStateProvider, useGameState, usePlayers };
+const useCurrentPlayer = () => {
+  const store = useGameState();
+  const currentPlayer = useSelector(store, (state) => {
+    const currentPlayerId = state.context.currentPlayerId;
+    const currentPlayer = state.context.players.find(
+      (p) => p.id === currentPlayerId,
+    );
+    return currentPlayer;
+  });
+  // if (!currentPlayer)
+  //   throw new Error(
+  //     "useCurrentPlayer failed to find a player who's turn it is.",
+  //   );
+  return currentPlayer;
+};
+
+const useGameStage = () => {
+  const store = useGameState();
+  return useSelector(store, (state) => state.context.gameStage);
+};
+
+export {
+  GameStateProvider,
+  useGameState,
+  usePlayers,
+  useCurrentPlayer,
+  useGameStage,
+};

@@ -11,10 +11,17 @@ import {
 } from "~/components/ui/select";
 import { usePlayers } from "~/context/game-state-context";
 
-export default function PlayerSelect({ className }: { className?: string }) {
+export default function PlayerSelect({
+  className,
+  onChange,
+}: {
+  className?: string;
+  onChange: (playerId: string) => void;
+}) {
   const players = usePlayers();
+
   return (
-    <Select>
+    <Select onValueChange={onChange}>
       <SelectTrigger className={className}>
         <SelectValue placeholder="Who won?" />
       </SelectTrigger>

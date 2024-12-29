@@ -1,5 +1,9 @@
 export type TurnEntry = {
   /**
+   * The player's id.
+   */
+  playerId: string;
+  /**
    * The points the player earned this turn.
    */
   earned: number;
