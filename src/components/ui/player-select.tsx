@@ -11,11 +11,11 @@ import {
 } from "~/components/ui/select";
 import { usePlayers } from "~/context/game-state-context";
 
-export default function PlayerSelect() {
+export default function PlayerSelect({ className }: { className?: string }) {
   const players = usePlayers();
   return (
     <Select>
-      <SelectTrigger>
+      <SelectTrigger className={className}>
         <SelectValue placeholder="Who won?" />
       </SelectTrigger>
       <SelectContent>

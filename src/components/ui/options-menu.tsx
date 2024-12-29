@@ -28,17 +28,23 @@ export default function OptionsMenu({ className }: { className?: string }) {
   const [open, setOpen] = React.useState(false);
   const isMobile = useIsMobile();
 
+  const toggleOpen = React.useCallback(() => {
+    setOpen((currOpen) => !currOpen);
+  }, []);
+
   if (isMobile)
     return (
-      <Drawer open={open} onOpenChange={setOpen}>
+      <Drawer open={open} onOpenChange={toggleOpen}>
         <DrawerTrigger asChild>
           <Button size="icon" variant="ghost">
             <Menu className="dark:fill-white" />
           </Button>
         </DrawerTrigger>
         <DrawerContent className={cn("gap-1 px-4", className)}>
-          <DrawerTitle className="pt-2">Options Menu</DrawerTitle>
-          <DrawerDescription>Game options</DrawerDescription>
+          <div className="flex flex-col gap-1 pl-1">
+            <DrawerTitle>Options Menu</DrawerTitle>
+            <DrawerDescription>Game options</DrawerDescription>
+          </div>
           <Separator className="mx-auto" />
           <OptionMenuItems className="mt-2" />
         </DrawerContent>
@@ -46,16 +52,18 @@ export default function OptionsMenu({ className }: { className?: string }) {
     );
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={toggleOpen}>
       <SheetTrigger asChild>
         <Button size="icon" variant="ghost">
           <Menu className="dark:fill-white" />
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className={className}>
-        <SheetHeader>
+        <SheetHeader className="pl-1 pt-1">
           <SheetTitle>Options Menu</SheetTitle>
-          <SheetDescription>Game options</SheetDescription>
+          <SheetDescription className="pb-1 leading-none">
+            Game options
+          </SheetDescription>
         </SheetHeader>
         <Separator className="mx-auto" />
         <OptionMenuItems className="mt-2" />

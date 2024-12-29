@@ -38,7 +38,7 @@ export const createGameState = (savedState?: GameState) =>
   createStore({
     context: savedState ?? initialState,
     on: {
-      // #region PLAYER EVENTS
+      // #region Player Events
       changePlayerName: {
         players: (ctx, e: { playerId: string; newName: string }) => {
           return ctx.players.map((p) =>
@@ -78,6 +78,8 @@ export const createGameState = (savedState?: GameState) =>
           }
         },
       },
+      // #endregion
+      // #region Stage Progression
       progressToFirstRollStage: (ctx) => {
         // make sure all players have a name
         const namedPlayers = ctx.players.map((player, i) => {
@@ -88,10 +90,21 @@ export const createGameState = (savedState?: GameState) =>
             name: playerName,
           };
         });
-        return { ...ctx, players: namedPlayers };
+        return {
+          ...ctx,
+          players: namedPlayers,
+          gameStage: gameStage.FINAL_ROLLS,
+        };
+      },
+      progressToRegulation: (ctx, e: { firstRoleWinner: string }) => {
+        // TODO: Set the winner of the first roll to have the first turn in regulation.
+        return {
+          ...ctx,
+          gameStage: gameStage.REGULATION,
+        };
       },
       // #endregion
-      // #region LOAD / RESET
+      // #region Load / Reset
       RESET: () => initialState,
       RESTORE: (_ctx, e: { savedState: GameState }) => e.savedState,
     },
