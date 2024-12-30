@@ -10,9 +10,9 @@ export type TurnEntry = {
   /**
    * The total score the player has after this turn.
    */
-  total: number;
+  newTotal: number;
   /**
    * Whether or not the player got on the board this turn.
    */
-  gotOnTheBoardThisTurn?: boolean;
+  gotOnTheBoardThisTurn: boolean;
 };

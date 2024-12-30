@@ -7,7 +7,6 @@ import { useGameStage, useGameState } from "~/context/game-state-context";
 import { Button } from "~/components/ui/button";
 import { DiceFive } from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
-import WrongStage from "~/components/ui/wrong-stage";
 
 export default function FirstRoll() {
   const gameState = useGameState();
@@ -30,27 +29,21 @@ export default function FirstRoll() {
   return (
     <main className="flex justify-center">
       <section className="flex max-w-[22rem] flex-col gap-2 pt-4">
-        {gameStage === "FIRST_ROLL" ? (
-          <>
-            <h1 className="text-center text-3xl font-bold">
-              <i>ROLL FOR FIRST TURN</i>
-            </h1>
-            <FirstRollInstructions />
-            <div className="flex justify-center">
-              <PlayerSelect className="w-40" onChange={handlePlayerChange} />
-            </div>
-            <Button
-              className="w-full [&_svg]:size-5"
-              onClick={handleFinishedClick}
-              disabled={selectedPlayer === null}
-            >
-              <DiceFive />
-              {`Let's Play!`}
-            </Button>
-          </>
-        ) : (
-          <WrongStage className="pt-16" />
-        )}
+        <h1 className="text-center text-3xl font-bold">
+          <i>ROLL FOR FIRST TURN</i>
+        </h1>
+        <FirstRollInstructions />
+        <div className="flex justify-center">
+          <PlayerSelect className="w-40" onChange={handlePlayerChange} />
+        </div>
+        <Button
+          className="w-full [&_svg]:size-5"
+          onClick={handleFinishedClick}
+          disabled={selectedPlayer === null}
+        >
+          <DiceFive />
+          {`Let's Play!`}
+        </Button>
       </section>
     </main>
   );

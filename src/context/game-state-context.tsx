@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { setCookie } from "cookies-next/client";
 import { createGameState, type GameState } from "./game-state";
 import { useSelector } from "@xstate/store/react";
 
@@ -35,6 +36,7 @@ const GameStateProvider = ({ children }: { children: React.ReactNode }) => {
 
   gameStateStore.subscribe((state) => {
     localStorage.setItem(LS_KEY, JSON.stringify(state.context));
+    setCookie("gameStage", state.context.gameStage);
   });
 
   return (
@@ -67,10 +69,6 @@ const useCurrentPlayer = () => {
     );
     return currentPlayer;
   });
-  // if (!currentPlayer)
-  //   throw new Error(
-  //     "useCurrentPlayer failed to find a player who's turn it is.",
-  //   );
   return currentPlayer;
 };
 

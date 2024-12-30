@@ -16,15 +16,18 @@ export default function Setup() {
 
   return (
     <main className="flex justify-center">
-      <section className="flex max-w-screen-sm flex-col gap-2 pt-4">
+      <section className="flex w-full max-w-screen-md flex-col gap-1 px-3 pt-3">
         <h1 className="text-center text-3xl font-bold">
           <i>NEW GAME</i>
+        </h1>
+        <h1 className="text-center text-lg font-bold leading-none">
+          <i>Make sure to list players in counter-clockwise order</i>
         </h1>
         <div className="flex items-center justify-center gap-3">
           <p className="text-xl">How many players?</p>
           <PlayerCountSelect />
         </div>
-        <PlayersInputList />
+        <PlayersInputList className="pb-2" />
         <Button className="w-full [&_svg]:size-5" onClick={handleFinishedClick}>
           <DiceFive />
           {`Let's Roll!`}
