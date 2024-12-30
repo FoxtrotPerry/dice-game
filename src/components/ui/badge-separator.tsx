@@ -14,7 +14,7 @@ export default function BadgeSeparator({
         <Separator />
       </div>
       <Badge className={className}>
-        <i>Instructions</i>
+        <i className="text-nowrap">{title}</i>
       </Badge>
       <div className="flex w-full items-center">
         <Separator />

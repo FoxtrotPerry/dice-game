@@ -1,5 +1,6 @@
 "use client";
 
+import BadgeSeparator from "~/components/ui/badge-separator";
 import OnDeck from "~/components/ui/on-deck";
 import OnTheBoard from "~/components/ui/on-the-board";
 import RankBadge from "~/components/ui/rank-badge";
@@ -41,6 +42,7 @@ export default function Game() {
             </div>
           </div>
         </div>
+        <BadgeSeparator title="On Deck" />
         <OnDeck />
         {currentPlayer.onTheBoard ? (
           <ScorePad currentPlayer={currentPlayer} />

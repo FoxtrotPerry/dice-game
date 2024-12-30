@@ -13,6 +13,8 @@ export default function OptionMenuItems({ className }: { className?: string }) {
     redirect("/setup");
   };
 
+  // TODO: Add "Leaderboard" and "Previous Turns" menu items.
+
   return (
     <div className={cn("flex flex-col gap-2 pb-4", className)}>
       <OptionMenuNavItem href={"/"}>Home</OptionMenuNavItem>
