@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -10,10 +10,12 @@ import {
   DialogClose,
 } from "~/components/ui/dialog";
 import { cn } from "~/lib/utils";
+import { useModal } from "~/hooks/use-modal";
 
 export default function AreYouSure({
   className,
   children,
+  modalId,
   title = "Are you sure?",
   description = "Please confirm this action.",
   destructive = false,
@@ -21,36 +23,36 @@ export default function AreYouSure({
 }: {
   className?: string;
   children: React.ReactNode;
+  modalId: string;
   title?: string;
   description?: React.ReactNode;
   destructive?: boolean;
   onConfirm: () => void;
 }) {
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  const handleTriggerClick = () => {
-    setIsOpen((curr) => !curr);
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
-  };
+  const { open, openModal, closeModal } = useModal(modalId);
 
   const handleConfirmClick = () => {
-    handleClose();
+    closeModal();
     onConfirm();
   };
 
+  // Cleanup function used on component unmount
+  useEffect(() => {
+    return () => {
+      closeModal();
+    };
+  }, []);
+
   return (
-    <Dialog open={isOpen}>
-      <DialogTrigger asChild onClick={handleTriggerClick}>
+    <Dialog open={open}>
+      <DialogTrigger asChild onClick={openModal}>
         {children}
       </DialogTrigger>
       <DialogContent
         className={cn("sm:max-w-[425px]", className)}
-        onCloseAutoFocus={handleClose}
-        onEscapeKeyDown={handleClose}
-        onPointerDownOutside={handleClose}
+        onCloseAutoFocus={closeModal}
+        onEscapeKeyDown={closeModal}
+        onPointerDownOutside={closeModal}
         renderDefaultCloseButton={false}
       >
         <DialogHeader>
@@ -59,7 +61,7 @@ export default function AreYouSure({
         <div className="grid gap-4 py-4">{description}</div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="ghost" onClick={handleClose}>
+            <Button variant="ghost" onClick={closeModal}>
               Cancel
             </Button>
           </DialogClose>

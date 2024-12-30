@@ -32,24 +32,24 @@ export default function OptionsMenu({ className }: { className?: string }) {
     setOpen((currOpen) => !currOpen);
   }, []);
 
-  if (isMobile)
-    return (
-      <Drawer open={open} onOpenChange={toggleOpen}>
-        <DrawerTrigger asChild>
-          <Button size="icon" variant="ghost">
-            <Menu className="dark:fill-white" />
-          </Button>
-        </DrawerTrigger>
-        <DrawerContent className={cn("gap-1 px-4", className)}>
-          <div className="flex flex-col gap-1 pl-1">
-            <DrawerTitle>Options Menu</DrawerTitle>
-            <DrawerDescription>Game options</DrawerDescription>
-          </div>
-          <Separator className="mx-auto" />
-          <OptionMenuItems className="mt-2" />
-        </DrawerContent>
-      </Drawer>
-    );
+  // if (isMobile)
+  //   return (
+  //     <Drawer open={open} onOpenChange={toggleOpen}>
+  //       <DrawerTrigger asChild>
+  //         <Button size="icon" variant="ghost">
+  //           <Menu className="dark:fill-white" />
+  //         </Button>
+  //       </DrawerTrigger>
+  //       <DrawerContent className={cn("gap-1 px-4", className)}>
+  //         <div className="flex flex-col gap-1 pl-1">
+  //           <DrawerTitle>Options Menu</DrawerTitle>
+  //           <DrawerDescription>Game options</DrawerDescription>
+  //         </div>
+  //         <Separator className="mx-auto" />
+  //         <OptionMenuItems className="mt-2" />
+  //       </DrawerContent>
+  //     </Drawer>
+  //   );
 
   return (
     <Sheet open={open} onOpenChange={toggleOpen}>

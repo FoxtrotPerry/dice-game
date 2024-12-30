@@ -27,6 +27,7 @@ export const middleware = (request: NextRequest) => {
   if (
     Object.values(stageToRouteMap).includes(requestedRoute as StageBoundRoute)
   ) {
+    console.log(requestedRoute);
     // get the route associated with the current game stage
     const correctRoute = stageToRouteMap[currentGameStage as GameStage];
     // if the requested route doesn't match the route associated with the game's current state
@@ -37,6 +38,7 @@ export const middleware = (request: NextRequest) => {
       });
       const url = request.nextUrl.clone();
       url.pathname = correctRoute;
+      console.log(url.toString());
       // redirect to the correct route
       return NextResponse.redirect(url);
     }
