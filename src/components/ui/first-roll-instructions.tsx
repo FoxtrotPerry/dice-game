@@ -1,6 +1,4 @@
 import InstructionItem from "~/components/ui/instruction-item";
-import { Separator } from "~/components/ui/separator";
-import { Badge } from "~/components/ui/badge";
 import BadgeSeparator from "./badge-separator";
 
 export default function FirstRollInstructions() {

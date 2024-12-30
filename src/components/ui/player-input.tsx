@@ -1,8 +1,8 @@
 import { UserCircle } from "@phosphor-icons/react/dist/ssr";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { Input } from "~/components/ui/input";
 import { useGameState } from "~/context/game-state-context";
-import { type Player } from "~/types/player";
+import type { Player } from "~/types/player";
 
 export default function PlayerInput({
   InputProps,

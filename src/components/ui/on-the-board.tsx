@@ -1,7 +1,8 @@
 import { Card } from "~/components/ui/card";
-import { useCurrentPlayer, useGameState } from "~/context/game-state-context";
-import { Player } from "~/types/player";
+import { useGameState } from "~/context/game-state-context";
+import type { Player } from "~/types/player";
 import { Button } from "./button";
+import { cn } from "~/lib/utils";
 
 export default function OnTheBoard({
   className,
@@ -40,7 +41,10 @@ export default function OnTheBoard({
 
   return (
     <Card
-      className="flex flex-col gap-2 rounded-3xl border-8 border-solid p-4"
+      className={cn(
+        "flex flex-col gap-2 rounded-3xl border-8 border-solid p-4",
+        className,
+      )}
       style={{ borderColor: currentPlayer.color }}
     >
       <h3 className="text-center text-4xl font-bold">ON THE BOARD?</h3>

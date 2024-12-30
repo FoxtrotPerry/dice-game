@@ -14,6 +14,7 @@ export default function UndoButton({ className }: { className?: string }) {
 
   return (
     <AreYouSure
+      modalId="modal-undo"
       onConfirm={handleUndoClick}
       title="Undo last turn?"
       description="Are you sure you want to undo the last turn? This action cannot be undone."

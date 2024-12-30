@@ -8,7 +8,7 @@ export const useModal = (modalId: string) => {
 
   const open = useMemo(() => {
     return !!searchParams.get(modalId);
-  }, [searchParams]);
+  }, [modalId, searchParams]);
 
   const openModal = useCallback(() => {
     const queryParams = new URLSearchParams(searchParams);
@@ -18,7 +18,7 @@ export const useModal = (modalId: string) => {
     }
     const newUrl = `${path}?${queryParams}`;
     router.push(newUrl);
-  }, []);
+  }, [modalId, path, router, searchParams]);
 
   const closeModal = useCallback(() => {
     const queryParams = new URLSearchParams(searchParams);
@@ -28,7 +28,7 @@ export const useModal = (modalId: string) => {
     }
     const newUrl = `${path}?${queryParams}`;
     router.push(newUrl);
-  }, []);
+  }, [modalId, path, router, searchParams]);
 
   return { open, openModal, closeModal };
 };

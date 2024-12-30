@@ -5,7 +5,8 @@ import { cn } from "~/lib/utils";
 import { Button } from "./button";
 import { useState } from "react";
 import { useGameState } from "~/context/game-state-context";
-import { Player } from "~/types/player";
+import type { Player } from "~/types/player";
+import { formatScore } from "~/utils/number";
 
 const numpadItems = [
   "1",
@@ -32,9 +33,7 @@ export default function ScorePad({
   const gameState = useGameState();
   const [score, setScore] = useState(0);
 
-  const handleNumpadClick = (
-    value: (typeof numpadItems)[keyof typeof numpadItems],
-  ) => {
+  const handleNumpadClick = (value: (typeof numpadItems)[number]) => {
     switch (value) {
       case "CLEAR":
         setScore(0);
@@ -66,7 +65,9 @@ export default function ScorePad({
         className="relative max-w-full rounded-3xl border-8 border-solid px-2"
         style={{ borderColor: currentPlayer.color }}
       >
-        <p className="overflow-ellipsis whitespace-nowrap py-2 text-center text-5xl font-bold">{`+${score}`}</p>
+        <p className="overflow-ellipsis whitespace-nowrap py-2 text-center text-5xl font-bold">
+          +{formatScore(score)}
+        </p>
       </Card>
       <Card
         className={

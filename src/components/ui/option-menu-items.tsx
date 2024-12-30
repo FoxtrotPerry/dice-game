@@ -7,7 +7,6 @@ import AreYouSure from "./are-you-sure";
 import { useModal } from "~/hooks/use-modal";
 import {
   ArrowsCounterClockwise,
-  DiceFive,
   HouseLine,
 } from "@phosphor-icons/react/dist/ssr";
 
@@ -27,10 +26,6 @@ export default function OptionMenuItems({ className }: { className?: string }) {
       <OptionMenuNavItem href={"/"}>
         <HouseLine size={32} weight="bold" />
         <p className="text-lg">Home</p>
-      </OptionMenuNavItem>
-      <OptionMenuNavItem href={"/setup"}>
-        <DiceFive size={32} weight="bold" />
-        <p className="text-lg">New Game</p>
       </OptionMenuNavItem>
       <AreYouSure
         modalId="modal-reset"

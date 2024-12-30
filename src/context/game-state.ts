@@ -3,9 +3,8 @@ import type { Player } from "~/types/player";
 import { playerColor } from "~/types/playerColor";
 import { createId } from "@paralleldrive/cuid2";
 import { getRandomInt } from "~/utils/math";
-import { GameStage, gameStage } from "~/types/gameStage";
-import { TurnEntry } from "~/types/turnEntry";
-import { comparePlayerScore } from "~/utils/array";
+import { type GameStage, gameStage } from "~/types/gameStage";
+import type { TurnEntry } from "~/types/turnEntry";
 import { getRankings } from "~/utils/ranking";
 import { getLastPlayer, getNextPlayerId } from "~/utils/turns";
 
@@ -24,7 +23,6 @@ const initialState: GameState = {
       name: "",
       id: createId(),
       score: 0,
-      // turnHistory: [],
       color: playerColor.BLUE,
       onTheBoard: false,
     },
@@ -32,7 +30,6 @@ const initialState: GameState = {
       name: "",
       id: createId(),
       score: 0,
-      // turnHistory: [],
       color: playerColor.RED,
       onTheBoard: false,
     },
@@ -90,11 +87,22 @@ export const createGameState = (savedState?: GameState) =>
         if (e.turnEntry.earned > 0) {
           newRankings = getRankings(updatedPlayers);
         }
+
+        /*
+         * if the player surpassed the score threshold, trigger the transition to the final rolls stage
+         */
+        let newStage = ctx.gameStage;
+        console.log(e.turnEntry.newTotal);
+        if (e.turnEntry.newTotal >= 10_000) {
+          newStage = gameStage.FINAL_ROLLS;
+        }
+
         return {
           ...ctx,
           currentPlayerId: nextPlayerId,
           rankings: newRankings,
           turnHistory: ctx.turnHistory.concat(e.turnEntry),
+          gameStage: newStage,
         };
       },
       // #endregion

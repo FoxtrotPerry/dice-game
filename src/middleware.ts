@@ -1,6 +1,10 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { type NextRequest, NextResponse } from "next/server";
-import { GameStage, StageBoundRoute, stageToRouteMap } from "./types/gameStage";
+import {
+  type GameStage,
+  type StageBoundRoute,
+  stageToRouteMap,
+} from "./types/gameStage";
 
 const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
@@ -27,18 +31,12 @@ export const middleware = (request: NextRequest) => {
   if (
     Object.values(stageToRouteMap).includes(requestedRoute as StageBoundRoute)
   ) {
-    console.log(requestedRoute);
     // get the route associated with the current game stage
     const correctRoute = stageToRouteMap[currentGameStage as GameStage];
     // if the requested route doesn't match the route associated with the game's current state
     if (requestedRoute !== correctRoute) {
-      console.log({
-        correctRoute,
-        requestedRoute,
-      });
       const url = request.nextUrl.clone();
       url.pathname = correctRoute;
-      console.log(url.toString());
       // redirect to the correct route
       return NextResponse.redirect(url);
     }

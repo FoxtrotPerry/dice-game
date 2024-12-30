@@ -1,11 +1,12 @@
-import { GameState } from "~/context/game-state";
+import type { GameState } from "~/context/game-state";
 
 export const getLastPlayer = (ctx: NoInfer<GameState>) => {
-  const lastPlayerId =
-    ctx.turnOrder[
-      ctx.turnOrder.findIndex((playerId) => playerId === ctx.currentPlayerId) -
-        1
-    ];
+  const currentPlayerIndex = ctx.turnOrder.findIndex(
+    (playerId) => playerId === ctx.currentPlayerId,
+  );
+  const lastPlayerIndex =
+    currentPlayerIndex === 0 ? ctx.players.length - 1 : currentPlayerIndex - 1;
+  const lastPlayerId = ctx.turnOrder[lastPlayerIndex];
   const lastPlayer = ctx.players.find((player) => player.id === lastPlayerId);
   return lastPlayer;
 };

@@ -37,11 +37,11 @@ export default function AreYouSure({
   };
 
   // Cleanup function used on component unmount
-  useEffect(() => {
-    return () => {
-      closeModal();
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     closeModal();
+  //   };
+  // }, []);
 
   return (
     <Dialog open={open}>

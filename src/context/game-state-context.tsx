@@ -73,12 +73,11 @@ const useCurrentPlayer = () => {
 };
 
 const usePlayerRanking = (playerId?: string) => {
-  if (!playerId) return "-";
   const store = useGameState();
   const rankings = useSelector(store, (state) => state.context.rankings);
-  if (rankings.length === 0) return "-";
+  if (!playerId || rankings.length === 0) return "-";
   const currentPlayerRankingIndex = rankings.findIndex(
-    (playerId) => playerId === playerId,
+    (rankedPlayerId) => rankedPlayerId === playerId,
   );
   return currentPlayerRankingIndex + 1;
 };
@@ -112,6 +111,17 @@ const useOnDeckPlayers = () => {
   return onDeckPlayers;
 };
 
+const useFirstPlacePlayer = () => {
+  const store = useGameState();
+  return useSelector(store, (state) => {
+    const rankings = state.context.rankings;
+    const firstPlacePlayer = state.context.players.find(
+      (p) => p.id === rankings[0],
+    );
+    return firstPlacePlayer;
+  });
+};
+
 export {
   GameStateProvider,
   useGameState,
@@ -121,4 +131,5 @@ export {
   useTurnHistory,
   usePlayerRanking,
   useOnDeckPlayers,
+  useFirstPlacePlayer,
 };

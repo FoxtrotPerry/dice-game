@@ -1,4 +1,4 @@
-import { Player } from "~/types/player";
+import type { Player } from "~/types/player";
 import { comparePlayerScore } from "./array";
 import { medalColors } from "~/types/medalColors";
 

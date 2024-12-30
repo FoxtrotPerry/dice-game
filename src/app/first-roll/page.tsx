@@ -3,14 +3,13 @@
 import PlayerSelect from "~/components/ui/player-select";
 import FirstRollInstructions from "~/components/ui/first-roll-instructions";
 import { redirect } from "next/navigation";
-import { useGameStage, useGameState } from "~/context/game-state-context";
+import { useGameState } from "~/context/game-state-context";
 import { Button } from "~/components/ui/button";
 import { DiceFive } from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
 
 export default function FirstRoll() {
   const gameState = useGameState();
-  const gameStage = useGameStage();
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
 
   const handleFinishedClick = () => {
