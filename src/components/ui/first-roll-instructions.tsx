@@ -1,21 +1,12 @@
 import InstructionItem from "~/components/ui/instruction-item";
 import { Separator } from "~/components/ui/separator";
 import { Badge } from "~/components/ui/badge";
+import BadgeSeparator from "./badge-separator";
 
 export default function FirstRollInstructions() {
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex max-w-screen-sm justify-evenly gap-2">
-        <div className="flex w-full items-center">
-          <Separator />
-        </div>
-        <Badge>
-          <i>Instructions</i>
-        </Badge>
-        <div className="flex w-full items-center">
-          <Separator />
-        </div>
-      </div>
+      <BadgeSeparator title="Instructions" />
       <InstructionItem number={1}>
         <p className="font-bold leading-none">Every player rolls one die.</p>
       </InstructionItem>

@@ -49,6 +49,7 @@ export default function ScorePad({
             gotOnTheBoardThisTurn: false,
           },
         });
+        setScore(0);
         break;
       default:
         if (score.toString().length < 9) {

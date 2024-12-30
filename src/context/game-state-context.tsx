@@ -72,9 +72,44 @@ const useCurrentPlayer = () => {
   return currentPlayer;
 };
 
+const usePlayerRanking = (playerId?: string) => {
+  if (!playerId) return "-";
+  const store = useGameState();
+  const rankings = useSelector(store, (state) => state.context.rankings);
+  if (rankings.length === 0) return "-";
+  const currentPlayerRankingIndex = rankings.findIndex(
+    (playerId) => playerId === playerId,
+  );
+  return currentPlayerRankingIndex + 1;
+};
+
+const useTurnHistory = () => {
+  const store = useGameState();
+  return useSelector(store, (state) => state.context.turnHistory);
+};
+
 const useGameStage = () => {
   const store = useGameState();
   return useSelector(store, (state) => state.context.gameStage);
+};
+
+const useOnDeckPlayers = () => {
+  const store = useGameState();
+  const { players, turnOrder, currentPlayerId } = useSelector(
+    store,
+    (state) => state.context,
+  );
+  const turnOrderIndex = turnOrder.findIndex(
+    (playerId) => playerId === currentPlayerId,
+  );
+  const onDeckPlayerIds = turnOrder
+    .slice(turnOrderIndex)
+    .concat(turnOrder.slice(0, turnOrderIndex))
+    .slice(1);
+  const onDeckPlayers = onDeckPlayerIds.map((playerId) =>
+    players.find((p) => p.id === playerId),
+  );
+  return onDeckPlayers;
 };
 
 export {
@@ -83,4 +118,7 @@ export {
   usePlayers,
   useCurrentPlayer,
   useGameStage,
+  useTurnHistory,
+  usePlayerRanking,
+  useOnDeckPlayers,
 };
