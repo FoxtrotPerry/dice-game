@@ -36,7 +36,7 @@ export default function OptionsMenu({ className }: { className?: string }) {
             Game options
           </SheetDescription>
         </SheetHeader>
-        <Separator className="mx-auto" />
+        <Separator className="mx-auto mt-2" />
         <OptionMenuItems className="mt-2" />
       </SheetContent>
     </Sheet>

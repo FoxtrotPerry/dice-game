@@ -82,9 +82,28 @@ const usePlayerRanking = (playerId?: string) => {
   return currentPlayerRankingIndex + 1;
 };
 
+const usePlayerRankings = () => {
+  const store = useGameState();
+  const { players, rankings } = useSelector(store, (state) => state.context);
+  const rankedPlayers = rankings.map((playerId) => {
+    return players.find((p) => p.id === playerId);
+  });
+  return rankedPlayers;
+};
+
 const useTurnHistory = () => {
   const store = useGameState();
   return useSelector(store, (state) => state.context.turnHistory);
+};
+
+const useTurnHistoryForPlayer = (playerId?: string) => {
+  const store = useGameState();
+  const turnHistory = useSelector(store, (state) => state.context.turnHistory);
+  if (!playerId) return [];
+  const playersTurnHistory = turnHistory.filter(
+    (turnEntry) => turnEntry.playerId === playerId,
+  );
+  return playersTurnHistory;
 };
 
 const useGameStage = () => {
@@ -129,7 +148,9 @@ export {
   useCurrentPlayer,
   useGameStage,
   useTurnHistory,
+  useTurnHistoryForPlayer,
   usePlayerRanking,
+  usePlayerRankings,
   useOnDeckPlayers,
   useFirstPlacePlayer,
 };

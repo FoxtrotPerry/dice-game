@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -32,16 +32,9 @@ export default function AreYouSure({
   const { open, openModal, closeModal } = useModal(modalId);
 
   const handleConfirmClick = () => {
-    closeModal();
     onConfirm();
+    closeModal();
   };
-
-  // Cleanup function used on component unmount
-  // useEffect(() => {
-  //   return () => {
-  //     closeModal();
-  //   };
-  // }, []);
 
   return (
     <Dialog open={open}>
@@ -56,12 +49,12 @@ export default function AreYouSure({
         renderDefaultCloseButton={false}
       >
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle className="text-3xl">{title}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">{description}</div>
-        <DialogFooter>
+        <DialogFooter className="flex gap-2">
           <DialogClose asChild>
-            <Button variant="ghost" onClick={closeModal}>
+            <Button variant="outline" onClick={closeModal}>
               Cancel
             </Button>
           </DialogClose>

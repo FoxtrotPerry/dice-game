@@ -31,7 +31,11 @@ export default function Game() {
         <div className="flex gap-2">
           <PlayerAvatar player={currentPlayer} size="large" />
           <div className="flex w-full flex-col justify-evenly">
-            <p className="text-4xl font-bold">{currentPlayer.name}</p>
+            <div className="max-w-[250px] sm:max-w-[350px]">
+              <p className="truncate text-4xl font-bold">
+                {currentPlayer.name}
+              </p>
+            </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <RankBadge />

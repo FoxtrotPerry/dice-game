@@ -65,7 +65,7 @@ export default function ScorePad({
         className="relative max-w-full rounded-3xl border-8 border-solid px-2"
         style={{ borderColor: currentPlayer.color }}
       >
-        <p className="overflow-ellipsis whitespace-nowrap py-2 text-center text-5xl font-bold">
+        <p className="py-2 text-center text-5xl font-bold">
           +{formatScore(score)}
         </p>
       </Card>
