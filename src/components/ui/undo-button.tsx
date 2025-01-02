@@ -14,14 +14,14 @@ export default function UndoButton({ className }: { className?: string }) {
 
   return (
     <AreYouSure
-      modalId="modal-undo"
+      modalId="undo"
       onConfirm={handleUndoClick}
       title="Undo last turn?"
       description="Are you sure you want to undo the last turn? This action cannot be undone."
     >
       <Button
         className={cn(
-          "size-12 rounded-full border-4 border-solid border-gray-500/50 bg-gray-200 focus:bg-gray-200 disabled:bg-gray-200 disabled:focus:bg-gray-200 dark:bg-gray-700 disabled:dark:bg-gray-700 [&_svg]:size-6",
+          "size-12 rounded-full border-4 border-solid border-gray-500/50 bg-gray-200 hover:bg-gray-500 focus:bg-gray-200 disabled:bg-gray-200 disabled:focus:bg-gray-200 dark:bg-gray-700 dark:hover:bg-slate-500 disabled:dark:bg-gray-700 [&_svg]:size-6",
           className,
         )}
         disabled={turnHistory.length === 0}

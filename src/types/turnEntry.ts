@@ -14,5 +14,5 @@ export type TurnEntry = {
   /**
    * Whether or not the player got on the board this turn.
    */
-  gotOnTheBoardThisTurn: boolean;
+  gotOnBoardThisTurn: boolean;
 };

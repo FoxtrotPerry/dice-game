@@ -9,16 +9,18 @@ import { getRankings } from "~/utils/ranking";
 import { getLastPlayer, getNextPlayerId } from "~/utils/turns";
 
 export type GameState = {
+  id: string;
   players: Player[];
   gameStage: GameStage;
   currentPlayerId: string;
   rankings: string[];
   turnOrder: string[];
   turnHistory: TurnEntry[];
-  firstToPassThreshold: string;
+  firstToPassThresholdId: string;
 };
 
 const initialState: GameState = {
+  id: createId(),
   players: [
     {
       name: "",
@@ -40,7 +42,7 @@ const initialState: GameState = {
   turnHistory: [],
   gameStage: gameStage.SETUP,
   currentPlayerId: "",
-  firstToPassThreshold: "",
+  firstToPassThresholdId: "",
 };
 
 export const createGameState = (savedState?: GameState) =>
@@ -63,7 +65,7 @@ export const createGameState = (savedState?: GameState) =>
         updatedPlayer = {
           ...updatedPlayer,
           onTheBoard: !updatedPlayer.onTheBoard
-            ? e.turnEntry.gotOnTheBoardThisTurn
+            ? e.turnEntry.gotOnBoardThisTurn
             : true,
           score: e.turnEntry.newTotal,
         };
@@ -96,10 +98,24 @@ export const createGameState = (savedState?: GameState) =>
          * the final rolls stage
          */
         let newStage = ctx.gameStage;
-        let firstToPassThreshold = ctx.firstToPassThreshold;
-        if (e.turnEntry.newTotal >= 10_000 && ctx.firstToPassThreshold === "") {
+        let firstToPassThresholdId = ctx.firstToPassThresholdId;
+        if (
+          e.turnEntry.newTotal >= 10_000 &&
+          ctx.firstToPassThresholdId === ""
+        ) {
           newStage = gameStage.FINAL_ROLLS;
-          firstToPassThreshold = e.turnEntry.playerId;
+          firstToPassThresholdId = e.turnEntry.playerId;
+        }
+
+        /*
+         * If the next player is the first player to pass the score threshold,
+         * set the game stage to game over.
+         */
+        if (
+          ctx.firstToPassThresholdId !== "" &&
+          nextPlayerId === ctx.firstToPassThresholdId
+        ) {
+          newStage = gameStage.GAME_OVER;
         }
 
         return {
@@ -108,7 +124,7 @@ export const createGameState = (savedState?: GameState) =>
           rankings: newRankings,
           turnHistory: ctx.turnHistory.concat(e.turnEntry),
           gameStage: newStage,
-          firstToPassThreshold,
+          firstToPassThresholdId,
         };
       },
       // #endregion
@@ -137,7 +153,7 @@ export const createGameState = (savedState?: GameState) =>
           ...lastPlayer,
           score: lastPlayer.score - (lastTurnEntry?.earned ?? 0),
           onTheBoard:
-            lastTurnEntry?.gotOnTheBoardThisTurn === true
+            lastTurnEntry?.gotOnBoardThisTurn === true
               ? false
               : lastPlayer.onTheBoard,
         };
@@ -165,10 +181,10 @@ export const createGameState = (savedState?: GameState) =>
          * If the last turn resulted in the transition to last rolls,
          * revert that stage transition
          */
-        let firstToPassThreshold = ctx.firstToPassThreshold;
+        let firstToPassThresholdId = ctx.firstToPassThresholdId;
         let currentGameStage = ctx.gameStage;
-        if (lastTurnEntry.playerId === ctx.firstToPassThreshold) {
-          firstToPassThreshold = "";
+        if (lastTurnEntry.playerId === ctx.firstToPassThresholdId) {
+          firstToPassThresholdId = "";
           currentGameStage = gameStage.REGULATION;
         }
 
@@ -179,9 +195,32 @@ export const createGameState = (savedState?: GameState) =>
           rankings: updatedRankings,
           turnHistory: ctx.turnHistory.slice(0, ctx.turnHistory.length - 1),
           gameStage: currentGameStage,
-          firstToPassThreshold,
+          firstToPassThresholdId,
         };
       },
+      // #endregion
+
+      // #region Play Again
+      /**
+       * Resets the game but keep the same players
+       */
+      playAgain: (ctx) => {
+        const gameState = ctx;
+        const resetPlayers = gameState.players.map((player) => {
+          return {
+            ...player,
+            onTheBoard: false,
+            score: 0,
+          };
+        });
+        return {
+          ...initialState,
+          players: resetPlayers,
+          gameStage: gameStage.FIRST_ROLL,
+          id: createId(),
+        };
+      },
+
       // #endregion
 
       // #region Change Player Name

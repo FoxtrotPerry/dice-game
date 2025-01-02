@@ -6,6 +6,7 @@ import AuthButton from "./auth-button";
 import OptionsMenu from "./options-menu";
 import LeaderboardDialog from "./leaderboard-dialog";
 import TurnLogDialog from "./turn-log-dialog";
+import ResetDialog from "./reset-dialog";
 
 export const NavBar = ({ className }: { className?: string }) => {
   return (
@@ -21,6 +22,7 @@ export const NavBar = ({ className }: { className?: string }) => {
       </div>
       <LeaderboardDialog />
       <TurnLogDialog />
+      <ResetDialog />
     </>
   );
 };

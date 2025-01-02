@@ -14,7 +14,7 @@ import { useModal } from "~/hooks/use-modal";
 import { useFormattedTurns } from "~/context/game-state-context";
 
 export default function TurnLogDialog({ className }: { className?: string }) {
-  const { open, closeModal } = useModal("modal-turn-log");
+  const { open, closeModal } = useModal("turn-log");
   const formattedTurns = useFormattedTurns(100);
 
   const turnsExist = formattedTurns.length > 0;
@@ -47,7 +47,9 @@ export default function TurnLogDialog({ className }: { className?: string }) {
                 {formattedTurns.map((turn, i) => (
                   <div key={i} className="table-row">
                     <div className="table-cell">
-                      <p className="text-left">{formattedTurns.length - i}.</p>
+                      <p className="pr-3 text-right">
+                        {formattedTurns.length - i}.
+                      </p>
                     </div>
                     <div className="table-cell">
                       <p key={i} className="pl-2">

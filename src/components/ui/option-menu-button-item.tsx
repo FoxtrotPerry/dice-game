@@ -1,5 +1,4 @@
 import { Button } from "~/components/ui/button";
-import { SheetClose } from "~/components/ui/sheet";
 import { cn } from "~/lib/utils";
 
 export default function OptionMenuButtonItem({
@@ -12,17 +11,15 @@ export default function OptionMenuButtonItem({
   className?: string;
 }) {
   return (
-    <SheetClose asChild>
-      <Button
-        variant="link"
-        onClick={onClick}
-        className={cn(
-          "flex w-full justify-start gap-2 rounded-md p-2 no-underline hover:bg-gray-100 hover:no-underline dark:hover:bg-gray-800",
-          className,
-        )}
-      >
-        {children}
-      </Button>
-    </SheetClose>
+    <Button
+      variant="link"
+      onClick={onClick}
+      className={cn(
+        "flex w-full justify-start gap-2 rounded-md p-2 no-underline hover:bg-gray-100 hover:no-underline dark:hover:bg-gray-800",
+        className,
+      )}
+    >
+      {children}
+    </Button>
   );
 }

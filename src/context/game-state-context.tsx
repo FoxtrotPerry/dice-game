@@ -4,7 +4,7 @@ import React from "react";
 import { setCookie } from "cookies-next/client";
 import { createGameState, type GameState } from "./game-state";
 import { useSelector } from "@xstate/store/react";
-import { Player } from "~/types/player";
+import { formatScore } from "~/utils/number";
 
 const LS_KEY = "gameState";
 
@@ -147,20 +147,26 @@ const useFirstPlacePlayer = () => {
  * @param limit the max amount of turns to be returned
  */
 const useFormattedTurns = (limit: number) => {
+  // The existence of a for loop in this function trips
+  // makes eslint believe these hooks might be called in a
+  // loop. So we disable this rule since this isn't the case.
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const store = useGameState();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { players, turnHistory } = useSelector(store, (state) => state.context);
   const playerMap = new Map(players.map((player) => [player.id, player]));
   const lastTurns = turnHistory.slice(-limit);
   const formattedTurns: string[] = [];
   // we might be asked to return quite a few turns so we use
   // a traditional for loop for the sake of speed
+  // eslint-disable-next-line @typescript-eslint/prefer-for-of
   for (let i = 0; i < lastTurns.length; i++) {
     const player = playerMap.get(lastTurns[i]?.playerId ?? "");
-    if (lastTurns[i]?.gotOnTheBoardThisTurn) {
+    if (lastTurns[i]?.gotOnBoardThisTurn) {
       formattedTurns.unshift(`${player?.name} got on the board.`);
     } else if ((lastTurns[i]?.earned ?? 0) > 0) {
       formattedTurns.unshift(
-        `${player?.name} earned ${lastTurns[i]?.earned} points.`,
+        `${player?.name} earned ${formatScore(lastTurns[i]?.earned ?? 0)} points.`,
       );
     } else if (
       lastTurns[i]?.earned === 0 &&

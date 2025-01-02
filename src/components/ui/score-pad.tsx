@@ -45,7 +45,7 @@ export default function ScorePad({
             earned: score,
             playerId: currentPlayer.id,
             newTotal: currentPlayer.score + score,
-            gotOnTheBoardThisTurn: false,
+            gotOnBoardThisTurn: false,
           },
         });
         setScore(0);

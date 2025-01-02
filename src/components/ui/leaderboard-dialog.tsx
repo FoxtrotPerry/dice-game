@@ -13,13 +13,14 @@ import { useModal } from "~/hooks/use-modal";
 import { usePlayerRankings } from "~/context/game-state-context";
 import { Trophy } from "@phosphor-icons/react/dist/ssr";
 import { medalColors } from "~/types/medalColors";
+import { formatScore } from "~/utils/number";
 
 export default function LeaderboardDialog({
   className,
 }: {
   className?: string;
 }) {
-  const { open, closeModal } = useModal("modal-leaderboard");
+  const { open, closeModal } = useModal("leaderboard");
   const playerRankings = usePlayerRankings();
 
   const getIcon = (place: number) => {
@@ -74,7 +75,9 @@ export default function LeaderboardDialog({
                         </p>
                       </td>
                       <td>
-                        <p className="text-2xl">{rankedPlayer?.score}</p>
+                        <p className="text-2xl">
+                          {formatScore(rankedPlayer?.score ?? 0)}
+                        </p>
                       </td>
                     </tr>
                   );

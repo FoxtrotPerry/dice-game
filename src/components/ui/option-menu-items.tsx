@@ -1,37 +1,29 @@
 import { cn } from "~/lib/utils";
-import { redirect } from "next/navigation";
 import OptionMenuNavItem from "./option-menu-nav-item";
 import OptionMenuButtonItem from "./option-menu-button-item";
-import { useGameState } from "~/context/game-state-context";
-import AreYouSure from "./are-you-sure";
-import { useModal } from "~/hooks/use-modal";
 import {
   ArrowsCounterClockwise,
   HouseLine,
+  Info,
   ListNumbers,
   Ranking,
 } from "@phosphor-icons/react/dist/ssr";
+import { Separator } from "./separator";
+import { useEditSearchParams } from "~/hooks/use-edit-search-params";
 
 export default function OptionMenuItems({ className }: { className?: string }) {
-  const gameState = useGameState();
-  const resetModal = useModal("modal-reset");
-  const leaderboardModal = useModal("modal-leaderboard");
-  const turnLogModal = useModal("modal-turn-log");
-  const drawer = useModal("drawer");
-
-  const handleResetClick = () => {
-    gameState.send({ type: "RESET" });
-    redirect("/setup");
-  };
+  const { editSearchParams } = useEditSearchParams();
 
   const handleLeaderboardClick = () => {
-    drawer.closeModal();
-    leaderboardModal.openModal();
+    editSearchParams({ set: { modal: "leaderboard" } });
   };
 
   const handleTurnLogClick = () => {
-    drawer.closeModal();
-    turnLogModal.openModal();
+    editSearchParams({ set: { modal: "turn-log" } });
+  };
+
+  const handleResetClick = () => {
+    editSearchParams({ set: { modal: "reset" } });
   };
 
   return (
@@ -48,26 +40,18 @@ export default function OptionMenuItems({ className }: { className?: string }) {
         <ListNumbers size={32} weight="bold" />
         <p className="text-lg">Turn Log</p>
       </OptionMenuButtonItem>
-      <AreYouSure
-        modalId="modal-reset"
-        onConfirm={handleResetClick}
-        title="Confirm game reset"
-        destructive
-        description={
-          <p>
-            Are you sure you&apos;d like to erase your current game?{" "}
-            <b>This action cannot be reversed.</b>
-          </p>
-        }
+      <OptionMenuNavItem href={"/about"} disabled>
+        <Info size={32} weight="bold" />
+        <p className="text-lg">About</p>
+      </OptionMenuNavItem>
+      <Separator />
+      <OptionMenuButtonItem
+        onClick={handleResetClick}
+        className="text-red-600 hover:bg-red-700/15 dark:hover:bg-red-400/15"
       >
-        <OptionMenuButtonItem
-          className="text-red-600 hover:bg-red-700/15 dark:hover:bg-red-400/15"
-          onClick={resetModal.closeModal}
-        >
-          <ArrowsCounterClockwise size={32} weight="bold" />
-          <p className="text-lg">Reset Game</p>
-        </OptionMenuButtonItem>
-      </AreYouSure>
+        <ArrowsCounterClockwise size={32} weight="bold" />
+        <p className="text-lg">Reset Game</p>
+      </OptionMenuButtonItem>
     </div>
   );
 }

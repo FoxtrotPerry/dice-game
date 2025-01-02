@@ -20,7 +20,7 @@ export default function OnTheBoard({
       type: "endTurn",
       turnEntry: {
         earned: 0,
-        gotOnTheBoardThisTurn: false,
+        gotOnBoardThisTurn: false,
         newTotal: 0,
         playerId: currentPlayer.id,
       },
@@ -32,7 +32,7 @@ export default function OnTheBoard({
       type: "endTurn",
       turnEntry: {
         earned: 0,
-        gotOnTheBoardThisTurn: true,
+        gotOnBoardThisTurn: true,
         newTotal: 0,
         playerId: currentPlayer.id,
       },

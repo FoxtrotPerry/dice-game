@@ -11,6 +11,7 @@ import {
 } from "~/components/ui/dialog";
 import { cn } from "~/lib/utils";
 import { useModal } from "~/hooks/use-modal";
+import { useEditSearchParams } from "~/hooks/use-edit-search-params";
 
 export default function AreYouSure({
   className,
@@ -22,23 +23,28 @@ export default function AreYouSure({
   onConfirm,
 }: {
   className?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   modalId: string;
   title?: string;
   description?: React.ReactNode;
   destructive?: boolean;
   onConfirm: () => void;
 }) {
-  const { open, openModal, closeModal } = useModal(modalId);
+  const { open, closeModal } = useModal(modalId);
+  const { editSearchParams } = useEditSearchParams();
 
   const handleConfirmClick = () => {
     onConfirm();
     closeModal();
   };
 
+  const handleOpenClick = () => {
+    editSearchParams({ set: { modal: modalId } });
+  };
+
   return (
     <Dialog open={open}>
-      <DialogTrigger asChild onClick={openModal}>
+      <DialogTrigger asChild onClick={handleOpenClick}>
         {children}
       </DialogTrigger>
       <DialogContent

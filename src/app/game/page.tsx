@@ -1,5 +1,6 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import BadgeSeparator from "~/components/ui/badge-separator";
 import OnDeck from "~/components/ui/on-deck";
 import OnTheBoard from "~/components/ui/on-the-board";
@@ -27,11 +28,15 @@ export default function Game() {
 
   const inFinalRolls = currentGameStage === gameStage.FINAL_ROLLS;
 
+  if (currentGameStage === gameStage.GAME_OVER) {
+    redirect("/game-over");
+  }
+
   const onDeckText = onDeckPlayers[0]
     ? `On Deck: ${onDeckPlayers[0].name}`
     : null;
 
-  const separatorText = inFinalRolls ? "PLAYER TO BEAT:" : onDeckText;
+  const separatorText = inFinalRolls ? <i>FINAL ROLL</i> : onDeckText;
 
   return (
     <main className="flex justify-center">
