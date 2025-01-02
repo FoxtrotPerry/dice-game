@@ -4,6 +4,7 @@ import React from "react";
 import { setCookie } from "cookies-next/client";
 import { createGameState, type GameState } from "./game-state";
 import { useSelector } from "@xstate/store/react";
+import { Player } from "~/types/player";
 
 const LS_KEY = "gameState";
 
@@ -141,6 +142,38 @@ const useFirstPlacePlayer = () => {
   });
 };
 
+/**
+ * Returns a list of turns formatted to human readable strings
+ * @param limit the max amount of turns to be returned
+ */
+const useFormattedTurns = (limit: number) => {
+  const store = useGameState();
+  const { players, turnHistory } = useSelector(store, (state) => state.context);
+  const playerMap = new Map(players.map((player) => [player.id, player]));
+  const lastTurns = turnHistory.slice(-limit);
+  const formattedTurns: string[] = [];
+  // we might be asked to return quite a few turns so we use
+  // a traditional for loop for the sake of speed
+  for (let i = 0; i < lastTurns.length; i++) {
+    const player = playerMap.get(lastTurns[i]?.playerId ?? "");
+    if (lastTurns[i]?.gotOnTheBoardThisTurn) {
+      formattedTurns.unshift(`${player?.name} got on the board.`);
+    } else if ((lastTurns[i]?.earned ?? 0) > 0) {
+      formattedTurns.unshift(
+        `${player?.name} earned ${lastTurns[i]?.earned} points.`,
+      );
+    } else if (
+      lastTurns[i]?.earned === 0 &&
+      (lastTurns[i]?.newTotal ?? 0) > 0
+    ) {
+      formattedTurns.unshift(`${player?.name} earned no points.`);
+    } else {
+      formattedTurns.unshift(`${player?.name} did not get on the board.`);
+    }
+  }
+  return formattedTurns;
+};
+
 export {
   GameStateProvider,
   useGameState,
@@ -153,4 +186,5 @@ export {
   usePlayerRankings,
   useOnDeckPlayers,
   useFirstPlacePlayer,
+  useFormattedTurns,
 };

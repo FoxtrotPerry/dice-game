@@ -12,7 +12,11 @@ export default function OnDeck({ className }: { className?: string }) {
         if (!player) return null;
         return (
           <PlayerAvatar
-            className="-mr-2.5"
+            className={cn(
+              "-mx-1",
+              onDeckPlayers.length >= 4 && "-mx-1.5",
+              onDeckPlayers.length >= 7 && "-mx-3",
+            )}
             style={{
               zIndex: onDeckPlayers.length - i,
             }}

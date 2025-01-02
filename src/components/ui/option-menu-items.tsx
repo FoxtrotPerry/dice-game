@@ -17,13 +17,22 @@ export default function OptionMenuItems({ className }: { className?: string }) {
   const resetModal = useModal("modal-reset");
   const leaderboardModal = useModal("modal-leaderboard");
   const turnLogModal = useModal("modal-turn-log");
+  const drawer = useModal("drawer");
 
   const handleResetClick = () => {
     gameState.send({ type: "RESET" });
     redirect("/setup");
   };
 
-  // TODO: Add "Leaderboard" and "Previous Turns" menu items.
+  const handleLeaderboardClick = () => {
+    drawer.closeModal();
+    leaderboardModal.openModal();
+  };
+
+  const handleTurnLogClick = () => {
+    drawer.closeModal();
+    turnLogModal.openModal();
+  };
 
   return (
     <div className={cn("flex flex-col gap-2 pb-4", className)}>
@@ -31,11 +40,11 @@ export default function OptionMenuItems({ className }: { className?: string }) {
         <HouseLine size={32} weight="bold" />
         <p className="text-lg">Home</p>
       </OptionMenuNavItem>
-      <OptionMenuButtonItem onClick={leaderboardModal.openModal}>
+      <OptionMenuButtonItem onClick={handleLeaderboardClick}>
         <Ranking size={32} weight="bold" />
         <p className="text-lg">Leaderboard</p>
       </OptionMenuButtonItem>
-      <OptionMenuButtonItem onClick={turnLogModal.openModal}>
+      <OptionMenuButtonItem onClick={handleTurnLogClick}>
         <ListNumbers size={32} weight="bold" />
         <p className="text-lg">Turn Log</p>
       </OptionMenuButtonItem>
@@ -45,10 +54,10 @@ export default function OptionMenuItems({ className }: { className?: string }) {
         title="Confirm game reset"
         destructive
         description={
-          <>
+          <p>
             Are you sure you&apos;d like to erase your current game?{" "}
             <b>This action cannot be reversed.</b>
-          </>
+          </p>
         }
       >
         <OptionMenuButtonItem

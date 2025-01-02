@@ -12,24 +12,26 @@ import {
   Sheet,
 } from "~/components/ui/sheet";
 import OptionMenuItems from "~/components/ui/option-menu-items";
-
-// TODO: Handle open state of Drawers, Sheets, and nested Dialog components via search params
+import { useModal } from "~/hooks/use-modal";
 
 export default function OptionsMenu({ className }: { className?: string }) {
-  const [open, setOpen] = React.useState(false);
-
-  const toggleOpen = React.useCallback(() => {
-    setOpen((currOpen) => !currOpen);
-  }, []);
+  const { open, openModal, closeModal } = useModal("drawer");
 
   return (
-    <Sheet open={open} onOpenChange={toggleOpen}>
+    <Sheet open={open}>
       <SheetTrigger asChild>
-        <Button size="icon" variant="ghost">
+        <Button size="icon" variant="ghost" onClick={openModal}>
           <Menu className="dark:fill-white" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className={className}>
+      <SheetContent
+        side="left"
+        className={className}
+        onCloseAutoFocus={closeModal}
+        onEscapeKeyDown={closeModal}
+        onPointerDownOutside={closeModal}
+        onCloseClick={closeModal}
+      >
         <SheetHeader className="pl-1 pt-1">
           <SheetTitle>Options Menu</SheetTitle>
           <SheetDescription className="pb-1 leading-none">

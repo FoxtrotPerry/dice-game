@@ -15,6 +15,7 @@ export type GameState = {
   rankings: string[];
   turnOrder: string[];
   turnHistory: TurnEntry[];
+  firstToPassThreshold: string;
 };
 
 const initialState: GameState = {
@@ -39,6 +40,7 @@ const initialState: GameState = {
   turnHistory: [],
   gameStage: gameStage.SETUP,
   currentPlayerId: "",
+  firstToPassThreshold: "",
 };
 
 export const createGameState = (savedState?: GameState) =>
@@ -48,7 +50,7 @@ export const createGameState = (savedState?: GameState) =>
       // #region End Turn
       endTurn: (ctx, e: { turnEntry: TurnEntry }) => {
         /*
-         * find and update the player object with the contents of the turn
+         * Find and update the player object with the contents of the turn
          */
         let updatedPlayer = ctx.players.find(
           (player) => player.id === e.turnEntry.playerId,
@@ -67,12 +69,12 @@ export const createGameState = (savedState?: GameState) =>
         };
 
         /*
-         * get player who's turn it will be next
+         * Get player who's turn it will be next
          */
         const nextPlayerId = getNextPlayerId(ctx);
 
         /*
-         * update the player array to include the updates from this turn
+         * Update the player array to include the updates from this turn
          */
         const currentPlayerIndex = ctx.players.findIndex(
           (p) => p.id === e.turnEntry.playerId,
@@ -81,7 +83,7 @@ export const createGameState = (savedState?: GameState) =>
         updatedPlayers[currentPlayerIndex] = updatedPlayer;
 
         /*
-         * if the player scored points, update the player rankings
+         * If the player scored points, update the player rankings
          */
         let newRankings = ctx.rankings;
         if (e.turnEntry.earned > 0) {
@@ -89,12 +91,15 @@ export const createGameState = (savedState?: GameState) =>
         }
 
         /*
-         * if the player surpassed the score threshold, trigger the transition to the final rolls stage
+         * If the player surpassed the score threshold on this turn
+         * and is the first to do so then trigger the transition to
+         * the final rolls stage
          */
         let newStage = ctx.gameStage;
-        console.log(e.turnEntry.newTotal);
-        if (e.turnEntry.newTotal >= 10_000) {
+        let firstToPassThreshold = ctx.firstToPassThreshold;
+        if (e.turnEntry.newTotal >= 10_000 && ctx.firstToPassThreshold === "") {
           newStage = gameStage.FINAL_ROLLS;
+          firstToPassThreshold = e.turnEntry.playerId;
         }
 
         return {
@@ -103,6 +108,7 @@ export const createGameState = (savedState?: GameState) =>
           rankings: newRankings,
           turnHistory: ctx.turnHistory.concat(e.turnEntry),
           gameStage: newStage,
+          firstToPassThreshold,
         };
       },
       // #endregion
@@ -155,12 +161,25 @@ export const createGameState = (savedState?: GameState) =>
           updatedRankings = getRankings(updatedPlayers);
         }
 
+        /*
+         * If the last turn resulted in the transition to last rolls,
+         * revert that stage transition
+         */
+        let firstToPassThreshold = ctx.firstToPassThreshold;
+        let currentGameStage = ctx.gameStage;
+        if (lastTurnEntry.playerId === ctx.firstToPassThreshold) {
+          firstToPassThreshold = "";
+          currentGameStage = gameStage.REGULATION;
+        }
+
         return {
           ...ctx,
           players: updatedPlayers,
           currentPlayerId: lastPlayer.id,
           rankings: updatedRankings,
           turnHistory: ctx.turnHistory.slice(0, ctx.turnHistory.length - 1),
+          gameStage: currentGameStage,
+          firstToPassThreshold,
         };
       },
       // #endregion

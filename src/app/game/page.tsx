@@ -12,6 +12,7 @@ import {
   useCurrentPlayer,
   useFirstPlacePlayer,
   useGameStage,
+  useOnDeckPlayers,
 } from "~/context/game-state-context";
 import { gameStage } from "~/types/gameStage";
 import { formatScore } from "~/utils/number";
@@ -20,10 +21,17 @@ export default function Game() {
   const currentPlayer = useCurrentPlayer();
   const currentGameStage = useGameStage();
   const firstPlacePlayer = useFirstPlacePlayer();
+  const onDeckPlayers = useOnDeckPlayers();
 
   if (!currentPlayer || !currentGameStage) return <></>;
 
   const inFinalRolls = currentGameStage === gameStage.FINAL_ROLLS;
+
+  const onDeckText = onDeckPlayers[0]
+    ? `On Deck: ${onDeckPlayers[0].name}`
+    : null;
+
+  const separatorText = inFinalRolls ? "PLAYER TO BEAT:" : onDeckText;
 
   return (
     <main className="flex justify-center">
@@ -45,9 +53,7 @@ export default function Game() {
             </div>
           </div>
         </div>
-        <BadgeSeparator
-          title={inFinalRolls ? "PLAYER TO BEAT" : "Instructions"}
-        />
+        <BadgeSeparator title={separatorText} />
         {inFinalRolls && firstPlacePlayer ? <PlayerToBeat /> : <OnDeck />}
 
         {currentPlayer.onTheBoard ? (

@@ -22,10 +22,6 @@ export default function LeaderboardDialog({
   const { open, closeModal } = useModal("modal-leaderboard");
   const playerRankings = usePlayerRankings();
 
-  const handleConfirmClick = () => {
-    closeModal();
-  };
-
   const getIcon = (place: number) => {
     switch (place) {
       case 1:
@@ -39,6 +35,8 @@ export default function LeaderboardDialog({
     }
   };
 
+  const rankingsExist = playerRankings.length > 0;
+
   return (
     <Dialog open={open}>
       <DialogContent
@@ -46,43 +44,55 @@ export default function LeaderboardDialog({
         onCloseAutoFocus={closeModal}
         onEscapeKeyDown={closeModal}
         onPointerDownOutside={closeModal}
-        renderDefaultCloseButton={false}
+        onCloseClick={closeModal}
       >
         <div className="w-full">
           <DialogHeader>
             <DialogTitle className="text-3xl">Leaderboard</DialogTitle>
           </DialogHeader>
-          <table className="my-2 w-full table-auto">
-            <thead>
-              <tr>
-                <th>Place</th>
-                <th className="text-left">Player</th>
-                <th className="text-left">Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {playerRankings.map((rankedPlayer, i) => {
-                return (
-                  <tr className="h-10" key={rankedPlayer?.id}>
-                    <td>
-                      <div className="flex justify-center">
-                        {getIcon(i + 1)}
-                      </div>
-                    </td>
-                    <td className="max-w-[150px]">
-                      <p className="truncate text-2xl">{rankedPlayer?.name}</p>
-                    </td>
-                    <td>
-                      <p className="text-2xl">{rankedPlayer?.score}</p>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          {rankingsExist ? (
+            <table className="my-2 w-full table-auto">
+              <thead>
+                <tr>
+                  <th>Place</th>
+                  <th className="text-left">Player</th>
+                  <th className="text-left">Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {playerRankings.map((rankedPlayer, i) => {
+                  return (
+                    <tr className="h-10" key={rankedPlayer?.id}>
+                      <td>
+                        <div className="flex justify-center">
+                          {getIcon(i + 1)}
+                        </div>
+                      </td>
+                      <td className="max-w-[150px]">
+                        <p className="truncate text-2xl">
+                          {rankedPlayer?.name}
+                        </p>
+                      </td>
+                      <td>
+                        <p className="text-2xl">{rankedPlayer?.score}</p>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : (
+            <div className="pb-6 pt-3">
+              <p className="text-center text-gray-500">No rankings yet!</p>
+              <p className="text-center text-xs text-gray-500">
+                Rankings will show up as soon as points are scored
+              </p>
+            </div>
+          )}
+
           <DialogFooter className="flex gap-2">
             <DialogClose asChild>
-              <Button onClick={handleConfirmClick}>Close</Button>
+              <Button onClick={closeModal}>Close</Button>
             </DialogClose>
           </DialogFooter>
         </div>
