@@ -1,23 +1,12 @@
 import { createStore } from "@xstate/store";
 import type { Player } from "~/types/player";
-import { playerColor } from "~/types/playerColor";
 import { createId } from "@paralleldrive/cuid2";
 import { getRandomInt } from "~/utils/math";
-import { type GameStage, gameStage } from "~/types/gameStage";
 import type { TurnEntry } from "~/types/turnEntry";
 import { getRankings } from "~/utils/ranking";
 import { getLastPlayer, getNextPlayerId } from "~/utils/turns";
-
-export type GameState = {
-  id: string;
-  players: Player[];
-  gameStage: GameStage;
-  currentPlayerId: string;
-  rankings: string[];
-  turnOrder: string[];
-  turnHistory: TurnEntry[];
-  firstToPassThresholdId: string;
-};
+import { playerColors } from "~/types/playerColor";
+import { type GameState } from "~/types/gameState";
 
 const initialState: GameState = {
   id: createId(),
@@ -26,21 +15,21 @@ const initialState: GameState = {
       name: "",
       id: createId(),
       score: 0,
-      color: playerColor.BLUE,
+      color: "#FFABAB",
       onTheBoard: false,
     },
     {
       name: "",
       id: createId(),
       score: 0,
-      color: playerColor.RED,
+      color: "#6EB5FF",
       onTheBoard: false,
     },
   ],
   rankings: [],
   turnOrder: [],
   turnHistory: [],
-  gameStage: gameStage.SETUP,
+  gameStage: "SETUP",
   currentPlayerId: "",
   firstToPassThresholdId: "",
 };
@@ -103,7 +92,7 @@ export const createGameState = (savedState?: GameState) =>
           e.turnEntry.newTotal >= 10_000 &&
           ctx.firstToPassThresholdId === ""
         ) {
-          newStage = gameStage.FINAL_ROLLS;
+          newStage = "FINAL_ROLLS";
           firstToPassThresholdId = e.turnEntry.playerId;
         }
 
@@ -115,7 +104,7 @@ export const createGameState = (savedState?: GameState) =>
           ctx.firstToPassThresholdId !== "" &&
           nextPlayerId === ctx.firstToPassThresholdId
         ) {
-          newStage = gameStage.GAME_OVER;
+          newStage = "GAME_OVER";
         }
 
         return {
@@ -185,7 +174,7 @@ export const createGameState = (savedState?: GameState) =>
         let currentGameStage = ctx.gameStage;
         if (lastTurnEntry.playerId === ctx.firstToPassThresholdId) {
           firstToPassThresholdId = "";
-          currentGameStage = gameStage.REGULATION;
+          currentGameStage = "REGULATION";
         }
 
         return {
@@ -216,9 +205,9 @@ export const createGameState = (savedState?: GameState) =>
         return {
           ...initialState,
           players: resetPlayers,
-          gameStage: gameStage.FIRST_ROLL,
+          gameStage: "FIRST_ROLL",
           id: createId(),
-        };
+        } satisfies GameState;
       },
 
       // #endregion
@@ -242,7 +231,7 @@ export const createGameState = (savedState?: GameState) =>
             // we need to generate some more players
             const numOfNewPlayers = e.newPlayerCount - ctx.players.length;
             const takenColors = ctx.players.map((player) => player.color);
-            const availableColors = Object.values(playerColor).filter(
+            const availableColors = playerColors.filter(
               (c) => !takenColors.includes(c),
             );
             const newPlayers: Player[] = [];
@@ -251,7 +240,7 @@ export const createGameState = (savedState?: GameState) =>
               const randomColor = availableColors[randColorIndex];
               availableColors.splice(randColorIndex, 1);
               newPlayers[i] = {
-                color: randomColor ?? playerColor.VANILLA,
+                color: randomColor ?? "#E5DBD9",
                 id: createId(),
                 name: "",
                 onTheBoard: false,
@@ -280,8 +269,8 @@ export const createGameState = (savedState?: GameState) =>
         return {
           ...ctx,
           players: namedPlayers,
-          gameStage: gameStage.FIRST_ROLL,
-        };
+          gameStage: "FIRST_ROLL",
+        } satisfies GameState;
       },
       // #endregion
 
@@ -296,10 +285,10 @@ export const createGameState = (savedState?: GameState) =>
           .map((player) => player.id);
         return {
           ...ctx,
-          gameStage: gameStage.REGULATION,
+          gameStage: "REGULATION",
           turnOrder: playerTurnOrder,
           currentPlayerId: e.firstRoleWinnerId,
-        };
+        } satisfies GameState;
       },
       // #endregion
 

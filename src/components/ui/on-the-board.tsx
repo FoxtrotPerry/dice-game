@@ -1,5 +1,5 @@
 import { Card } from "~/components/ui/card";
-import { useGameState } from "~/context/game-state-context";
+import { useGameStateStore } from "~/context/game-state-context";
 import type { Player } from "~/types/player";
 import { Button } from "./button";
 import { cn } from "~/lib/utils";
@@ -11,7 +11,7 @@ export default function OnTheBoard({
   className?: string;
   currentPlayer: Player;
 }) {
-  const gameState = useGameState();
+  const gameState = useGameStateStore();
 
   if (!currentPlayer) return <></>;
 

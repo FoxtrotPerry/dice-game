@@ -1,11 +1,14 @@
 import { ArrowCounterClockwise } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "./button";
-import { useGameState, useTurnHistory } from "~/context/game-state-context";
+import {
+  useGameStateStore,
+  useTurnHistory,
+} from "~/context/game-state-context";
 import { cn } from "~/lib/utils";
 import AreYouSure from "./are-you-sure";
 
 export default function UndoButton({ className }: { className?: string }) {
-  const gameState = useGameState();
+  const gameState = useGameStateStore();
   const turnHistory = useTurnHistory();
 
   const handleUndoClick = () => {

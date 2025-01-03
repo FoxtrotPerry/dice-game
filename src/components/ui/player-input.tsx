@@ -1,7 +1,7 @@
 import { UserCircle } from "@phosphor-icons/react/dist/ssr";
 import type { ComponentProps } from "react";
 import { Input } from "~/components/ui/input";
-import { useGameState } from "~/context/game-state-context";
+import { useGameStateStore } from "~/context/game-state-context";
 import type { Player } from "~/types/player";
 
 export default function PlayerInput({
@@ -11,7 +11,7 @@ export default function PlayerInput({
   InputProps: ComponentProps<typeof Input>;
   player: Player;
 }) {
-  const gameState = useGameState();
+  const gameState = useGameStateStore();
 
   const handlePlayerNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     gameState.send({

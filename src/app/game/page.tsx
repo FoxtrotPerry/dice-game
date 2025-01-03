@@ -15,7 +15,6 @@ import {
   useGameStage,
   useOnDeckPlayers,
 } from "~/context/game-state-context";
-import { gameStage } from "~/types/gameStage";
 import { formatScore } from "~/utils/number";
 
 export default function Game() {
@@ -26,9 +25,9 @@ export default function Game() {
 
   if (!currentPlayer || !currentGameStage) return <></>;
 
-  const inFinalRolls = currentGameStage === gameStage.FINAL_ROLLS;
+  const inFinalRolls = currentGameStage === "FINAL_ROLLS";
 
-  if (currentGameStage === gameStage.GAME_OVER) {
+  if (currentGameStage === "GAME_OVER") {
     redirect("/game-over");
   }
 

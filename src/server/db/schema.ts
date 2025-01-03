@@ -1,7 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from "drizzle-orm";
+import { type InferInsertModel, type InferSelectModel, sql } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -40,6 +40,7 @@ export const posts = createTable(
 
 export const games = createTable("game", {
   id: text("id").primaryKey(),
+  accountId: text("account_id").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
@@ -47,6 +48,9 @@ export const games = createTable("game", {
     () => new Date(),
   ),
 });
+
+export type SelectGame = InferSelectModel<typeof games>;
+export type InsertGame = InferInsertModel<typeof games>;
 
 export const turns = createTable(
   "turn",
@@ -65,14 +69,23 @@ export const turns = createTable(
   }),
 );
 
+export type SelectTurn = InferSelectModel<typeof turns>;
+export type InsertTurn = InferInsertModel<typeof turns>;
+
 export const ranking = createTable("ranking", {
   gameId: text("game_id").notNull(),
   playerId: text("player_id").notNull(),
   rank: integer("rank").notNull(),
 });
 
+export type SelectRanking = InferSelectModel<typeof ranking>;
+export type InsertRanking = InferInsertModel<typeof ranking>;
+
 export const player = createTable("player", {
   id: text("id").notNull(),
   name: text("name").notNull(),
   color: text("color").notNull(),
 });
+
+export type SelectPlayer = InferSelectModel<typeof player>;
+export type InsertPlayer = InferInsertModel<typeof player>;

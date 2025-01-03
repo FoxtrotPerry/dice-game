@@ -1,9 +1,9 @@
-import { useGameState } from "~/context/game-state-context";
+import { useGameStateStore } from "~/context/game-state-context";
 import { redirect } from "next/navigation";
 import AreYouSure from "./are-you-sure";
 
 export default function ResetDialog() {
-  const gameState = useGameState();
+  const gameState = useGameStateStore();
 
   const handleResetClick = () => {
     gameState.send({ type: "RESET" });

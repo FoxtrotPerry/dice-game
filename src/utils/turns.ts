@@ -1,4 +1,4 @@
-import type { GameState } from "~/context/game-state";
+import type { GameState } from "~/types/gameState";
 
 export const getLastPlayer = (ctx: NoInfer<GameState>) => {
   const currentPlayerIndex = ctx.turnOrder.findIndex(

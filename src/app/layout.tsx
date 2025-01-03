@@ -8,6 +8,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { ThemeProvider } from "~/components/theme-provider";
 import { NavBar } from "~/components/ui/nav-bar";
 import { GameStateProvider } from "~/context/game-state-context";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Five Dice",
@@ -33,12 +34,14 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <TRPCReactProvider>
-              <GameStateProvider>
-                <header className="sticky top-0 z-10 flex w-full justify-center bg-slate-200/30 py-1 pl-2 pr-3 shadow-md backdrop-blur-sm dark:bg-slate-900/30">
-                  <NavBar className="max-w-[56rem]" />
-                </header>
-                {children}
-              </GameStateProvider>
+              <Suspense fallback={<h1 className="text-center">LOADING...</h1>}>
+                <GameStateProvider>
+                  <header className="sticky top-0 z-10 flex w-full justify-center bg-slate-200/30 py-1 pl-2 pr-3 shadow-md backdrop-blur-sm dark:bg-slate-900/30">
+                    <NavBar className="max-w-[56rem]" />
+                  </header>
+                  {children}
+                </GameStateProvider>
+              </Suspense>
             </TRPCReactProvider>
           </ThemeProvider>
         </body>

@@ -1,9 +1,12 @@
-import type { playerColor } from "./playerColor";
+import { z } from "zod";
+import { playerColors } from "./playerColor";
 
-export type Player = {
-  name: string;
-  id: string;
-  score: number;
-  color: (typeof playerColor)[keyof typeof playerColor];
-  onTheBoard: boolean;
-};
+export const zPlayer = z.object({
+  name: z.string(),
+  id: z.string().cuid2(),
+  score: z.number(),
+  color: z.enum(playerColors),
+  onTheBoard: z.boolean(),
+});
+
+export type Player = z.infer<typeof zPlayer>;

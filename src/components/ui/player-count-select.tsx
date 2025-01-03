@@ -8,7 +8,7 @@ import {
   SelectContent,
   SelectItem,
 } from "~/components/ui/select";
-import { useGameState, usePlayers } from "~/context/game-state-context";
+import { useGameStateStore, usePlayers } from "~/context/game-state-context";
 import { cn } from "~/lib/utils";
 
 export default function PlayerCountSelect({
@@ -19,7 +19,7 @@ export default function PlayerCountSelect({
   className?: string;
 }) {
   const values = useRef([2, 3, 4, 5, 6, 7, 8, 9]);
-  const gameState = useGameState();
+  const gameState = useGameStateStore();
   const players = usePlayers();
 
   const handleValueChange = useCallback(

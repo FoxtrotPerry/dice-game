@@ -4,7 +4,7 @@ import { Card } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 import { Button } from "./button";
 import { useState } from "react";
-import { useGameState } from "~/context/game-state-context";
+import { useGameStateStore } from "~/context/game-state-context";
 import type { Player } from "~/types/player";
 import { formatScore } from "~/utils/number";
 
@@ -30,7 +30,7 @@ export default function ScorePad({
   className?: string;
   currentPlayer: Player;
 }) {
-  const gameState = useGameState();
+  const gameState = useGameStateStore();
   const [score, setScore] = useState(0);
 
   const handleNumpadClick = (value: (typeof numpadItems)[number]) => {

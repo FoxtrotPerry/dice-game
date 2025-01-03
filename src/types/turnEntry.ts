@@ -1,18 +1,10 @@
-export type TurnEntry = {
-  /**
-   * The player's id.
-   */
-  playerId: string;
-  /**
-   * The points the player earned this turn.
-   */
-  earned: number;
-  /**
-   * The total score the player has after this turn.
-   */
-  newTotal: number;
-  /**
-   * Whether or not the player got on the board this turn.
-   */
-  gotOnBoardThisTurn: boolean;
-};
+import z from "zod";
+
+export const zTurnEntry = z.object({
+  playerId: z.string().nonempty(),
+  earned: z.number(),
+  newTotal: z.number(),
+  gotOnBoardThisTurn: z.boolean(),
+});
+
+export type TurnEntry = z.infer<typeof zTurnEntry>;

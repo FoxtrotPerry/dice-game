@@ -4,11 +4,11 @@ import PlayerCountSelect from "~/components/ui/player-count-select";
 import { Button } from "~/components/ui/button";
 import PlayersInputList from "~/components/ui/players-input-list";
 import { redirect } from "next/navigation";
-import { useGameState } from "~/context/game-state-context";
+import { useGameStateStore } from "~/context/game-state-context";
 import { DiceFive } from "@phosphor-icons/react/dist/ssr";
 
 export default function Setup() {
-  const gameState = useGameState();
+  const gameState = useGameStateStore();
   const handleFinishedClick = () => {
     gameState.send({ type: "progressToFirstRollStage" });
     redirect("/first-roll");

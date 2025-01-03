@@ -2,9 +2,10 @@
 
 import React from "react";
 import { setCookie } from "cookies-next/client";
-import { createGameState, type GameState } from "./game-state";
+import { createGameState } from "./game-state";
 import { useSelector } from "@xstate/store/react";
 import { formatScore } from "~/utils/number";
+import type { GameState } from "~/types/gameState";
 
 const LS_KEY = "gameState";
 
@@ -48,21 +49,27 @@ const GameStateProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 // Hook to access Context that indirectly exposes the created store
-const useGameState = () => {
+const useGameStateStore = () => {
   const ctx = React.useContext(GameStateContext);
 
-  if (!ctx) throw Error(`useGameState must be used within a GameStateProvider`);
+  if (!ctx)
+    throw Error(`useGameStateStore must be used within a GameStateProvider`);
 
   return ctx;
 };
 
+const useGameState = () => {
+  const store = useGameStateStore();
+  return useSelector(store, (state) => state.context);
+};
+
 const usePlayers = () => {
-  const store = useGameState();
+  const store = useGameStateStore();
   return useSelector(store, (state) => state.context.players);
 };
 
 const useCurrentPlayer = () => {
-  const store = useGameState();
+  const store = useGameStateStore();
   const currentPlayer = useSelector(store, (state) => {
     const currentPlayerId = state.context.currentPlayerId;
     const currentPlayer = state.context.players.find(
@@ -74,7 +81,7 @@ const useCurrentPlayer = () => {
 };
 
 const usePlayerRanking = (playerId?: string) => {
-  const store = useGameState();
+  const store = useGameStateStore();
   const rankings = useSelector(store, (state) => state.context.rankings);
   if (!playerId || rankings.length === 0) return "-";
   const currentPlayerRankingIndex = rankings.findIndex(
@@ -84,7 +91,7 @@ const usePlayerRanking = (playerId?: string) => {
 };
 
 const usePlayerRankings = () => {
-  const store = useGameState();
+  const store = useGameStateStore();
   const { players, rankings } = useSelector(store, (state) => state.context);
   const rankedPlayers = rankings.map((playerId) => {
     return players.find((p) => p.id === playerId);
@@ -93,12 +100,12 @@ const usePlayerRankings = () => {
 };
 
 const useTurnHistory = () => {
-  const store = useGameState();
+  const store = useGameStateStore();
   return useSelector(store, (state) => state.context.turnHistory);
 };
 
 const useTurnHistoryForPlayer = (playerId?: string) => {
-  const store = useGameState();
+  const store = useGameStateStore();
   const turnHistory = useSelector(store, (state) => state.context.turnHistory);
   if (!playerId) return [];
   const playersTurnHistory = turnHistory.filter(
@@ -108,12 +115,12 @@ const useTurnHistoryForPlayer = (playerId?: string) => {
 };
 
 const useGameStage = () => {
-  const store = useGameState();
+  const store = useGameStateStore();
   return useSelector(store, (state) => state.context.gameStage);
 };
 
 const useOnDeckPlayers = () => {
-  const store = useGameState();
+  const store = useGameStateStore();
   const { players, turnOrder, currentPlayerId } = useSelector(
     store,
     (state) => state.context,
@@ -132,7 +139,7 @@ const useOnDeckPlayers = () => {
 };
 
 const useFirstPlacePlayer = () => {
-  const store = useGameState();
+  const store = useGameStateStore();
   return useSelector(store, (state) => {
     const rankings = state.context.rankings;
     const firstPlacePlayer = state.context.players.find(
@@ -151,7 +158,7 @@ const useFormattedTurns = (limit: number) => {
   // makes eslint believe these hooks might be called in a
   // loop. So we disable this rule since this isn't the case.
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const store = useGameState();
+  const store = useGameStateStore();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { players, turnHistory } = useSelector(store, (state) => state.context);
   const playerMap = new Map(players.map((player) => [player.id, player]));
@@ -182,6 +189,7 @@ const useFormattedTurns = (limit: number) => {
 
 export {
   GameStateProvider,
+  useGameStateStore,
   useGameState,
   usePlayers,
   useCurrentPlayer,

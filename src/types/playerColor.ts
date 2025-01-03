@@ -1,12 +1,12 @@
-export const playerColor = {
-  PINK: "#FFCCF9",
-  RED: "#FFABAB",
-  ORANGE: "#FFCBC1",
-  YELLOW: "#FFFFD1",
-  MINT: "#AFF8DB",
-  CYAN: "#C4FAF8",
-  BLUE: "#6EB5FF",
-  PURPLE: "#B28DFF",
-  SLATE: "#D7EEFF",
-  VANILLA: "#E5DBD9",
-} as const;
+export const playerColors = [
+  "#FFCCF9",
+  "#FFABAB",
+  "#FFCBC1",
+  "#FFFFD1",
+  "#AFF8DB",
+  "#C4FAF8",
+  "#6EB5FF",
+  "#B28DFF",
+  "#D7EEFF",
+  "#E5DBD9",
+] as const;
