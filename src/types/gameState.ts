@@ -12,6 +12,7 @@ export const zGameState = z.object({
   turnOrder: z.array(z.string().cuid2()),
   turnHistory: z.array(zTurnEntry),
   firstToPassThresholdId: z.string().cuid2(),
+  initialSource: z.enum(["loaded", "initial"]),
 });
 
 export type GameState = z.infer<typeof zGameState>;

@@ -9,6 +9,7 @@ import { useGameState, useGameStateStore } from "~/context/game-state-context";
 import { useCallback, useMemo } from "react";
 import { LoadingButton } from "~/components/ui/loading-button";
 import { Check, FloppyDisk } from "@phosphor-icons/react/dist/ssr";
+import LocalGameAnalytics from "~/components/ui/local-game-analytics";
 
 export default function GameOver() {
   const { isSignedIn, user } = useUser();
@@ -26,8 +27,7 @@ export default function GameOver() {
     enabled: !!user,
   });
   const saveGame = api.game.saveGame.useMutation({
-    onSuccess: async (results) => {
-      console.log(results);
+    onSuccess: async () => {
       await utils.game.invalidate();
     },
   });
@@ -79,6 +79,7 @@ export default function GameOver() {
         >
           {saveButtonContent}
         </LoadingButton>
+        <LocalGameAnalytics />
       </section>
     </main>
   );

@@ -32,6 +32,7 @@ const initialState: GameState = {
   gameStage: "SETUP",
   currentPlayerId: "",
   firstToPassThresholdId: "",
+  initialSource: "initial",
 };
 
 export const createGameState = (savedState?: GameState) =>

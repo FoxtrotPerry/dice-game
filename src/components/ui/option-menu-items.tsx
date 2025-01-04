@@ -3,6 +3,7 @@ import OptionMenuNavItem from "./option-menu-nav-item";
 import OptionMenuButtonItem from "./option-menu-button-item";
 import {
   ArrowsCounterClockwise,
+  BookOpenText,
   HouseLine,
   Info,
   ListNumbers,
@@ -44,7 +45,7 @@ export default function OptionMenuItems({ className }: { className?: string }) {
         <p className="text-lg">Turn Log</p>
       </OptionMenuButtonItem>
       <OptionMenuNavItem href={"/instructions"} disabled>
-        <Info size={32} weight="bold" />
+        <BookOpenText size={32} weight="bold" />
         <p className="text-lg">Instructions</p>
       </OptionMenuNavItem>
       <OptionMenuNavItem href={"/about"} disabled>

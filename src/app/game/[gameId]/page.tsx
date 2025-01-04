@@ -1,5 +1,5 @@
 import { api } from "~/trpc/server";
-import GameAnalytics from "~/components/ui/game-analytics";
+import SavedGameAnalytics from "~/components/ui/saved-game-analytics";
 
 export default async function UserPage({
   params,
@@ -12,7 +12,7 @@ export default async function UserPage({
   return (
     <main className="flex justify-center">
       <section className="flex w-full max-w-screen-sm flex-col gap-2 p-3">
-        <GameAnalytics gameId={gameId} />
+        <SavedGameAnalytics gameId={gameId} />
       </section>
     </main>
   );

@@ -10,6 +10,7 @@ import {
   turn,
 } from "~/server/db/schema";
 import { zGameState } from "~/types/gameState";
+import { clerkClient } from "@clerk/nextjs/server";
 
 export const gameRouter = createTRPCRouter({
   saveGame: publicProcedure
@@ -36,11 +37,13 @@ export const gameRouter = createTRPCRouter({
       const addToTurns = ctx.db.insert(turn).values(turnValues).returning();
 
       const playerValues: InsertPlayer[] = gameState.players.map((player) => {
-        const rank = gameState.rankings.findIndex((playerId) => player.id);
+        const rank = gameState.rankings.findIndex(
+          (playerId) => player.id === playerId,
+        );
         return {
           gameId: gameState.id,
           color: player.color,
-          rank,
+          rank: rank !== -1 ? rank + 1 : rank,
           id: player.id,
           name: player.name,
         };
@@ -55,8 +58,8 @@ export const gameRouter = createTRPCRouter({
         addToGames,
         addToTurns,
         addToPlayers,
-      ]).catch((reason) => {
-        throw Error(reason);
+      ]).catch((reason: string) => {
+        throw Error(reason ?? "Unspecified error");
       });
 
       return {
@@ -90,7 +93,12 @@ export const gameRouter = createTRPCRouter({
         },
         where: (games, { eq }) => eq(games.id, input),
       });
-      return resp;
+      if (!resp) throw Error(`Could not find game with id: ${input}}`);
+      const userResp = await (
+        await clerkClient()
+      ).users.getUser(resp.accountId);
+      const { username, imageUrl } = userResp;
+      return { game: resp, userDetails: { username, imageUrl } };
     }),
 
   getUsersGames: publicProcedure
@@ -100,13 +108,14 @@ export const gameRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
+      // TODO: Validate that this query works
       const resp = await ctx.db.query.game.findMany({
         with: {
           players: true,
           turns: true,
         },
-        where: (games, { eq }) => eq(games.id, input.userId),
+        where: (games, { eq }) => eq(games.accountId, input.userId),
       });
-      return null;
+      return resp;
     }),
 });

@@ -30,7 +30,11 @@ const GameStateProvider = ({ children }: { children: React.ReactNode }) => {
         | GameState
         | undefined;
       if (savedState) {
-        gameStateStore.send({ type: "RESTORE", savedState });
+        savedState.initialSource = "loaded";
+        gameStateStore.send({
+          type: "RESTORE",
+          savedState,
+        });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
