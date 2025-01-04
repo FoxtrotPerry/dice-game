@@ -7,12 +7,15 @@ import {
   Info,
   ListNumbers,
   Ranking,
+  UserCircle,
 } from "@phosphor-icons/react/dist/ssr";
-import { Separator } from "./separator";
 import { useEditSearchParams } from "~/hooks/use-edit-search-params";
+import BadgeSeparator from "./badge-separator";
+import { useUser } from "@clerk/nextjs";
 
 export default function OptionMenuItems({ className }: { className?: string }) {
   const { editSearchParams } = useEditSearchParams();
+  const { isSignedIn } = useUser();
 
   const handleLeaderboardClick = () => {
     editSearchParams({ set: { modal: "leaderboard" } });
@@ -40,11 +43,25 @@ export default function OptionMenuItems({ className }: { className?: string }) {
         <ListNumbers size={32} weight="bold" />
         <p className="text-lg">Turn Log</p>
       </OptionMenuButtonItem>
+      <OptionMenuNavItem href={"/instructions"} disabled>
+        <Info size={32} weight="bold" />
+        <p className="text-lg">Instructions</p>
+      </OptionMenuNavItem>
       <OptionMenuNavItem href={"/about"} disabled>
         <Info size={32} weight="bold" />
         <p className="text-lg">About</p>
       </OptionMenuNavItem>
-      <Separator />
+      {isSignedIn && (
+        <>
+          <BadgeSeparator>User Options</BadgeSeparator>
+          <OptionMenuNavItem href={`/user`}>
+            <UserCircle size={32} weight="bold" />
+            <p className="text-lg">User</p>
+          </OptionMenuNavItem>
+        </>
+      )}
+
+      <BadgeSeparator>Danger Zone</BadgeSeparator>
       <OptionMenuButtonItem
         onClick={handleResetClick}
         className="text-red-600 hover:bg-red-700/15 dark:hover:bg-red-400/15"

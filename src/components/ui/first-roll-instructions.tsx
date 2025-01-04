@@ -4,7 +4,7 @@ import BadgeSeparator from "./badge-separator";
 export default function FirstRollInstructions() {
   return (
     <div className="flex flex-col gap-2">
-      <BadgeSeparator title="Instructions" />
+      <BadgeSeparator>Instructions</BadgeSeparator>
       <InstructionItem number={1}>
         <p className="font-bold leading-none">Every player rolls one die.</p>
       </InstructionItem>

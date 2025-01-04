@@ -57,7 +57,7 @@ export default function Game() {
             </div>
           </div>
         </div>
-        <BadgeSeparator title={separatorText} />
+        <BadgeSeparator>{separatorText}</BadgeSeparator>
         {inFinalRolls && firstPlacePlayer ? <PlayerToBeat /> : <OnDeck />}
 
         {currentPlayer.onTheBoard ? (

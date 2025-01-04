@@ -1,7 +1,12 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { type InferInsertModel, type InferSelectModel, sql } from "drizzle-orm";
+import {
+  type InferInsertModel,
+  type InferSelectModel,
+  sql,
+  relations,
+} from "drizzle-orm";
 import {
   boolean,
   index,
@@ -38,8 +43,8 @@ export const posts = createTable(
   }),
 );
 
-export const games = createTable("game", {
-  id: text("id").primaryKey(),
+export const game = createTable("game", {
+  id: text("id").primaryKey().unique(),
   accountId: text("account_id").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
@@ -49,13 +54,20 @@ export const games = createTable("game", {
   ),
 });
 
-export type SelectGame = InferSelectModel<typeof games>;
-export type InsertGame = InferInsertModel<typeof games>;
+export const gameRelations = relations(game, ({ many }) => ({
+  turns: many(turn),
+  players: many(player),
+}));
 
-export const turns = createTable(
+export type SelectGame = InferSelectModel<typeof game>;
+export type InsertGame = InferInsertModel<typeof game>;
+
+export const turn = createTable(
   "turn",
   {
-    gameId: text("game_id").notNull(),
+    gameId: text("game_id")
+      .notNull()
+      .references(() => game.id),
     turnId: integer("turn_id").notNull(),
     playerId: text("player_id").notNull(),
     earned: integer("earned").notNull(),
@@ -69,23 +81,32 @@ export const turns = createTable(
   }),
 );
 
-export type SelectTurn = InferSelectModel<typeof turns>;
-export type InsertTurn = InferInsertModel<typeof turns>;
+export const turnRelations = relations(turn, ({ one }) => ({
+  game: one(game, {
+    fields: [turn.gameId],
+    references: [game.id],
+  }),
+}));
 
-export const ranking = createTable("ranking", {
-  gameId: text("game_id").notNull(),
-  playerId: text("player_id").notNull(),
-  rank: integer("rank").notNull(),
-});
-
-export type SelectRanking = InferSelectModel<typeof ranking>;
-export type InsertRanking = InferInsertModel<typeof ranking>;
+export type SelectTurn = InferSelectModel<typeof turn>;
+export type InsertTurn = InferInsertModel<typeof turn>;
 
 export const player = createTable("player", {
+  gameId: text("game_id")
+    .notNull()
+    .references(() => game.id),
   id: text("id").notNull(),
+  rank: integer("rank").notNull(),
   name: text("name").notNull(),
   color: text("color").notNull(),
 });
+
+export const playerRelations = relations(player, ({ one }) => ({
+  game: one(game, {
+    fields: [player.gameId],
+    references: [game.id],
+  }),
+}));
 
 export type SelectPlayer = InferSelectModel<typeof player>;
 export type InsertPlayer = InferInsertModel<typeof player>;

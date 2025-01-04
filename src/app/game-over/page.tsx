@@ -6,10 +6,12 @@ import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import LeaderboardTable from "~/components/ui/leaderboard-table";
 import { useGameState, useGameStateStore } from "~/context/game-state-context";
-import { Loader2 } from "lucide-react";
+import { useCallback, useMemo } from "react";
+import { LoadingButton } from "~/components/ui/loading-button";
+import { Check, FloppyDisk } from "@phosphor-icons/react/dist/ssr";
 
 export default function GameOver() {
-  const user = useUser();
+  const { isSignedIn, user } = useUser();
   const gameStateStore = useGameStateStore();
   const gameState = useGameState();
   const utils = api.useUtils();
@@ -21,7 +23,7 @@ export default function GameOver() {
 
   const gameAlreadySaved = api.game.gameExists.useQuery(gameState.id, {
     refetchOnWindowFocus: false,
-    enabled: !!user.user,
+    enabled: !!user,
   });
   const saveGame = api.game.saveGame.useMutation({
     onSuccess: async (results) => {
@@ -30,18 +32,37 @@ export default function GameOver() {
     },
   });
 
-  const handleSaveGameClick = async () => {
-    if (gameState && user?.user?.id) {
-      saveGame.mutate({ gameState, accountId: user.user.id });
-    }
-  };
-
   const pending = saveGame.isPending || gameAlreadySaved.isPending;
 
-  const disableSaving =
-    pending || gameAlreadySaved.data === true || !user.isSignedIn;
+  const alreadySaved = gameAlreadySaved.data === true;
 
-  const saveButtonText = disableSaving ? "Game already saved!" : "Save Game";
+  const disableSaving = alreadySaved || !isSignedIn;
+
+  const saveButtonContent = useMemo(() => {
+    if (isSignedIn && !alreadySaved) {
+      return (
+        <>
+          Save Game
+          <FloppyDisk size={32} weight="bold" />
+        </>
+      );
+    } else if (!isSignedIn) {
+      return "Sign in to save";
+    } else if (alreadySaved) {
+      return (
+        <>
+          Game saved!
+          <Check size={32} weight="bold" color="#59e271" />
+        </>
+      );
+    }
+  }, [alreadySaved, isSignedIn]);
+
+  const handleSaveGameClick = useCallback(async () => {
+    if (gameState && user?.id && !disableSaving) {
+      saveGame.mutate({ gameState, accountId: user.id });
+    }
+  }, [disableSaving, gameState, saveGame, user?.id]);
 
   return (
     <main className="flex justify-center">
@@ -51,10 +72,13 @@ export default function GameOver() {
         </h1>
         <LeaderboardTable />
         <Button onClick={handlePlayAgainClick}>Play Again?</Button>
-        <Button onClick={handleSaveGameClick} disabled={disableSaving}>
-          {pending && <Loader2 className="animate-spin" />}
-          {saveButtonText}
-        </Button>
+        <LoadingButton
+          onClick={handleSaveGameClick}
+          loading={pending}
+          disabled={disableSaving}
+        >
+          {saveButtonContent}
+        </LoadingButton>
       </section>
     </main>
   );

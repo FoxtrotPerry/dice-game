@@ -4,10 +4,10 @@ import { Separator } from "./separator";
 
 export default function BadgeSeparator({
   className,
-  title,
+  children,
 }: {
   className?: string;
-  title: React.ReactNode;
+  children: React.ReactNode;
 }) {
   return (
     <div className="flex max-w-screen-sm justify-evenly gap-2">
@@ -15,7 +15,7 @@ export default function BadgeSeparator({
         <Separator />
       </div>
       <Badge className={cn("hover:bg-black dark:hover:bg-white", className)}>
-        <p className="text-nowrap">{title}</p>
+        <div className="text-nowrap">{children}</div>
       </Badge>
       <div className="flex w-full items-center">
         <Separator />
