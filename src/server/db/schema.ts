@@ -9,13 +9,11 @@ import {
 } from "drizzle-orm";
 import {
   boolean,
-  index,
   integer,
   pgTableCreator,
   primaryKey,
   text,
   timestamp,
-  varchar,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -25,23 +23,6 @@ import {
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `five-dice_${name}`);
-
-export const posts = createTable(
-  "post",
-  {
-    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date(),
-    ),
-  },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  }),
-);
 
 export const game = createTable("game", {
   id: text("id").primaryKey().unique(),
