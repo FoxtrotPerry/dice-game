@@ -46,6 +46,7 @@ export const gameRouter = createTRPCRouter({
           rank: rank !== -1 ? rank + 1 : rank,
           id: player.id,
           name: player.name,
+          finalScore: player.score,
         };
       });
 

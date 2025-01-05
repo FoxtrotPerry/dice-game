@@ -14,7 +14,6 @@ export default function LocalLeaderboardTable({
     gameState,
     userId: "",
   });
-  console.log(localSavedGame.players);
   return (
     <LeaderboardTable players={localSavedGame.players} className={className} />
   );

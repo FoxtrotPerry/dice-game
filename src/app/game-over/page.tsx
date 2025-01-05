@@ -78,22 +78,24 @@ export default function GameOver() {
 
   return (
     <main className="flex justify-center">
-      <section className="flex w-full max-w-screen-sm flex-col gap-2 p-3">
+      <section className="flex w-full max-w-screen-sm flex-col gap-4 p-3">
         <h1 className="w-full text-center text-4xl font-bold">
           <i>GAME OVER</i>
         </h1>
         <LocalLeaderboardTable />
-        <Button onClick={handlePlayAgainClick}>Play Again?</Button>
-        <LoadingButton
-          onClick={handleSaveGameClick}
-          loading={pending}
-          disabled={disableSaving}
-        >
-          {saveButtonContent}
-        </LoadingButton>
+        <div className="flex flex-col gap-2">
+          <Button onClick={handlePlayAgainClick}>Play Again?</Button>
+          <LoadingButton
+            onClick={handleSaveGameClick}
+            loading={pending}
+            disabled={disableSaving}
+          >
+            {saveButtonContent}
+          </LoadingButton>
+        </div>
         <BadgeSeparator>Awards</BadgeSeparator>
         {analytics.data && <GameAwards awards={analytics.data} />}
-        <BadgeSeparator className="py-4">Analytics</BadgeSeparator>
+        <BadgeSeparator>Analytics</BadgeSeparator>
         <LocalGameAnalytics />
       </section>
     </main>

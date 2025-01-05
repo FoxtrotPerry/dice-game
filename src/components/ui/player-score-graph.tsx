@@ -61,9 +61,12 @@ export function PlayerScoreGraph({
             <CartesianGrid vertical={true} />
             <XAxis
               dataKey="turn"
+              type="number"
               tickLine={false}
               axisLine={false}
-              tickCount={10}
+              tickCount={5}
+              domain={[0, "dataMax"]}
+              interval="preserveEnd"
             >
               <Label value="Turn" offset={-5} position="bottom" />
             </XAxis>
@@ -72,6 +75,7 @@ export function PlayerScoreGraph({
               tickLine={false}
               axisLine={false}
               domain={[0, 10000]}
+              allowDataOverflow
               tickFormatter={(value: number) => {
                 return abbreviateScore(value);
               }}

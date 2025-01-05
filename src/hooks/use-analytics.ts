@@ -3,8 +3,11 @@ import { type GetGameResponseGameData } from "~/types/analytics";
 import type { GameState } from "~/types/gameState";
 import {
   gameStateToSavedGame,
+  getFirstPlayerToStealFirst,
   getHighestTurnAnalytics,
+  getHighLowVariance,
   getMostNoScoreTurns,
+  getUnderDog,
 } from "~/utils/analytics";
 
 type UserAnalyticsParams =
@@ -29,14 +32,26 @@ export function useAnalytics(params: UserAnalyticsParams) {
         }
       })();
 
-      const [highestTurn, mostNoScores] = await Promise.all([
+      const [
+        highestTurn,
+        mostNoScores,
+        firstToSteal,
+        underDog,
+        highLowVariance,
+      ] = await Promise.all([
         getHighestTurnAnalytics(game),
         getMostNoScoreTurns(game),
+        getFirstPlayerToStealFirst(game),
+        getUnderDog(game),
+        getHighLowVariance(game),
       ]);
 
       return {
         highestTurn,
         mostNoScores,
+        firstToSteal,
+        underDog,
+        highLowVariance,
       };
     },
     enabled: isUseAnalyticsEnabled(params),

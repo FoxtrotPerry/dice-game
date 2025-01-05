@@ -59,6 +59,12 @@ export default function ScorePad({
     }
   };
 
+  /**
+ // TODO: Disable the END TURN button if:
+ - game is in final rolls stage and current score input wouldn't be enough to win
+ - current score input isn't evenly divisible by 50. 
+ */
+
   return (
     <div className={cn("flex flex-col items-center gap-2", className)}>
       <Card

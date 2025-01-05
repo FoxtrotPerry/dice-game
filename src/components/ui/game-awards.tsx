@@ -1,14 +1,16 @@
 import { cn } from "~/lib/utils";
 import { type UseAnalyticsData } from "~/types/analytics";
+import { Card, CardDescription, CardHeader, CardTitle } from "./card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./card";
-import { Coins, EggCrack } from "@phosphor-icons/react/dist/ssr";
+  Clover,
+  Coins,
+  Dog,
+  EggCrack,
+  Knife,
+  Spade,
+} from "@phosphor-icons/react/dist/ssr";
 import React from "react";
+import { Turtle } from "lucide-react";
 
 export default function GameAwards({
   className,
@@ -17,33 +19,63 @@ export default function GameAwards({
   className?: string;
   awards: NonNullable<UseAnalyticsData>;
 }) {
-  const { highestTurn, mostNoScores } = awards;
+  const { highestTurn, mostNoScores, firstToSteal, underDog, highLowVariance } =
+    awards;
+  const { highestVariance, lowestVariance } = highLowVariance;
   return (
     <div className={cn("grid grid-cols-1 gap-2 md:grid-cols-2", className)}>
       <Award
         name="High Roller"
+        description={"Highest earnings on one singular turn"}
         color={highestTurn.highestTurnPlayer?.color}
         playerName={highestTurn.highestTurnPlayer?.name}
-        description={"Highest earnings on one singular turn."}
-        value={
-          <b>
-            {`Earned ${highestTurn.highestTurn?.earned} on turn
+        value={`Earned ${highestTurn.highestTurn?.earned} on turn
             #${highestTurn.highestTurn?.turnId}`}
-          </b>
-        }
         icon={<Coins size={32} />}
       />
       <Award
-        name="Biggest Loser"
+        name="Luck of the Draw"
+        description="Earned nothing the most amount of times"
         color={mostNoScores?.mostNoScoreTurnPlayer?.color}
         playerName={mostNoScores?.mostNoScoreTurnPlayer?.name}
-        description="Highest number of turns earning nothing."
-        value={
-          <b>
-            {`Earned nothing a total of ${mostNoScores?.mostNoScoreTurns} times`}
-          </b>
-        }
-        icon={<EggCrack size={32} />}
+        value={`Earned nothing a total of ${mostNoScores?.mostNoScoreTurns} times`}
+        icon={<Clover size={32} />}
+      />
+      {firstToSteal && (
+        <Award
+          name="Back Stabber"
+          description="First person to steal 1st during Final Rolls"
+          color={firstToSteal.color}
+          icon={<Knife size={32} />}
+          playerName={firstToSteal.name}
+          value={`Stole 1st place with a score of ${firstToSteal.finalScore}`}
+        />
+      )}
+      {underDog && (
+        <Award
+          name="Under Dog"
+          description={"Had the biggest 2nd half score improvement"}
+          color={underDog.underDogPlayer.color}
+          icon={<Dog size={32} />}
+          playerName={underDog.underDogPlayer.name}
+          value={`2nd half average of ${underDog.secondHalfAvg.toFixed(0)} pts/turn`}
+        />
+      )}
+      <Award
+        name="Wildcard"
+        description="Biggest variance in point earnings per turn"
+        color={highestVariance.player?.color}
+        icon={<Spade size={32} />}
+        playerName={highestVariance.player?.name}
+        value={`Variance was ${highestVariance.percentAboveAvg.toFixed(0)}% above average`}
+      />
+      <Award
+        name="Slow n' Steady"
+        description="Lowest variance in point earnings per turn"
+        color={lowestVariance.player?.color}
+        icon={<Turtle size={32} strokeWidth={1.25} />}
+        playerName={lowestVariance.player?.name}
+        value={`Variance was ${lowestVariance.percentBelowAvg.toFixed(0)}% below average`}
       />
     </div>
   );
@@ -79,7 +111,9 @@ function Award({
           </p>
         </CardTitle>
         <CardDescription className="text-center">{description}</CardDescription>
-        <div className="flex justify-center">{value}</div>
+        <div className="flex justify-center">
+          <b>{value}</b>
+        </div>
       </CardHeader>
     </Card>
   );
