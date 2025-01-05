@@ -1,7 +1,7 @@
 import { api } from "~/trpc/server";
-import SavedGameAnalytics from "~/components/ui/saved-game-analytics";
+import SavedGameContainer from "~/components/ui/saved-game-container";
 
-export default async function UserPage({
+export default async function SavedGameInfo({
   params,
 }: {
   params: Promise<{ gameId: string }>;
@@ -11,8 +11,8 @@ export default async function UserPage({
 
   return (
     <main className="flex justify-center">
-      <section className="flex w-full max-w-screen-sm flex-col gap-2 p-3">
-        <SavedGameAnalytics gameId={gameId} />
+      <section className="flex w-full max-w-screen-sm flex-col p-3">
+        <SavedGameContainer gameId={gameId} />
       </section>
     </main>
   );

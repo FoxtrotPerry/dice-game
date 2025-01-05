@@ -86,6 +86,10 @@ export const turnRelations = relations(turn, ({ one }) => ({
     fields: [turn.gameId],
     references: [game.id],
   }),
+  player: one(player, {
+    fields: [turn.playerId],
+    references: [player.id],
+  }),
 }));
 
 export type SelectTurn = InferSelectModel<typeof turn>;
@@ -99,13 +103,15 @@ export const player = createTable("player", {
   rank: integer("rank").notNull(),
   name: text("name").notNull(),
   color: text("color").notNull(),
+  finalScore: integer("final_score").notNull().default(0),
 });
 
-export const playerRelations = relations(player, ({ one }) => ({
+export const playerRelations = relations(player, ({ one, many }) => ({
   game: one(game, {
     fields: [player.gameId],
     references: [game.id],
   }),
+  playerTurns: many(turn),
 }));
 
 export type SelectPlayer = InferSelectModel<typeof player>;

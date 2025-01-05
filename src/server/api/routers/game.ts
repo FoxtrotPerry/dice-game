@@ -88,7 +88,12 @@ export const gameRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const resp = await ctx.db.query.game.findFirst({
         with: {
-          players: true,
+          players: {
+            with: {
+              playerTurns: true,
+            },
+            orderBy: (players, { asc }) => [asc(players.rank)],
+          },
           turns: true,
         },
         where: (games, { eq }) => eq(games.id, input),

@@ -1,17 +1,15 @@
-"use client";
-
-import { usePlayerRankings } from "~/context/game-state-context";
 import { Trophy } from "@phosphor-icons/react/dist/ssr";
 import { medalColors } from "~/types/medalColors";
 import { cn } from "~/lib/utils";
+import type { GetGameResponseGameData } from "~/types/analytics";
 
 export default function LeaderboardTable({
   className,
+  players,
 }: {
   className?: string;
+  players: GetGameResponseGameData["players"];
 }) {
-  const playerRankings = usePlayerRankings();
-
   const getIcon = (place: number) => {
     switch (place) {
       case 1:
@@ -26,7 +24,7 @@ export default function LeaderboardTable({
   };
 
   return (
-    <table className={cn("my-2 table-auto", className)}>
+    <table className={cn("table-auto", className)}>
       <thead>
         <tr>
           <th>Place</th>
@@ -35,17 +33,17 @@ export default function LeaderboardTable({
         </tr>
       </thead>
       <tbody>
-        {playerRankings.map((rankedPlayer, i) => {
+        {players.map((player, i) => {
           return (
-            <tr className="h-10" key={rankedPlayer?.id}>
+            <tr className="h-10" key={player?.id}>
               <td>
                 <div className="flex justify-center">{getIcon(i + 1)}</div>
               </td>
               <td className="max-w-[150px]">
-                <p className="truncate text-2xl">{rankedPlayer?.name}</p>
+                <p className="truncate text-2xl">{player?.name}</p>
               </td>
               <td>
-                <p className="text-2xl">{rankedPlayer?.score}</p>
+                <p className="text-2xl">{player?.finalScore}</p>
               </td>
             </tr>
           );

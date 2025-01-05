@@ -1,19 +1,16 @@
 "use client";
 
 import { useGameState } from "~/context/game-state-context";
-import { useAnalytics } from "~/hooks/use-analytics";
 import GameAnalytics from "./game-analytics";
+import { gameStateToSavedGame } from "~/utils/analytics";
 
 export default function LocalGameAnalytics({}) {
   const gameState = useGameState();
-  const analytics = useAnalytics({
-    source: "localState",
-    gameState: gameState,
-  });
+  const localGameSave = gameStateToSavedGame({ gameState, userId: "" });
 
   return (
     <div>
-      <GameAnalytics analytics={analytics.data} />
+      <GameAnalytics players={localGameSave.players} />
     </div>
   );
 }

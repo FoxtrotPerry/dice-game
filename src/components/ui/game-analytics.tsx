@@ -1,10 +1,19 @@
-import { type UseAnalyticsData } from "~/hooks/use-analytics";
+import type { GetGameResponseGameData } from "~/types/analytics";
+import { PlayerScoreGraph } from "./player-score-graph";
+import { cn } from "~/lib/utils";
 
 export default function GameAnalytics({
-  analytics,
+  players,
+  className,
 }: {
-  analytics: UseAnalyticsData;
+  players: GetGameResponseGameData["players"];
+  className?: string;
 }) {
-  console.log(analytics);
-  return <></>;
+  return (
+    <div className={cn("flex flex-col gap-2", className)}>
+      {players.map((player) => {
+        return <PlayerScoreGraph player={player} key={player.id} />;
+      })}
+    </div>
+  );
 }
