@@ -10,10 +10,7 @@ import { useCallback, useMemo } from "react";
 import { LoadingButton } from "~/components/ui/loading-button";
 import { Check, FloppyDisk } from "@phosphor-icons/react/dist/ssr";
 import LocalGameAnalytics from "~/components/ui/local-game-analytics";
-import { gameStateToSavedGame } from "~/utils/analytics";
 import { useAnalytics } from "~/hooks/use-analytics";
-import LeaderboardTable from "~/components/ui/leaderboard-table";
-import GameAnalytics from "~/components/ui/game-analytics";
 import BadgeSeparator from "~/components/ui/badge-separator";
 import GameAwards from "~/components/ui/game-awards";
 
@@ -21,7 +18,6 @@ export default function GameOver() {
   const { isSignedIn, user } = useUser();
   const gameStateStore = useGameStateStore();
   const gameState = useGameState();
-  const localGameSave = gameStateToSavedGame({ gameState, userId: "" });
   const utils = api.useUtils();
 
   const analytics = useAnalytics({

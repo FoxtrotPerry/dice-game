@@ -10,7 +10,7 @@ import {
   turn,
 } from "~/server/db/schema";
 import { zGameState } from "~/types/gameState";
-import { clerkClient } from "@clerk/nextjs/server";
+import { clerkClient, auth } from "@clerk/nextjs/server";
 
 export const gameRouter = createTRPCRouter({
   saveGame: publicProcedure
@@ -109,18 +109,22 @@ export const gameRouter = createTRPCRouter({
 
   getUsersGames: publicProcedure
     .input(
-      z.object({
-        userId: z.string(),
-      }),
+      z
+        .object({
+          userId: z.string(),
+        })
+        .optional(),
     )
     .query(async ({ ctx, input }) => {
-      // TODO: Validate that this query works
+      const { userId: clerkUserId } = await auth();
+      const userId = clerkUserId ?? input?.userId ?? "";
+
       const resp = await ctx.db.query.game.findMany({
         with: {
           players: true,
           turns: true,
         },
-        where: (games, { eq }) => eq(games.accountId, input.userId),
+        where: (games, { eq }) => eq(games.accountId, userId),
       });
       return resp;
     }),

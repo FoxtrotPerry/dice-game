@@ -5,7 +5,6 @@ import {
   Clover,
   Coins,
   Dog,
-  EggCrack,
   Knife,
   Spade,
 } from "@phosphor-icons/react/dist/ssr";

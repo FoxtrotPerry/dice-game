@@ -34,6 +34,9 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <TRPCReactProvider>
+              {/**
+               * TODO: Replace fallback with something better
+               */}
               <Suspense fallback={<h1 className="text-center">LOADING...</h1>}>
                 <GameStateProvider>
                   <header className="sticky top-0 z-10 flex w-full justify-center bg-slate-200/30 py-1 pl-2 pr-3 shadow-md backdrop-blur-sm dark:bg-slate-900/30">

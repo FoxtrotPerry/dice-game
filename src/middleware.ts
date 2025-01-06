@@ -2,22 +2,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { type NextRequest, NextResponse } from "next/server";
 import { type GameStage, stageToRouteMap } from "./types/gameStage";
 
-const isPublicRoute = createRouteMatcher([
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-  "/",
-  "/setup",
-  "/first-roll",
-  "/game",
-]);
-
-export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) {
-    await auth.protect();
-  }
-});
-
-export const middleware = (request: NextRequest) => {
+const middleware = (request: NextRequest) => {
   const requestedRoute = request.nextUrl.pathname;
   const gameStageCookie = request.cookies.get("gameStage");
   const currentGameStage = gameStageCookie?.value;
@@ -36,6 +21,24 @@ export const middleware = (request: NextRequest) => {
     }
   }
 };
+
+const isPublicRoute = createRouteMatcher([
+  "/sign-in(.*)",
+  "/sign-up(.*)",
+  "/",
+  "/setup",
+  "/first-roll",
+  "/game",
+  "/game/(.*)",
+  "/game-over",
+]);
+
+export default clerkMiddleware(async (auth, request) => {
+  if (!isPublicRoute(request)) {
+    await auth.protect();
+  }
+  return middleware(request);
+});
 
 export const config = {
   matcher: [

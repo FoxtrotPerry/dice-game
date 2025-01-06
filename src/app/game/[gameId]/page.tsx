@@ -1,4 +1,4 @@
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 import SavedGameContainer from "~/components/ui/saved-game-container";
 
 export default async function SavedGameInfo({
@@ -12,7 +12,9 @@ export default async function SavedGameInfo({
   return (
     <main className="flex justify-center">
       <section className="flex w-full max-w-screen-sm flex-col p-3">
-        <SavedGameContainer gameId={gameId} />
+        <HydrateClient>
+          <SavedGameContainer gameId={gameId} />
+        </HydrateClient>
       </section>
     </main>
   );

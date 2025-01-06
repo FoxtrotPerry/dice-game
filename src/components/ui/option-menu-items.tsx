@@ -4,11 +4,11 @@ import OptionMenuButtonItem from "./option-menu-button-item";
 import {
   ArrowsCounterClockwise,
   BookOpenText,
+  DiceFive,
   HouseLine,
   Info,
   ListNumbers,
   Ranking,
-  UserCircle,
 } from "@phosphor-icons/react/dist/ssr";
 import { useEditSearchParams } from "~/hooks/use-edit-search-params";
 import BadgeSeparator from "./badge-separator";
@@ -55,9 +55,9 @@ export default function OptionMenuItems({ className }: { className?: string }) {
       {isSignedIn && (
         <>
           <BadgeSeparator>User Options</BadgeSeparator>
-          <OptionMenuNavItem href={`/user`}>
-            <UserCircle size={32} weight="bold" />
-            <p className="text-lg">User</p>
+          <OptionMenuNavItem href={`/my-games`}>
+            <DiceFive size={32} weight="bold" />
+            <p className="text-lg">My Games</p>
           </OptionMenuNavItem>
         </>
       )}
