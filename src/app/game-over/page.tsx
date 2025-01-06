@@ -83,7 +83,7 @@ export default function GameOver() {
           <Button onClick={handlePlayAgainClick}>Play Again?</Button>
           <LoadingButton
             onClick={handleSaveGameClick}
-            loading={pending}
+            loading={pending && !disableSaving}
             disabled={disableSaving}
           >
             {saveButtonContent}
