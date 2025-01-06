@@ -16,7 +16,11 @@ export default function SavedGameContainer({
   gameId: string;
   className?: string;
 }) {
-  const [getGameResp] = clientApi.game?.getGame.useSuspenseQuery(gameId);
+  const [getGameResp] = clientApi.game?.getGame.useSuspenseQuery(gameId, {
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
   const analytics = useAnalytics({
     source: "gameSave",
     savedGame: getGameResp.game,
