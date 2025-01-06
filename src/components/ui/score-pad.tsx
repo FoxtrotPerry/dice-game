@@ -4,7 +4,12 @@ import { Card } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 import { Button } from "./button";
 import { useState } from "react";
-import { useGameStateStore } from "~/context/game-state-context";
+import {
+  useFirstPlacePlayer,
+  useGameStage,
+  useGameState,
+  useGameStateStore,
+} from "~/context/game-state-context";
 import type { Player } from "~/types/player";
 import { formatScore } from "~/utils/number";
 
@@ -30,7 +35,9 @@ export default function ScorePad({
   className?: string;
   currentPlayer: Player;
 }) {
-  const gameState = useGameStateStore();
+  const gameStateStore = useGameStateStore();
+  const firstPlacePlayer = useFirstPlacePlayer();
+  const gameState = useGameState();
   const [score, setScore] = useState(0);
 
   const handleNumpadClick = (value: (typeof numpadItems)[number]) => {
@@ -39,7 +46,7 @@ export default function ScorePad({
         setScore(0);
         break;
       case "END TURN":
-        gameState.send({
+        gameStateStore.send({
           type: "endTurn",
           turnEntry: {
             earned: score,
@@ -59,11 +66,12 @@ export default function ScorePad({
     }
   };
 
-  /**
- // TODO: Disable the END TURN button if:
- - game is in final rolls stage and current score input wouldn't be enough to win
- - current score input isn't evenly divisible by 50. 
- */
+  const scoreIsInvalid = score % 50 !== 0;
+  const isFinalRolls = gameState.gameStage === "FINAL_ROLLS";
+  const wouldBeHighScore =
+    (firstPlacePlayer?.score ?? 0) < currentPlayer.score + score;
+
+  const disabledInFinalRolls = isFinalRolls && !wouldBeHighScore && score !== 0;
 
   return (
     <div className={cn("flex flex-col items-center gap-2", className)}>
@@ -94,6 +102,10 @@ export default function ScorePad({
                   "h-full w-full rounded-none py-2 text-xl",
                   isNumber && "text-5xl",
                 )}
+                disabled={
+                  numpadItem === "END TURN" &&
+                  (scoreIsInvalid || disabledInFinalRolls)
+                }
                 onClick={() => handleNumpadClick(numpadItem)}
               >
                 <b>{numpadItem}</b>
