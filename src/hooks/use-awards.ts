@@ -16,7 +16,7 @@ type UserAwardsParams =
 
 export function useAwards(params: UserAwardsParams) {
   return useQuery({
-    queryKey: ["analytics"],
+    queryKey: ["awards"],
     queryFn: async () => {
       const game = (() => {
         switch (params.source) {

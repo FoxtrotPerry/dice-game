@@ -2,7 +2,7 @@
 
 import { useGameState } from "~/context/game-state-context";
 import LeaderboardTable from "./leaderboard-table";
-import { gameStateToSavedGame } from "~/utils/analytics";
+import { gameStateToSavedGame } from "~/utils/awards";
 
 export default function LocalLeaderboardTable({
   className,
