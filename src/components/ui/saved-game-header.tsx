@@ -2,7 +2,7 @@
 
 import { cn } from "~/lib/utils";
 import { format } from "date-fns";
-import type { GetGameResponseData } from "~/types/analytics";
+import type { GetGameResponseData } from "~/types/awards";
 
 export default function SavedGameHeader({
   getGameResp,

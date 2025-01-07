@@ -1,4 +1,4 @@
-import type { GetGameResponseGameData } from "~/types/analytics";
+import type { GetGameResponseGameData } from "~/types/awards";
 import { PlayerScoreGraph } from "./player-score-graph";
 import { cn } from "~/lib/utils";
 

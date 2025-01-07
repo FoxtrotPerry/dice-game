@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { type GetGameResponseGameData } from "~/types/analytics";
+import { type GetGameResponseGameData } from "~/types/awards";
 import type { GameState } from "~/types/gameState";
 import {
   gameStateToSavedGame,
@@ -8,15 +8,13 @@ import {
   getHighLowVariance,
   getMostNoScoreTurns,
   getUnderDog,
-} from "~/utils/analytics";
+} from "~/utils/awards";
 
-type UserAnalyticsParams =
+type UserAwardsParams =
   | { source: "gameSave"; savedGame: GetGameResponseGameData }
   | { source: "localState"; gameState: GameState };
 
-// TODO: Rename to useAwards
-
-export function useAnalytics(params: UserAnalyticsParams) {
+export function useAwards(params: UserAwardsParams) {
   return useQuery({
     queryKey: ["analytics"],
     queryFn: async () => {
@@ -58,7 +56,7 @@ export function useAnalytics(params: UserAnalyticsParams) {
   });
 }
 
-function isUseAnalyticsEnabled(params: UserAnalyticsParams) {
+function isUseAnalyticsEnabled(params: UserAwardsParams) {
   switch (params.source) {
     case "gameSave":
       return true;

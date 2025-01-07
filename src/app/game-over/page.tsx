@@ -10,7 +10,7 @@ import { useCallback, useMemo } from "react";
 import { LoadingButton } from "~/components/ui/loading-button";
 import { Check, FloppyDisk } from "@phosphor-icons/react/dist/ssr";
 import LocalGameAnalytics from "~/components/ui/local-game-analytics";
-import { useAnalytics } from "~/hooks/use-analytics";
+import { useAwards } from "~/hooks/use-awards";
 import BadgeSeparator from "~/components/ui/badge-separator";
 import GameAwards from "~/components/ui/game-awards";
 
@@ -20,7 +20,7 @@ export default function GameOver() {
   const gameState = useGameState();
   const utils = api.useUtils();
 
-  const analytics = useAnalytics({
+  const analytics = useAwards({
     source: "localState",
     gameState: gameState,
   });

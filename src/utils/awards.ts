@@ -1,4 +1,4 @@
-import type { GetGameResponseGameData } from "~/types/analytics";
+import type { GetGameResponseGameData } from "~/types/awards";
 import { type GameState } from "~/types/gameState";
 
 /**
