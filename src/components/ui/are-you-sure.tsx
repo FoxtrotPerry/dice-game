@@ -57,7 +57,7 @@ export default function AreYouSure({
         <DialogHeader>
           <DialogTitle className="text-3xl">{title}</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4 text-center">{description}</div>
+        <div className="grid gap-4 py-4">{description}</div>
         <DialogFooter className="flex gap-2">
           <DialogClose asChild>
             <Button variant="outline" onClick={closeModal}>
