@@ -6,7 +6,6 @@ import { Button } from "./button";
 import { useState } from "react";
 import {
   useFirstPlacePlayer,
-  useGameStage,
   useGameState,
   useGameStateStore,
 } from "~/context/game-state-context";

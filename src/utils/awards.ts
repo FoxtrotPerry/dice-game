@@ -1,4 +1,4 @@
-import type { GetGameResponseGameData } from "~/types/analytics";
+import type { GetGameResponseGameData } from "~/types/awards";
 import { type GameState } from "~/types/gameState";
 
 /**
@@ -182,8 +182,8 @@ export const getHighLowVariance = async (data: GetGameResponseGameData) => {
 
   // calculate percentages
   const varianceAvg = varianceSum / data.players.length;
-  const percentAbove = (highestVariance.variance / varianceAvg) * 100;
-  const percentBelow = (varianceAvg / lowestVariance.variance) * 100;
+  const percentAbove = (highestVariance.variance / varianceAvg) * 100 - 100;
+  const percentBelow = (varianceAvg / lowestVariance.variance) * 100 - 100;
   highestVariance.percentAboveAvg = percentAbove;
   lowestVariance.percentBelowAvg = percentBelow;
 

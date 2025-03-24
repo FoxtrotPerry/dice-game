@@ -2,7 +2,7 @@
 
 import { useGameState } from "~/context/game-state-context";
 import GameAnalytics from "./game-analytics";
-import { gameStateToSavedGame } from "~/utils/analytics";
+import { gameStateToSavedGame } from "~/utils/awards";
 
 export default function LocalGameAnalytics({}) {
   const gameState = useGameState();

@@ -17,7 +17,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "~/components/ui/chart";
-import { type GetGameResponseGameData } from "~/types/analytics";
+import { type GetGameResponseGameData } from "~/types/awards";
 import { abbreviateScore } from "~/utils/number";
 
 const chartConfig = {

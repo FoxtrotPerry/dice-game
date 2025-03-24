@@ -1,7 +1,7 @@
 import { Trophy } from "@phosphor-icons/react/dist/ssr";
 import { medalColors } from "~/types/medalColors";
 import { cn } from "~/lib/utils";
-import type { GetGameResponseGameData } from "~/types/analytics";
+import type { GetGameResponseGameData } from "~/types/awards";
 
 export default function LeaderboardTable({
   className,

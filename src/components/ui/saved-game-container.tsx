@@ -1,6 +1,6 @@
 "use client";
 
-import { useAnalytics } from "~/hooks/use-analytics";
+import { useAwards } from "~/hooks/use-awards";
 import { api as clientApi } from "~/trpc/react";
 import GameAwards from "~/components/ui/game-awards";
 import BadgeSeparator from "~/components/ui/badge-separator";
@@ -21,7 +21,7 @@ export default function SavedGameContainer({
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
-  const analytics = useAnalytics({
+  const analytics = useAwards({
     source: "gameSave",
     savedGame: getGameResp.game,
   });

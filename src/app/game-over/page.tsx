@@ -10,9 +10,10 @@ import { useCallback, useMemo } from "react";
 import { LoadingButton } from "~/components/ui/loading-button";
 import { Check, FloppyDisk } from "@phosphor-icons/react/dist/ssr";
 import LocalGameAnalytics from "~/components/ui/local-game-analytics";
-import { useAnalytics } from "~/hooks/use-analytics";
+import { useAwards } from "~/hooks/use-awards";
 import BadgeSeparator from "~/components/ui/badge-separator";
 import GameAwards from "~/components/ui/game-awards";
+import AreYouSure from "~/components/ui/are-you-sure";
 
 export default function GameOver() {
   const { isSignedIn, user } = useUser();
@@ -20,7 +21,7 @@ export default function GameOver() {
   const gameState = useGameState();
   const utils = api.useUtils();
 
-  const analytics = useAnalytics({
+  const analytics = useAwards({
     source: "localState",
     gameState: gameState,
   });
@@ -34,11 +35,6 @@ export default function GameOver() {
       await utils.game.invalidate();
     },
   });
-
-  const handlePlayAgainClick = () => {
-    gameStateStore.send({ type: "playAgain" });
-    redirect("/first-roll");
-  };
 
   const pending = saveGame.isPending || gameAlreadySaved.isPending;
 
@@ -72,6 +68,11 @@ export default function GameOver() {
     }
   }, [disableSaving, gameState, saveGame, user?.id]);
 
+  const handlePlayAgainClick = () => {
+    gameStateStore.send({ type: "playAgain" });
+    redirect("/first-roll");
+  };
+
   return (
     <main className="flex justify-center">
       <section className="flex w-full max-w-screen-sm flex-col gap-4 p-3">
@@ -80,7 +81,21 @@ export default function GameOver() {
         </h1>
         <LocalLeaderboardTable />
         <div className="flex flex-col gap-2">
-          <Button onClick={handlePlayAgainClick}>Play Again?</Button>
+          <AreYouSure
+            modalId="play-again"
+            description={
+              <p>
+                This will reset the current game keeping only the current
+                players.{" "}
+                {!disableSaving && (
+                  <b>{`If you wish to save your game, do so before confirming this action.`}</b>
+                )}
+              </p>
+            }
+            onConfirm={handlePlayAgainClick}
+          >
+            <Button>Play Again?</Button>
+          </AreYouSure>
           <LoadingButton
             onClick={handleSaveGameClick}
             loading={pending && !disableSaving}

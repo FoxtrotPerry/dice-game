@@ -1,5 +1,5 @@
 import { cn } from "~/lib/utils";
-import { type UseAnalyticsData } from "~/types/analytics";
+import { type UseAwardsData } from "~/types/awards";
 import { Card, CardDescription, CardHeader, CardTitle } from "./card";
 import {
   Clover,
@@ -16,7 +16,7 @@ export default function GameAwards({
   awards,
 }: {
   className?: string;
-  awards: NonNullable<UseAnalyticsData>;
+  awards: NonNullable<UseAwardsData>;
 }) {
   const { highestTurn, mostNoScores, firstToSteal, underDog, highLowVariance } =
     awards;
